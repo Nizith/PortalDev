@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const CustomerSchema = new mongoose.Schema({
-    Cusid: {
+    CusID: {
         type: String,
         required: true
     },
