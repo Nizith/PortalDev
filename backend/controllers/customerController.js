@@ -1,11 +1,11 @@
 const Customer = require('../models/customerModel.js');// Adjust the path to your model file
 
 const createCustomer = (async (req, res) => {
-    const { Cusid, name, age, status } = req.body;
+    const { CusID, name, age, status } = req.body;
 
 
     const newCustomer = new Customer({
-        Cusid,
+        CusID,
         name,
         age,
         status
