@@ -2,8 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-
-
 const app = express();
 
 app.use(cors());
@@ -19,8 +17,11 @@ mongoose.connect( URL )
     console.log("MongoDB Connection Successfull!");
 })
 .catch( (err) => {
-    console.log("MongoDB Connection UNsuccessfull!", err);
+    console.log("MongoDB Connection Unsuccessfull!", err);
 })
 
+const customerRoutes = require("./routes/customerRoutes.js");
+app.use(customerRoutes);
 
-
+const supplierRoutes = require("./routes/supplierroutes.js");
+app.use(supplierRoutes);

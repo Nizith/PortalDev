@@ -1,4 +1,4 @@
-const Supplier = require("../controllers/supplier.js");
+const Supplier = require("../models/supplierModel.js");
 
 const createSupplier = ( async ( req , res)=>{
     const{ name , age } = req.body;

@@ -1,4 +1,4 @@
-const Customer = require('../models/customer.js');// Adjust the path to your model file
+const Customer = require('../models/customerModel.js');// Adjust the path to your model file
 
 const createcustomer = (async(req,res)=>{
     const{ Cusid , name, age, status } = req.body;

@@ -7,11 +7,11 @@ const CusSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        
+        required:true
     },
     age: {
-        type: Int,
-        
+        type: Number,
+        required: true        
     },
     Status: {
         type: String,
@@ -19,12 +19,5 @@ const CusSchema = new mongoose.Schema({
         
     },
     
-
-
-
-
-
-
-
 });
 module.exports = mongoose.model('customer',CusSchema)
