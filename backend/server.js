@@ -25,3 +25,6 @@ app.use(customerRoutes);
 
 const supplierRoutes = require("./routes/supplierroutes.js");
 app.use(supplierRoutes);
+
+const sectionRoutes = require("./routes/sectionRoutes.js");
+app.use(sectionRoutes);

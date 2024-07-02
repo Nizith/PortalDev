@@ -1,30 +1,24 @@
 const Customer = require('../models/customerModel.js');// Adjust the path to your model file
 
-const createcustomer = (async(req,res)=>{
-    const{ Cusid , name, age, status } = req.body;
+const createCustomer = (async (req, res) => {
+    const { Cusid, name, age, status } = req.body;
 
 
-        const newCustomer = new Customer({
-            Cusid,
-            name,
-            age,
-            status
-        });
-       
-        await newCustomer.save()
+    const newCustomer = new Customer({
+        Cusid,
+        name,
+        age,
+        status
+    });
 
-        .then( () => {
-
-            res.status(201).json({message :'Customer Created Successfully'});
-
+    await newCustomer.save()
+        .then(() => {
+            res.status(201).json({ message: 'Customer Created Successfully' });
         })
         .catch((error) => {
             console.error(error);
-            res.status(500).json({message : 'Customer Creation Failed'});
-
+            res.status(500).json({ message: 'Customer Creation Failed' });
         })
 })
 
-module.exports = {createcustomer};
-
-
+module.exports = { createCustomer };

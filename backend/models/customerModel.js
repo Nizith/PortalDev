@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const CusSchema = new mongoose.Schema({
+const CustomerSchema = new mongoose.Schema({
     Cusid: {
         type: String,
         required: true
@@ -20,4 +20,4 @@ const CusSchema = new mongoose.Schema({
     },
     
 });
-module.exports = mongoose.model('customer',CusSchema)
+module.exports = mongoose.model('customer',CustomerSchema)
