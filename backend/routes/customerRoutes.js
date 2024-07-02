@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const CustomerCtrl = require('../controllers/customerdetails');
+const CustomerCtrl = require('../controllers/customerController');
 
 router.post('/portaldev/createcustomer',CustomerCtrl.createcustomer )
 
