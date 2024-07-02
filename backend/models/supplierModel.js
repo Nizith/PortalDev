@@ -12,4 +12,4 @@ const supplier = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('supplier',supplier)
+module.exports = mongoose.model('supplier',supplier);
