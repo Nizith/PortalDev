@@ -20,13 +20,13 @@ function Bodycomponent() {
   return (
     
     <>
-           <div>hello</div>
+        
 
            <div className="button-container">
 
 
-         <button onClick={navigateToSupplierRegistration } >suplier rejistration</button>
-           <button onClick={navigateToSectionRegistration} >Section rejistration</button>
+         <button onClick={navigateToSupplierRegistration }  className="w-1/4 py-1.5 rounded bg-teal-500 text-white  " >suplier rejistration</button>
+           <button onClick={navigateToSectionRegistration}  className="w-1/4 py-1.5 rounded bg-teal-500 text-white " >Section rejistration</button>
 
             </div>
     

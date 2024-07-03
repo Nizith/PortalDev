@@ -11,7 +11,7 @@ function App() {
       <h2>hhhh </h2>
       <Routes>
 
-        <Route path="/admindash" element={ < Bodycomponent /> } />  
+        <Route path="/admindash" element={ < Bodycomponent /> } />
       
       </Routes>
     </div>
