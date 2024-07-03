@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 
-function Sectionrejistration() {
+function Sectionregistration() {
 
 
  const [sectionID ,setSectionID] = useState('');
@@ -51,4 +51,4 @@ function Sectionrejistration() {
   )
 }
 
-export default Sectionrejistration
+export default Sectionregistration

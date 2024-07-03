@@ -8,11 +8,11 @@ function Bodycomponent() {
 
 
     const navigateToSupplierRegistration = () => {
-      navigate('/suplierrej')
+      navigate('/suplierreg')
     };
   
     const navigateToSectionRegistration = () => {
-      navigate('/sectionrej')
+      navigate('/sectionreg')
     };
 
 

@@ -3,6 +3,7 @@ import './index.css'
 import { BrowserRouter as Router  , Routes , Route } from "react-router-dom"
 import Bodycomponent from "./Components/Bodycomponent.jsx"
 import AdminLogin from "./Components/AdminLogin.jsx"
+import Sectionregistration from "./Components/Sectionregistration.jsx"
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
 
         <Route path="/" element={ <AdminLogin /> } />
         <Route path="/admindash" element={ < Bodycomponent /> } />  
+        <Route path="/sectionreg" element = { <Sectionregistration />} />
       
       </Routes>
     </div>
