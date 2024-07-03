@@ -16,7 +16,7 @@ function App() {
         <Route path="/" element={ <AdminLogin /> } />
         <Route path="/admindash" element={ < Bodycomponent /> } />  
         <Route path="/sectionreg" element = { <Sectionregistration />} />
-        <Route path="/supplieradd" element={<Supplier/>}/>
+        <Route path="/supplierreg" element={<Supplier/>}/>
       
       </Routes>
     </div>
