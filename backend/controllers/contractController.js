@@ -1,4 +1,4 @@
-const Contract = require('../models/contractModel.js/')
+const Contract = require('../models/contractModel.js')
 
 const createContract = (async(req,res) => {
     const {TenderNo, cusCntrctSD , cusCntrctED , supcntrctSD , supcntrctED , solutionDes , AccountManager , Manager , SalesEngineer , SolutionEngineer} = req.body;

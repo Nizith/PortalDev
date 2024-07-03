@@ -28,3 +28,6 @@ app.use(supplierRoutes);
 
 const sectionRoutes = require("./routes/sectionRoutes.js");
 app.use(sectionRoutes);
+
+const contractRoutes = require("./routes/contractRoutes.js");
+app.use(contractRoutes);
