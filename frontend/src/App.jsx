@@ -1,13 +1,27 @@
 import React from "react"
 import './index.css'
+import { BrowserRouter as Router  , Routes , Route } from "react-router-dom"
+import Bodycomponent from "./Components/Bodycomponent.jsx"
+import AdminLogin from "./Components/AdminLogin.jsx"
+import Sectionregistration from "./Components/Sectionregistration.jsx"
 
 function App() {
   return (
+    <Router>
     <>
-      <div className='App'>
-        <h2>first</h2>
-      </div>
+    <div className='App'>
+      <Routes>
+
+        <Route path="/" element={ <AdminLogin /> } />
+        <Route path="/admindash" element={ < Bodycomponent /> } />  
+        <Route path="/sectionreg" element = { <Sectionregistration />} />
+      
+      </Routes>
+    </div>
+      
+      
     </>
+    </Router>
   )
 }
 
