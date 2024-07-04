@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from "axios"
 
 
 function Sectionregistration() {
@@ -7,17 +8,23 @@ function Sectionregistration() {
  const [sectionID ,setSectionID] = useState('');
  const [sectionName,setSectionName] = useState('');
 
- const handleSubmit = (e)=>{
+ const sectionSubmit = (e) => {
     e.preventDefault();
+    const newSection ={
+      sectionID,
+      sectionName
+
+    }
+    axios.post("http://localhost:4500/portaldev/createsection" ,newSection )
+    .then(() => {
+          alert("section created successfully");
+    }).catch((error) => {
+          alert("section creation unsuccessfull")
+    })
 
     console.log("section rejistered :", {sectionID,sectionName});
 
  }
-
-
-
-
-
 
   return (
     <>
@@ -25,7 +32,7 @@ function Sectionregistration() {
     
     <div className="w-screen h-screen fixed flex justify-center">
         <div className="bg-amber-100 w-1/2 h-1/2 my-auto">
-           <form onSubmit ={handleSubmit}  className="p-10 rounded" >
+           <form onSubmit ={sectionSubmit}  className="p-10 rounded" >
              <h1 className="flex justify-center -mt-3 mb-5 text-2xl font-bold">Section Rejistration Form</h1>
            <div className="mb-5">
                <label htmlFor="sectionID">Section ID:</label>
