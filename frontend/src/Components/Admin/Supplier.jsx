@@ -1,19 +1,43 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import axios from 'axios';
 export default function Supplier() {
+
+  const [name,setName] = useState("")
+  const [age,setAge] = useState(0)
+
+  const SuplierSubmit = (e) => {
+      e.preventDefault()
+
+      const newSuplier = {name,age}
+
+      axios.post("http://localhost:4500/portaldev/createsupplier", newSuplier)
+      .then(() => {
+        alert("Supplier created successfully!!")
+      })
+      .catch((err) => {
+          console.error(err)
+          alert("Supplier created failed!!")
+      })
+
+
+      
+
+  }
 
   return (
     <div className="w-screen h-screen fixed flex justify-center">
       <div className="my-auto w-1/2 h-1/2 bg-amber-100">
-        <form className="p-10">
+        <form onSubmit={SuplierSubmit} className="p-10">
           <div className="mb-5">
             <label>Name:</label>
-            <input type='text' className="block w-full mt-2 h-9 rounded outline-0 ps-3 border-b-2 border-slate-600" />
+            <input onChange = {(e) => {setName(e.target.value)}} 
+            type='text' className="block w-full mt-2 h-9 rounded outline-0 ps-3 border-b-2 border-slate-600" />
           </div>
 
           <div className="mb-5">
             <label>Age:</label>
-            <input type='text' className="block w-full mt-2 h-9 rounded outline-0 ps-3 border-b-2 border-slate-600" />
+            <input onChange = {(e) => {setAge(e.target.value)}}
+            type='text' className="block w-full mt-2 h-9 rounded outline-0 ps-3 border-b-2 border-slate-600" />
           </div>
 
           <div className="flex justify-center mt-8">
