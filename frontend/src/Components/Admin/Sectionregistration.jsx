@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from "axios"
 
 
@@ -7,6 +7,7 @@ function Sectionregistration() {
 
  const [sectionID ,setSectionID] = useState('');
  const [sectionName,setSectionName] = useState('');
+ 
 
  const sectionSubmit = (e) => {
     e.preventDefault();
