@@ -1,16 +1,20 @@
 const mongoose = require('mongoose');
 
 const SupplierSchema = new mongoose.Schema({
-    sectionID:{
+    SRno:{
         type:String,
         required:true
     },
-    name:{
+    category:{
         type:String,
         required:true
     },
-    age:{
+    mobile:{
         type:Number,
+        required:true
+    },
+    description:{
+        type:String,
         required:true
     }
 

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const CustomerSchema = new mongoose.Schema({
-    CusID: {
+    BRnumber: {
         type: String,
         required: true
     },
@@ -9,12 +9,12 @@ const CustomerSchema = new mongoose.Schema({
         type: String,
         required:true
     },
-    age: {
-        type: Number,
+    email: {
+        type: String,
         required: true        
     },
-    status: {
-        type: String,
+    contact: {
+        type: Number,
         required: true
         
     },

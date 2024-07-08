@@ -1,12 +1,13 @@
 const Supplier = require("../models/supplierModel.js");
 
 const createSupplier = (async (req, res) => {
-    const { name, age,sectionID} = req.body;
+    const { SRno, category,mobile,description} = req.body;
 
     const newSupplier = new Supplier({
-        sectionID,
-        name,
-        age
+        SRno,
+        category,
+        mobile,
+        description
     });
 
     await newSupplier.save()
