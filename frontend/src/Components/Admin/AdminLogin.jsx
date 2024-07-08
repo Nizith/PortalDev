@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminLogin() {
 
@@ -12,9 +12,9 @@ export default function AdminLogin() {
 
         if (adminname === 'admin' && adminpassword === '1234') {
             navigate('/admindash')
-        }else {
+        } else {
             alert("Invalid credentials");
-          }
+        }
     }
     return (
         <>
@@ -26,7 +26,7 @@ export default function AdminLogin() {
                             <label htmlFor="adminname" className="">Name :</label>
                             <input
                                 type="text"
-                                onChange={ (a) => setadminname(a.target.value)}
+                                onChange={(a) => setadminname(a.target.value)}
                                 className="block w-full mt-2 h-8 rounded outline-0 border-b-2 border-slate-600 ps-3 text-black"
                             />
                         </div>
@@ -34,7 +34,7 @@ export default function AdminLogin() {
                             <label htmlFor="adminpassword" className="">Password :</label>
                             <input
                                 type="text"
-                                onChange={ (a) => setadminpassword(a.target.value)}
+                                onChange={(a) => setadminpassword(a.target.value)}
                                 className="block w-full mt-2 h-8 rounded outline-0 border-b-2 border-slate-600 ps-3 text-black" />
                         </div>
                         <button className="w-full mt-5 py-1.5 rounded bg-green-500 hover:bg-green-600 hover:duration-300 hover:outline outline-1 font-semibold" onClick={Approve}>Login As Admin</button>
