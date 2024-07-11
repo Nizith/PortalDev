@@ -31,3 +31,6 @@ app.use(sectionRoutes);
 
 const contractRoutes = require("./routes/contractRoutes.js");
 app.use(contractRoutes);
+
+const paymentRoutes = require("./routes/paymentRoutes.js");
+app.use(paymentRoutes);
