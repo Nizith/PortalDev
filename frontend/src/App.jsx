@@ -6,6 +6,7 @@ import AdminLogin from "./Components/Admin/AdminLogin.jsx"
 import Sectionregistration from "./Components/Admin/SectionAdd.jsx"
 import Supplier from "./Components/Admin/SupplierAdd.jsx"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
+import PaymentAdd from "./Components/PaymentAdd.jsx"
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path="/sectionreg" element = { <Sectionregistration />} />
         <Route path="/supplierreg" element={<Supplier/>}/>
         <Route path="/createcustomer" element = {<CustomerAdd/>} />
+        <Route path="/addpayment" element = {<PaymentAdd/>}/>
+
       
       </Routes>
     </div>
