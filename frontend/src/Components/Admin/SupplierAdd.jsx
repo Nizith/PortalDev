@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export default function Supplier() {
   const [SRno,setSRno] = useState("")
+  const [name,setName] = useState("")
   const [category,setcategory] = useState("")
   const [mobile,setmobile] = useState("")
   const [description,setdescription] = useState("")
@@ -15,7 +16,7 @@ export default function Supplier() {
   const SuplierSubmit = (e) => {
       e.preventDefault()
 
-      const newSuplier = {SRno,category, mobile,description}
+      const newSuplier = {SRno, name, category, mobile,description}
 
       axios.post("http://localhost:4500/portaldev/createsupplier", newSuplier)
       .then(() => {
@@ -38,6 +39,12 @@ export default function Supplier() {
         <div className="mb-5">
             <label>Supplier Rejistration number:</label>
             <input onChange = {(e) => {setSRno(e.target.value)}} 
+            type='text' className="block w-full mt-2 h-9 rounded outline-0 ps-3 border-b-2 border-slate-600" />
+          </div>
+          
+          <div className="mb-5">
+            <label>Supplier Name:</label>
+            <input onChange = {(e) => {setName(e.target.value)}} 
             type='text' className="block w-full mt-2 h-9 rounded outline-0 ps-3 border-b-2 border-slate-600" />
           </div>
           
