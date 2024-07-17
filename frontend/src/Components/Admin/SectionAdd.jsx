@@ -30,7 +30,7 @@ function Sectionregistration() {
       <div className="w-screen h-screen fixed flex justify-center">
         <div className="bg-amber-100 w-1/2 h-1/2 my-auto">
           <form onSubmit={sectionSubmit} className="p-10 rounded" >
-            <h1 className="flex justify-center -mt-3 mb-5 text-2xl font-bold">Section Rejistration Form</h1>
+            <h1 className="flex justify-center -mt-3 mb-5 text-2xl font-bold">Section Registration Form</h1>
             <div className="mb-5">
               <label htmlFor="sectionID">Section ID:</label>
               <input type="text" id='sectionID' value={sectionID} onChange={(e) => setSectionID(e.target.value)}
