@@ -32,6 +32,8 @@ app.use(sectionRoutes);
 const contractRoutes = require("./routes/contractRoutes.js");
 app.use(contractRoutes);
 
+const coordinatorRoutes = require("./routes/CordinatorsRoutes.js");
+app.use(coordinatorRoutes);
 
 const UserreqRoute = require("./routes/UserreqRoutes.js")
 app.use(UserreqRoute);

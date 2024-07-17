@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const UserRequirements = new mongoose.List({
+const UserRequirements = new mongoose.Schema({
 
     supplier:{
         type:String,

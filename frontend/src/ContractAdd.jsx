@@ -57,38 +57,33 @@ export default function ContractAdd() {
 
     const [suppliers, setSuppliers] = useState([]);
     const [customers, setCustomers] = useState([]);
+    const [coordinators, setCoordinators] = useState([])
 
+    // Fetch data once on component mount
     useEffect(() => {
-        ReadSuppliers();
-        ReadCustomers();
+        const fetchData = async () => {
+            try {
+                const [SupplierResponse, CustomerResponse, CoordinatorResponse] = await Promise.all([
+                    axios.get("http://localhost:4500/portaldev/readsupplier"),
+                    axios.get("http://localhost:4500/portaldev/readcustomer"),
+                    axios.get("http://localhost:4500/portaldev/allcordinator")
+                ]);
+
+                setSuppliers(SupplierResponse.data);
+                setCustomers(CustomerResponse.data);
+                setCoordinators(CoordinatorResponse.data);
+
+                console.log("Supplier Data: ", SupplierResponse.data);
+                console.log("Customer Data: ", CustomerResponse.data);
+                console.log("Coordinator Data: ", CoordinatorResponse.data);
+            } catch (error) {
+                console.error("Data fetching failed", error);
+                alert("Data fetching failed");
+            }
+        };
+
+        fetchData();
     }, []);
-
-    useEffect(() => {
-        console.log("Supplier Data : ", suppliers);
-    }, [suppliers]);
-
-    useEffect(() => {
-        console.log("Customer Data : ", customers);
-    }, [customers]);
-
-    const ReadSuppliers = async () => {
-        try {
-            const SupplierResponse = await axios.get("http://localhost:4500/portaldev/readsupplier");
-            setSuppliers(SupplierResponse.data);
-        } catch (error) {
-            console.error("Supplier data did not fetch:", error);
-            alert("Data fetching failed");
-        }
-    };
-
-    const ReadCustomers = async () => {
-        try {
-            const CustomerResponse = await axios.get("http://localhost:4500/portaldev/readcustomer");
-            setCustomers(CustomerResponse.data);
-        } catch (error) {
-            console.error("Customer data did not fetch:", error);
-        }
-    };
 
     return (
         <div>
@@ -107,6 +102,7 @@ export default function ContractAdd() {
                     handleChange={handleChange}
                     prevStep={prevStep}
                     nextStep={nextStep}
+                    coordinators={coordinators}
                 />
             )}
             {step === 3 && (
@@ -220,7 +216,7 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers }) => 
 };
 
 // Step 2 Component
-const StepTwo = ({ formData, handleChange, prevStep, nextStep }) => {
+const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators }) => {
     return (
         <>
             <div className='w-screen h-screen fixed flex justify-center'>
@@ -264,6 +260,9 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep }) => {
                                         onChange={handleChange}
                                     >
                                         <option value=""></option>
+                                        {Array.isArray (coordinators.data) && coordinators.data.map((coordinator) => (
+                                            <option key={coordinator._id} value={coordinator.AccountManager}>{coordinator.AccountManager}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div className='mb-3'>
@@ -276,6 +275,9 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep }) => {
                                         onChange={handleChange}
                                     >
                                         <option value=""></option>
+                                        {Array.isArray (coordinators.data) && coordinators.data.map((coordinator) => (
+                                            <option key={coordinator._id} value={coordinator.Manager}>{coordinator.Manager}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </fieldset>
@@ -305,6 +307,9 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep }) => {
                                         onChange={handleChange}
                                     >
                                         <option value=""></option>
+                                        {Array.isArray (coordinators.data) && coordinators.data.map((coordinator) => (
+                                            <option key={coordinator._id} value={coordinator.SalesEngineer}>{coordinator.SalesEngineer}</option>
+                                        ))}
                                     </select>
                                 </div>
                                 <div>
@@ -317,6 +322,9 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep }) => {
                                         onChange={handleChange}
                                     >
                                         <option value=""></option>
+                                        {Array.isArray (coordinators.data) && coordinators.data.map((coordinator) => (
+                                            <option key={coordinator._id} value={coordinator.SolutionEngineer}>{coordinator.SolutionEngineer}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </fieldset>

@@ -2,89 +2,92 @@ const cordinatorModel = require('../models/CordinatorsModel');
 
 
 //Create Cordinators
-const createCordinator = async(req,res) => {
-    try{
+const createCordinator = async (req, res) => {
+    try {
         const newCordinator = await cordinatorModel.create(req.body)
 
-        return newCordinator? res.status(200).json({
-            message:"Cordinator is created",
-            data:newCordinator
-        }):
-        res.status(500).json({
-            message:"Cordinator is not created"
+        return newCordinator ? res.status(200).json({
+            message: "Cordinator is created",
+            data: newCordinator
+        }) :
+            res.status(500).json({
+                message: "Cordinator is not created"
+            })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            mesage: error.message
         })
-    }catch(error){
-       console.log(error);
-       return res.status(500).json({
-        mesage: error.message
-       })
     }
 }
 
 //getAll cordinators
 
-const AllCordinators = async (req,res) => {
-    try{
-        const allCordinators = await cordinatorModel.find({});
-
-        return allCordinators ? res.status(200).json({
-            message:"All Cordinators are fetched",
-            data:allCordinators
-        })
-        : res.status(500).json({
-            message:"All Cordinators are not fetched",
-        })
+const AllCordinators = (async (req, res) => {
+    try {
+        const allCordinators = await cordinatorModel.find({})
+        if (allCordinators) {
+            res.status(200).json({
+                message: "All Cordinators are fetched",
+                data: allCordinators
+            })
+        }
+        else {
+            res.status(500).json({
+                message: "All Cordinators are not fetched",
+            })
+        }
     }
-    catch(error){
-        console.log(error.message);
+    catch (error) {
+        console.log(error);
         return res.status(500).json({
-            message:error.message
+            message: error.message
         })
     }
-}
+})
 
 //GetOneCordinator
 
-const getOneCordinator = async(req,res) => {
-    const {id} = req.params;
+const getOneCordinator = async (req, res) => {
+    const { id } = req.params;
 
-    try{
+    try {
         const OneCordinator = await cordinatorModel.findById(id);
         return OneCordinator ? res.status(200).json({
-            message:"find the cordinator",
-            data:OneCordinator
+            message: "find the cordinator",
+            data: OneCordinator
         })
-        : res.status(500).json({
-            message:"cordinator is not found",
+            : res.status(500).json({
+                message: "cordinator is not found",
 
-        })
+            })
 
     }
-    catch(error){
-        console.log(error.message);  
+    catch (error) {
+        console.log(error.message);
         return res.status(500).json({
-            message:error.message
+            message: error.message
         })
     }
 }
 
 //Update Cordinator
 
-const updateCordinator = async(req,res) => {
-    try{
-        const {id} = req.params;
+const updateCordinator = async (req, res) => {
+    try {
+        const { id } = req.params;
 
         const updateCordinator = await cordinatorModel.findByIdAndUpdate(id, req.body);
 
         return updateCordinator ? res.status(200).json({
-            message:"Cordinatoe is updated",
-            data:updateCordinator
+            message: "Cordinatoe is updated",
+            data: updateCordinator
         })
-        : res.status(505).json({
-            message:"Cordinator is not updated"
-        })
+            : res.status(505).json({
+                message: "Cordinator is not updated"
+            })
     }
-    catch(error){
+    catch (error) {
         console.log(error.message)
         return res.status(500).json({
             message: error.message
@@ -94,28 +97,28 @@ const updateCordinator = async(req,res) => {
 
 //Delete Cordinator
 
-const deleteCordinator = async(req,res) => {
-    try{
-        const {id} = req.params;
+const deleteCordinator = async (req, res) => {
+    try {
+        const { id } = req.params;
 
         const deletecordinator = await cordinatorModel.findByIdAndDelete(id);
 
         return deletecordinator ? res.status(200).json({
-            message:"Cordinator is deleted",
-            data:deletecordinator
+            message: "Cordinator is deleted",
+            data: deletecordinator
         })
-        : res.status(500).json({
-            message:"Cordinator is not deleted",
-        })
+            : res.status(500).json({
+                message: "Cordinator is not deleted",
+            })
     }
-    catch(error){
+    catch (error) {
         console.log(error.message);
         return res.status(500).json({
-            message:error.message
+            message: error.message
         })
     }
 }
 
 
 
-module.exports = {createCordinator,AllCordinators,getOneCordinator,updateCordinator,deleteCordinator};
+module.exports = { createCordinator, AllCordinators, getOneCordinator, updateCordinator, deleteCordinator };
