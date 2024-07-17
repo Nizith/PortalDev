@@ -6,6 +6,7 @@ import AdminLogin from "./Components/Admin/AdminLogin.jsx"
 import Sectionregistration from "./Components/Admin/SectionAdd.jsx"
 import Supplier from "./Components/Admin/SupplierAdd.jsx"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
+import ContractAdd from "./ContractAdd.jsx"
 
 function App() {
   return (
@@ -16,10 +17,11 @@ function App() {
 
         <Route path="/" element={ <AdminLogin /> } />
         <Route path="/admindash" element={ < Bodycomponent /> } />  
-        <Route path="/sectionreg" element = { <Sectionregistration />} />
-        <Route path="/supplierreg" element={<Supplier/>}/>
-        <Route path="/createcustomer" element = {<CustomerAdd/>} />
-      
+        <Route path="/addsection" element = { <Sectionregistration />} />
+        <Route path="/addsupplier" element={<Supplier/>}/>
+        <Route path="/addcustomer" element = {<CustomerAdd/>} />
+        <Route path="/addcontract" element = {<ContractAdd/>} />
+        
       </Routes>
     </div>
       
