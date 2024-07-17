@@ -7,6 +7,7 @@ import Sectionregistration from "./Components/Admin/SectionAdd.jsx"
 import Supplier from "./Components/Admin/SupplierAdd.jsx"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
 import ContractAdd from "./ContractAdd.jsx"
+import Cordinators from "./Components/Cordinators.jsx"
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/addsupplier" element={<Supplier/>}/>
         <Route path="/addcustomer" element = {<CustomerAdd/>} />
         <Route path="/addcontract" element = {<ContractAdd/>} />
+        <Route path="/addcordinator" element={<Cordinators/>}/>
         
       </Routes>
     </div>
