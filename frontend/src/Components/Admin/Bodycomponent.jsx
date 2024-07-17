@@ -6,11 +6,11 @@ function Bodycomponent() {
   const navigate = useNavigate();
 
   const navigateToSupplierRegistration = () => {
-    navigate('/supplierreg')
+    navigate('/addsupplier')
   };
 
   const navigateToSectionRegistration = () => {
-    navigate('/sectionreg')
+    navigate('/addsection')
   };
 
   return (
