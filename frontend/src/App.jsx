@@ -23,6 +23,7 @@ function App() {
         <Route path="/addsupplier" element={<Supplier/>}/>
         <Route path="/addcustomer" element = {<CustomerAdd/>} />
         <Route path="/addcontract" element = {<ContractAdd/>} />
+        <Route path="/addcordinator" element={<Cordinators/>}/>
         
       </Routes>
     </div>

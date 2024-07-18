@@ -23,7 +23,7 @@ export default function PaymentAdd() {
 
         const newPayment = { PRnumber, PRdate, LOIdetails, POnumber, POdate, InvoiceNumber, InvoiceDate, Paymentstatus, Paiddate, Paymentremarks, AMCpaymentterms, AMCcurrency, AMCamount }
 
-        axios.post("http://localhost:4500/portaldev/", newPayment)
+        axios.post("http://localhost:4500/portaldev/createPayment", newPayment)
             .then(() => {
                 alert("Payment Successful!")
             })
