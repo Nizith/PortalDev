@@ -1,6 +1,6 @@
 import React from "react"
 import './index.css'
-import { BrowserRouter as Router  , Routes , Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Bodycomponent from "./Components/Admin/Bodycomponent.jsx"
 import AdminLogin from "./Components/Admin/AdminLogin.jsx"
 import Sectionregistration from "./Components/Admin/SectionAdd.jsx"
@@ -12,24 +12,23 @@ import LandingPage from "./Components/LandingPage.jsx"
 function App() {
   return (
     <Router>
-    <>
-    <div className='App'>
-      <Routes>
+      <>
+        <div className='App'>
+          <Routes>
 
-        <Route path="/" element={ <LandingPage /> } />
-        <Route path="/login" element={ <AdminLogin /> } />
-        <Route path="/admindash" element={ < Bodycomponent /> } />
-        <Route path="/addsection" element = { <Sectionregistration />} />
-        <Route path="/addsupplier" element={<Supplier/>}/>
-        <Route path="/addcustomer" element = {<CustomerAdd/>} />
-        <Route path="/addcontract" element = {<ContractAdd/>} />
-        <Route path="/addcordinator" element={<Cordinators/>}/>
-        
-      </Routes>
-    </div>
-      
-      
-    </>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<AdminLogin />} />
+            <Route path="/admindash" element={< Bodycomponent />} />
+            <Route path="/addsection" element={<Sectionregistration />} />
+            <Route path="/addsupplier" element={<Supplier />} />
+            <Route path="/addcustomer" element={<CustomerAdd />} />
+            <Route path="/addcontract" element={<ContractAdd />} />
+
+          </Routes>
+        </div>
+
+
+      </>
     </Router>
   )
 }
