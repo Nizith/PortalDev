@@ -24,25 +24,27 @@ export default function AdminLogin() {
         <>
             <div className="">
                 <div className="absolute inset-0 flex justify-center items-center">
-                    <div className="bg-blue-900 w-2/5 h-1/2 my-auto rounded-md">
-                        <form action="" className="p-10 text-white" onSubmit={Approve}>
-                            <h1 className="flex justify-center -mt-3 mb-5 text-2xl  font-bold">Managed Services Contract Portal</h1>
-                            <div className="mb-5">
-                                <label htmlFor="adminname" className="">Name :</label>
+                    <div className="bg-white bg-opacity-90 w-1/3 my-auto rounded-3xl shadow-2xl p-5">
+                        <form action="" className="p-10 mt-3 font-bold" onSubmit={Approve}>
+                            <h1 className="flex justify-center -mt-3 mb-5 text-3xl text-center  font-bold">Managed Services Contract Portal</h1>
+                            <div className="my-10">
                                 <input
                                     type="text"
+                                    placeholder="Enter Username..."
                                     onChange={(a) => setadminname(a.target.value)}
-                                    className="block w-full mt-2 h-8 rounded outline-0 border-b-2 border-slate-600 ps-3 text-black"
+                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 rounded-3xl outline-0 border-b-4 border-slate-600 ps-5 text-black font-normal"
                                 />
                             </div>
                             <div className="mb-5">
-                                <label htmlFor="adminpassword" className="">Password :</label>
                                 <input
                                     type="text"
+                                    placeholder="Enter the Password..."
                                     onChange={(a) => setadminpassword(a.target.value)}
-                                    className="block w-full mt-2 h-8 rounded outline-0 border-b-2 border-slate-600 ps-3 text-black" />
+                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 rounded-3xl outline-0 border-b-4 border-slate-600 ps-5 text-black font-normal" />
                             </div>
-                            <button className="w-full mt-5 py-1.5 rounded bg-green-500 hover:bg-green-600 hover:duration-300 hover:outline outline-1 font-semibold" onClick={Approve}>Login</button>
+                            <div className="flex justify-center">
+                                <button className="w-2/3 mt-5 py-2 px-10 rounded-3xl text-white bg-green-500 hover:bg-green-600 hover:duration-300 font-semibold" onClick={Approve}>Login</button>
+                            </div>
                         </form>
                     </div>
 

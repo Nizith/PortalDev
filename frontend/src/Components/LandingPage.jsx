@@ -8,7 +8,7 @@ export default function LandingPage() {
     useEffect(() => {
         const timer = setTimeout(() => {
             navigate('/login'); // replace '/nextPage' with your target route
-        }, 5000);
+        }, 4000);
 
         return () => clearTimeout(timer); // Cleanup the timeout if the component unmounts
     }, [navigate]);

@@ -8,6 +8,7 @@ import Supplier from "./Components/Admin/SupplierAdd.jsx"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
 import ContractAdd from "./Components/ContractAdd.jsx"
 import LandingPage from "./Components/LandingPage.jsx"
+import PaymentAdd from"./Components/PaymentAdd.jsx"
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/addsupplier" element={<Supplier />} />
             <Route path="/addcustomer" element={<CustomerAdd />} />
             <Route path="/addcontract" element={<ContractAdd />} />
+            <Route path="/addpayment" element={<PaymentAdd />} />
 
           </Routes>
         </div>
