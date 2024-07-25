@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { IoMdAdd } from "react-icons/io";
+import { IoMdRemove } from "react-icons/io";
+import { IoIosWarning } from "react-icons/io";
+import toast, { Toaster } from 'react-hot-toast';
 
 // Main Component
 export default function ContractAdd() {
     const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState([{
         supplier: '',
         customer: '',
         customerContStartDate: '',
@@ -21,16 +25,31 @@ export default function ContractAdd() {
         tenderNo: '',
         contractStatus: '',
         solutionDescription: '',
-        remarks: ''
-    });
+        remarks: '',
+        AMCpaymentterms: '',
+        AMCcurrency: '',
+        AMCamount: ['', '', '', '', ''] // Initialize with 5 empty strings for 5 years
+    }]);
 
     // Handle input change
-    const handleChange = (e) => {
+    // Adjust handleChange to handle the dynamic form fields
+    const handleChange = (e, index, yearIndex) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
+        const newFormData = [...formData];
+        if (name === 'AMCamount') {
+            newFormData[index] = {
+                ...newFormData[index],
+                AMCamount: newFormData[index].AMCamount.map((amount, i) =>
+                    i === yearIndex ? value : amount
+                )
+            };
+        } else {
+            newFormData[index] = {
+                ...newFormData[index],
+                [name]: value
+            };
+        }
+        setFormData(newFormData);
     };
 
     // Proceed to next step
@@ -54,6 +73,23 @@ export default function ContractAdd() {
     const handleSubmit = (e) => {
         e.preventDefault();
     };
+    // "You can add only upto 4 forms!", { duration: 1000}
+    // Event to Add new Fields
+    const AddnewFeilds = (e) => {
+        e.preventDefault(); // Prevent form submission
+        if (formData.length >= 4) {
+            return
+        }
+        setFormData([...formData, { AMCpaymentterms: '', AMCcurrency: '', AMCamount: ['', '', '', '', ''] }]);
+    };
+
+    // Event to delete fields
+    const DeleteFields = (index) => {
+        const updatedFormData = [...formData];
+        updatedFormData.splice(index, 1);
+        setFormData(updatedFormData);
+    };
+
 
     const [suppliers, setSuppliers] = useState([]);
     const [customers, setCustomers] = useState([]);
@@ -86,42 +122,56 @@ export default function ContractAdd() {
     }, []);
 
     return (
-        <div>
-            {step === 1 && (
-                <StepOne
-                    formData={formData}
-                    handleChange={handleChange}
-                    nextStep={nextStep}
-                    suppliers={suppliers}
-                    customers={customers}
-                />
-            )}
-            {step === 2 && (
-                <StepTwo
-                    formData={formData}
-                    handleChange={handleChange}
-                    prevStep={prevStep}
-                    nextStep={nextStep}
-                    coordinators={coordinators}
-                />
-            )}
-            {step === 3 && (
-                <StepThree
-                    formData={formData}
-                    handleChange={handleChange}
-                    prevStep={prevStep}
-                    nextStep={nextStep}
-                />
-            )}
-             {step === 4 && (
-                <StepFour
-                    formData={formData}
-                    editCurrent={editCurrent}
-                    handleSubmit={handleSubmit}
-                    nextStep={nextStep}
-                />
-            )}
-        </div>
+        <>
+            <Toaster />
+
+            <div>
+                {step === 4 && (
+                    <StepOne
+                        formData={formData}
+                        handleChange={handleChange}
+                        nextStep={nextStep}
+                        suppliers={suppliers}
+                        customers={customers}
+                    />
+                )}
+                {step === 2 && (
+                    <StepTwo
+                        formData={formData}
+                        handleChange={handleChange}
+                        prevStep={prevStep}
+                        nextStep={nextStep}
+                        coordinators={coordinators}
+                    />
+                )}
+                {step === 3 && (
+                    <StepThree
+                        formData={formData}
+                        handleChange={handleChange}
+                        prevStep={prevStep}
+                        nextStep={nextStep}
+                    />
+                )}
+                {step === 1 && (
+                    <StepFour
+                        formData={formData}
+                        handleChange={handleChange}
+                        AddnewFeilds={AddnewFeilds}
+                        DeleteFields={DeleteFields}
+                        prevStep={prevStep}
+                        nextStep={nextStep}
+                    />
+                )}
+                {step === 5 && (
+                    <StepFive
+                        formData={formData}
+                        editCurrent={editCurrent}
+                        handleSubmit={handleSubmit}
+                        nextStep={nextStep}
+                    />
+                )}
+            </div>
+        </>
     );
 }
 
@@ -130,9 +180,18 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers }) => 
     return (
         <>
             <div className='w-screen h-screen fixed flex justify-center'>
-                <div className='w-2/5 my-auto bg-black bg-opacity-20 rounded'>
+                <div className='w-2/5 my-auto bg-white bg-opacity-50 rounded'>
                     <form className='m-10'>
-
+                        <div className='mb-5'>
+                            <label>Tender No :</label>
+                            <input
+                                className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
+                                type="text"
+                                name="tenderNo"
+                                value={formData.tenderNo}
+                                onChange={handleChange}
+                            />
+                        </div>
                         <div className='mb-5'>
                             <label>Supplier :</label>
                             <select
@@ -220,7 +279,7 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators }) =
     return (
         <>
             <div className='w-screen h-screen fixed flex justify-center'>
-                <div className='w-3/5 my-auto bg-black bg-opacity-20 rounded'>
+                <div className='w-3/5 my-auto bg-white bg-opacity-50 rounded'>
                     <form className='m-10'>
                         <div className='mb-5'>
                             <label>Subject Clerk :</label>
@@ -232,100 +291,103 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators }) =
                                 onChange={handleChange}
                             />
                         </div>
-                        <div className='grid grid-cols-2 gap-x-5'>
+                        <div>
                             <fieldset className='border-2 border-green-600 p-5 rounded'>
-                                <legend className='text-lg font-semibold text-blue-600 ms-5 px-2'>Sales</legend>
-                                <div className='mb-3'>
-                                    <label>Sales Team :</label>
-                                    <select
-                                        className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
-                                        id="salesTeam"
-                                        name="salesTeam"
-                                        value={formData.salesTeam}
-                                        onChange={handleChange}
-                                    >
-                                        <option value=""></option>
-                                        <option value="MB">MB</option>
-                                        <option value="LB">LB</option>
-                                        <option value="GB">GB</option>
-                                    </select>
-                                </div>
-                                <div className='mb-3'>
-                                    <label>AccountManager :</label>
-                                    <select
-                                        className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
-                                        id="accountManager"
-                                        name="accountManager"
-                                        value={formData.accountManager}
-                                        onChange={handleChange}
-                                    >
-                                        <option value=""></option>
-                                        {Array.isArray (coordinators.data) && coordinators.data.map((coordinator) => (
-                                            <option key={coordinator._id} value={coordinator.AccountManager}>{coordinator.AccountManager}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className='mb-3'>
-                                    <label>Manager :</label>
-                                    <select
-                                        className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
-                                        id="manager"
-                                        name="manager"
-                                        value={formData.manager}
-                                        onChange={handleChange}
-                                    >
-                                        <option value=""></option>
-                                        {Array.isArray (coordinators.data) && coordinators.data.map((coordinator) => (
-                                            <option key={coordinator._id} value={coordinator.Manager}>{coordinator.Manager}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </fieldset>
-                            <fieldset className='border-2 border-green-600 p-5 rounded'>
-                                <legend className='text-lg font-semibold text-blue-600 mx-5 px-2'>Solution</legend>
-                                <div className='mb-3'>
-                                    <label>Solution Team :</label>
-                                    <select
-                                        className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
-                                        id="solutionTeam"
-                                        name="solutionTeam"
-                                        value={formData.solutionTeam}
-                                        onChange={handleChange}
-                                    >
-                                        <option value=""></option>
-                                        <option value="EDS">EDS</option>
-                                        <option value="PSBD">PSBD</option>
-                                    </select>
-                                </div>
-                                <div className='mb-3'>
-                                    <label>Sales Engineer:</label>
-                                    <select
-                                        className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
-                                        id="salesEngineer"
-                                        name="salesEngineer"
-                                        value={formData.salesEngineer}
-                                        onChange={handleChange}
-                                    >
-                                        <option value=""></option>
-                                        {Array.isArray (coordinators.data) && coordinators.data.map((coordinator) => (
-                                            <option key={coordinator._id} value={coordinator.SalesEngineer}>{coordinator.SalesEngineer}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div>
-                                    <label>Solution Engineer :</label>
-                                    <select
-                                        className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
-                                        id="solutionEngineer"
-                                        name="solutionEngineer"
-                                        value={formData.solutionEngineer}
-                                        onChange={handleChange}
-                                    >
-                                        <option value=""></option>
-                                        {Array.isArray (coordinators.data) && coordinators.data.map((coordinator) => (
-                                            <option key={coordinator._id} value={coordinator.SolutionEngineer}>{coordinator.SolutionEngineer}</option>
-                                        ))}
-                                    </select>
+                                <legend className='text-lg font-semibold text-indigo-600 ms-5 px-2'>Sales & Solution Team</legend>
+                                <div className='grid grid-cols-2 gap-x-5'>
+                                    <div>
+                                        <div className='mb-3'>
+                                            <label>Sales Team :</label>
+                                            <select
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
+                                                id="salesTeam"
+                                                name="salesTeam"
+                                                value={formData.salesTeam}
+                                                onChange={handleChange}
+                                            >
+                                                <option value=""></option>
+                                                <option value="MB">MB</option>
+                                                <option value="LB">LB</option>
+                                                <option value="GB">GB</option>
+                                            </select>
+                                        </div>
+                                        <div className='mb-3'>
+                                            <label>AccountManager :</label>
+                                            <select
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
+                                                id="accountManager"
+                                                name="accountManager"
+                                                value={formData.accountManager}
+                                                onChange={handleChange}
+                                            >
+                                                <option value=""></option>
+                                                {Array.isArray(coordinators.data) && coordinators.data.map((coordinator) => (
+                                                    <option key={coordinator._id} value={coordinator.AccountManager}>{coordinator.AccountManager}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className='mb-3'>
+                                            <label>Manager :</label>
+                                            <select
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
+                                                id="manager"
+                                                name="manager"
+                                                value={formData.manager}
+                                                onChange={handleChange}
+                                            >
+                                                <option value=""></option>
+                                                {Array.isArray(coordinators.data) && coordinators.data.map((coordinator) => (
+                                                    <option key={coordinator._id} value={coordinator.Manager}>{coordinator.Manager}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className=''>
+                                        <div className='mb-3'>
+                                            <label>Solution Team :</label>
+                                            <select
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
+                                                id="solutionTeam"
+                                                name="solutionTeam"
+                                                value={formData.solutionTeam}
+                                                onChange={handleChange}
+                                            >
+                                                <option value=""></option>
+                                                <option value="EDS">EDS</option>
+                                                <option value="PSBD">PSBD</option>
+                                            </select>
+                                        </div>
+                                        <div className='mb-3'>
+                                            <label>Sales Engineer:</label>
+                                            <select
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
+                                                id="salesEngineer"
+                                                name="salesEngineer"
+                                                value={formData.salesEngineer}
+                                                onChange={handleChange}
+                                            >
+                                                <option value=""></option>
+                                                {Array.isArray(coordinators.data) && coordinators.data.map((coordinator) => (
+                                                    <option key={coordinator._id} value={coordinator.SalesEngineer}>{coordinator.SalesEngineer}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label>Solution Engineer :</label>
+                                            <select
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
+                                                id="solutionEngineer"
+                                                name="solutionEngineer"
+                                                value={formData.solutionEngineer}
+                                                onChange={handleChange}
+                                            >
+                                                <option value=""></option>
+                                                {Array.isArray(coordinators.data) && coordinators.data.map((coordinator) => (
+                                                    <option key={coordinator._id} value={coordinator.SolutionEngineer}>{coordinator.SolutionEngineer}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </fieldset>
                         </div>
@@ -349,19 +411,9 @@ const StepThree = ({ formData, handleChange, prevStep, nextStep }) => {
     return (
         <>
             <div className='w-screen h-screen fixed flex justify-center'>
-                <div className='w-2/5 my-auto bg-black bg-opacity-20 rounded'>
+                <div className='w-2/5 my-auto bg-white bg-opacity-50 rounded'>
                     <form className='m-10'>
                         <div className='grid grid-cols-2 gap-x-5'>
-                            <div className='mb-7'>
-                                <label>Tender No :</label>
-                                <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
-                                    type="text"
-                                    name="tenderNo"
-                                    value={formData.tenderNo}
-                                    onChange={handleChange}
-                                />
-                            </div>
                             <div>
                                 <label>Contract Status :</label>
                                 <select
@@ -410,8 +462,99 @@ const StepThree = ({ formData, handleChange, prevStep, nextStep }) => {
     )
 };
 
-//step 4 Component
-const StepFour = ({ formData, editCurrent, handleSubmit }) => {
+// Step 4 Component
+const StepFour = ({ formData, handleChange, prevStep, nextStep, AddnewFeilds, DeleteFields }) => {
+    return (
+        <>
+            <div className='w-screen h-screen fixed flex justify-center'>
+                <div className='w-4/5 my-auto bg-white bg-opacity-50 rounded'>
+                    <h1 className='underline font-bold text-3xl text-indigo-800 ml-10 mt-5'>AMC Payment Details</h1>
+                    <form className='m-10 mt-5 mb-5'>
+                        {formData.map((field, index) => (
+                            <div key={index} className='mb-3 grid grid-rows-1 grid-cols-6 gap-x-5'>
+                                <div className='grid grid-rows-2'>
+                                    <label>Payment Term :</label>
+                                    <input
+                                        className='block h-8 rounded ps-2 outline-none mt-5'
+                                        type="text"
+                                        name="AMCpaymentterms"
+                                        value={field.AMCpaymentterms}
+                                        onChange={(e) => handleChange(e, index)}
+                                    />
+                                </div>
+                                <div className='grid grid-rows-2 w-1/2 ml-1'>
+                                    <label>Currency :</label>
+                                    <input
+                                        className='block h-8 w-full rounded ps-2 py-1 outline-none mt-5'
+                                        type="text"
+                                        name="AMCcurrency"
+                                        value={field.AMCcurrency}
+                                        onChange={(e) => handleChange(e, index)}
+                                    />
+                                </div>
+                                <div className='-ml-24 grid grid-rows-2'>
+                                    <label className='text-center'>Amount :</label>
+                                    <div className='grid grid-rows-1 grid-cols-11 gap-x-2 bg-lime-00' style={{ width: '8.9in' }}>
+                                        {Array.from({ length: 5 }, (_, year) => (
+                                            <div key={year} className='text-center col-span-2 -mt-6'>
+                                                <button
+                                                    onClick={(b) => { b.preventDefault() }}
+                                                    className='bg-indigo-700 bg-opacity-80 border-2 px-5 py-1 text-white border-indigo-800 rounded-md focus-within:bg-indigo-900 mx-auto'
+                                                >
+                                                    Year {year + 1}
+                                                </button>
+                                                <input
+                                                    className='block rounded ps-2 py-1 outline-none w-full' style={{ marginTop: '9px' }}
+                                                    type="text"
+                                                    name="AMCamount"
+                                                    value={field.AMCamount[year]}
+                                                    onChange={(e) => handleChange(e, index, year)}
+                                                />
+                                            </div>
+                                        ))}
+                                        <div className='ml-auto mt-auto flex justify-between gap-3'>
+                                            <button type="button"
+                                                className={`px-1 py-1 rounded-md ${formData.length >= 4 ? 'hover:bg-none' : 'hover:bg-neutral-300'}`}
+                                                disabled={formData.length >= 4}
+                                                onClick={(e) => {
+                                                    if (formData.length < 4) {
+                                                        AddnewFeilds(e);
+                                                    } else {
+                                                        // Show message or handle max fields reached
+                                                    }
+                                                }}
+                                            >
+                                                <IoMdAdd className={`size-5 ${formData.length >= 4 ? 'text-gray-500' : ''}`} />
+                                            </button>
+                                            <button type="button" className='hover:bg-neutral-300 px-1 py-1 rounded-md' onClick={() => { DeleteFields(index) }}><IoMdRemove className='size-5' /></button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        ))}
+                        {formData.length >= 4 && (
+                            <div className='bg-red-800 border-2 border-red-500 px-10 py-1.5 rounded-lg mb-3'>
+                                <IoIosWarning className='text-red-300 size-7' /><h3 className='text-red-300 text-lg ml-10 -mt-6'>You can only add upto 4 forms!</h3>
+                            </div>
+                        )}
+                        <div className='flex justify-between mt-6'>
+                            <button type="button" onClick={prevStep} className='bg-blue-900 hover:bg-green-600 flex px-8 py-2 rounded text-white font-semibold'>
+                                Previous
+                            </button>
+                            <button type="button" onClick={nextStep} className='bg-green-600 hover:bg-blue-900 px-8 py-2 rounded text-white font-semibold'>
+                                Next
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </>
+    );
+};
+
+//step 5 Component
+const StepFive = ({ formData, editCurrent, handleSubmit }) => {
     return (
         <>
             <div className='w-screen h-screen fixed flex justify-center'>
