@@ -11,6 +11,7 @@ import LandingPage from "./Components/LandingPage.jsx"
 import PaymentAdd from"./Components/PaymentAdd.jsx"
 import Customer from './Components/Admin/Customer.jsx'
 import Section from "./Components/Admin/Section.jsx"
+import SupplierTable from "./Components/Admin/SupplierTable.jsx"
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path="/customer" element={<Customer/>} />
 
             <Route path="/section" element={<Section/>} />
+            <Route path="/suppliertable" element={<SupplierTable/>} />
 
           </Routes>
         </div>
