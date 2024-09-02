@@ -1,5 +1,5 @@
 import React, { useEffect} from "react";
-import LandImg from "../images/landimage2.jpg"
+import LandImg from "../../images/landimage2.jpg"
 import {useNavigate} from 'react-router-dom'
 
 export default function LandingPage() {
