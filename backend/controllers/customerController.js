@@ -1,42 +1,118 @@
-const Customer = require('../models/customerModel.js');// Adjust the path to your model file
+const customerModel = require('../models/customerModel.js');
 
-const createCustomer = (async (req, res) => {
-    const { BRnumber, name, email, contact } = req.body;
-
-
-    const newCustomer = new Customer({
-        BRnumber,
-        name,
-        email,
-        contact
-    });
-
-    await newCustomer.save()
-        .then(() => {
-            res.status(201).json({ message: 'Customer Created Successfully' });
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).json({ message: 'Customer Creation Failed' });
-        })
-})
-
-const readCustomers = (async(req, res) => {
-    const customers = await Customer.find()
-
+//create Customers
+const createCustomer = async (req, res) => {
     try {
-        res.status(200).json({
-            message: "Customer Data Fetched!",
-            data: customers
-        })
+        const newCustomer = await customerModel.create(req.body)
+
+        return newCustomer ? res.status(200).json({
+            message: "Customer is created",
+            data: newCustomer
+        }) :
+            res.status(500).json({
+                message: "Customer is not created"
+            })
     } catch (error) {
-        res.status(200).json({
-            message: "Customer data fetching failed"
+        console.log(error);
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+//getAll customers
+const readCustomers = (async (req, res) => {
+    try {
+        const customers = await customerModel.find({})
+        if (customers) {
+            res.status(200).json({
+                message: "All customers are fetched",
+                data: customers
+            })
+        }
+        else {
+            res.status(500).json({
+                message: "All customers are not fetched",
+                data: customers
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: error.message
         })
     }
 })
 
-module.exports = { 
+//getOne Customer
+const getOneCustomer = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const OneCustomer = await customerModel.findById(id);
+        return OneCustomer ? res.status(200).json({
+            message: "find the Customer",
+            data: OneCustomer
+        })
+            : res.status(500).json({
+                message: "Customer is not found",
+            })
+    }
+    catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+//Update Customer
+const updateCustomer = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updateCustomer = await customerModel.findByIdAndUpdate(id, req.body);
+
+        return updateCustomer ? res.status(200).json({
+            message: "customer is Updated",
+            data: updateCustomer
+        })
+            : res.status(505).json({
+                message: "Customer is not updated"
+            })
+    }
+    catch (error) {
+        console.log(error.message)
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+//Delete Customer
+const deleteCustomer = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deleteCustomer = await customerModel.findByIdAndDelete(id);
+
+        return deleteCustomer ? res.status(200).json({
+            message: "Customer is deleted",
+            data: deleteCustomer
+        })
+            : res.status(500).json({
+                message: "Customer is not deleted",
+            })
+    }
+    catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+module.exports = {
     createCustomer,
-    readCustomers
- };
+    readCustomers,
+    getOneCustomer,
+    updateCustomer,
+    deleteCustomer
+};

@@ -1,45 +1,120 @@
+const supplierModel = require("../models/supplierModel.js");
 const Supplier = require("../models/supplierModel.js");
 
-const createSupplier = (async (req, res) => {
-    const { SRno,name, category, mobile, description } = req.body;
-
-    const newSupplier = new Supplier({
-        SRno,
-        name,
-        category,
-        mobile,
-        description
-    });
-
-    await newSupplier.save()
-        .then(() => {
-            res.status(201).json({ message: "new supplier created successfully" });
+const createSupplier = async (req, res) => {
+    try {
+        const newSupplier = await supplierModel.create(req.body)
+        return newSupplier ? res.status(200).json({
+            message: "Supplier created is successful",
+            data: newSupplier
+        }) :
+            res.status(500).json({
+                message: "Supploer is not created"
+            })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: error.message
         })
-        .catch((error) => {
-            console.error(error)
-            res.status(500).json({ message: "Supplier creattion unsuccessful", error })
-        })
+    }
 
-})
-
-const readSuppliers = (async (rew, res) => {
+}
+//getAll Suppliers
+const readSuppliers = (async (req, res) => {
 
     try {
-        const suppliers = await Supplier.find();
-
-        res.status(200).json({
-            message: "Supplier Data fetched!.",
-            data: suppliers,
-        })
+        const suppliers = await supplierModel.find();
+        if (suppliers) {
+            res.status(200).json({
+                message: "All suppliers are fetched",
+                data: suppliers
+            })
+        }
+        else {
+            res.status(500).json({
+                message: "All suppliers are not fetched",
+            })
+        }
     } catch (error) {
         console.log(error)
         res.status(500).json({
-            message: "Supplier Data Fetching Failed!."
+            message: error.message
         })
     }
 })
 
+//getOneSupplier
+
+const getOneSupplier = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const OneSupplier = await supplierModel.findById(id);
+        return OneSupplier ? res.status(200).json({
+            message: "Foundd the Supplier",
+            data: OneSupplier
+        })
+            : res.status(500).json({
+                message: "Supplier is not found"
+            })
+    }
+    catch (error) {
+        console.log(error.message);
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+//Update Supplier
+
+const updatesupplier = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const updatesupplier = await supplierModel.findByIdAndUpdate(id, req.body);
+
+        return updatesupplier ? res.status(200).json({
+            message: "Supplier is updated",
+            data: updatesupplier
+        })
+            : res.status(505).json({
+                message: "Supplier is not updated"
+            })
+    }
+    catch (error) {
+        console.log(error.message)
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+//Delete Supplier
+
+const deleteSupplier = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const deleteSupplier = await supplierModel.findByIdAndDelete(id);
+
+        return deleteSupplier ? res.status(200).json({
+            message: "Supplier is deleted",
+            data: deleteSupplier
+        })
+            : res.status(505).json({
+                message: "Supplier is not deleted",
+            })
+    } catch (error) {
+        console.log(error.message)
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
 module.exports = {
     createSupplier,
-    readSuppliers
+    readSuppliers,
+    getOneSupplier,
+    updatesupplier,
+    deleteSupplier
 };

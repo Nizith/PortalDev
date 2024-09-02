@@ -34,6 +34,7 @@ export default function Supplier() {
   }
 
   return (
+    <>
     <div className="w-screen h-screen fixed flex justify-center">
       <div className="my-auto w-1/2 h-4/5 bg-emerald-400 rounded-2xl">
         <form onSubmit={SuplierSubmit} className="p-10">
@@ -76,5 +77,8 @@ export default function Supplier() {
         </form>
       </div>
     </div>
+    
+
+    </>
   )
 }

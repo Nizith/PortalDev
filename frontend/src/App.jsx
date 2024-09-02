@@ -9,6 +9,9 @@ import ContractAdd from "./Components/ContractAdd.jsx"
 import PaymentAdd from"./Components/PaymentAdd.jsx"
 import Login from "./Components/Login/Login.jsx"
 import LandingPage from "./Components/Login/LandingPage.jsx"
+import Customer from './Components/Admin/Customer.jsx'
+import Section from "./Components/Admin/Section.jsx"
+import SupplierTable from "./Components/Admin/SupplierTable.jsx"
 
 function App() {
   return (
@@ -25,6 +28,11 @@ function App() {
             <Route path="/addcustomer" element={<CustomerAdd />} />
             <Route path="/addcontract" element={<ContractAdd />} />
             <Route path="/addpayment" element={<PaymentAdd />} />
+
+            <Route path="/customer" element={<Customer/>} />
+
+            <Route path="/section" element={<Section/>} />
+            <Route path="/suppliertable" element={<SupplierTable/>} />
 
           </Routes>
         </div>
