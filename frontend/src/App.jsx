@@ -12,6 +12,7 @@ import LandingPage from "./Components/Login/LandingPage.jsx"
 import Customer from './Components/Admin/Customer.jsx'
 import Section from "./Components/Admin/Section.jsx"
 import SupplierTable from "./Components/Admin/SupplierTable.jsx"
+import Cordinator from "./Components/Cordinators.jsx"
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/addsection" element={<Sectionregistration />} />
             <Route path="/addsupplier" element={<Supplier />} />
             <Route path="/addcustomer" element={<CustomerAdd />} />
+            <Route path="/addcordinator" element={<Cordinator />} />
             <Route path="/addcontract" element={<ContractAdd />} />
             <Route path="/addpayment" element={<PaymentAdd />} />
 

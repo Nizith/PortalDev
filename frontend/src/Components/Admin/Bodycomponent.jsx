@@ -15,7 +15,7 @@ function Bodycomponent() {
 
 
   const navigateToCoordinatorRegistration = () => {
-    navigate('/add')
+    navigate('/addcordinator')
   };
 
   const navigateToCustomerRegistration = () => {
@@ -33,7 +33,7 @@ function Bodycomponent() {
             <button onClick={navigateToCustomerRegistration} className='bg-blue-800 px-4 py-1.5 rounded-xl ml-12 mt-80' >Add Customer</button>
           </div>
           <div className="w-1/5 h-full mx-7 rounded-3xl py-1.5 bg-green-500 text-white">
-            <button onClick={navigateToSectionRegistration} className='bg-blue-800 px-4 py-1.5 rounded-xl ml-12 mt-80' >Add Coordinator</button>
+            <button onClick={navigateToCoordinatorRegistration} className='bg-blue-800 px-4 py-1.5 rounded-xl ml-12 mt-80' >Add Coordinator</button>
           </div>
           <div className="w-1/5 h-full mx-7 rounded-3xl py-1.5 bg-green-500 text-white">
             <button onClick={navigateToSectionRegistration} className='bg-blue-800 px-4 py-1.5 rounded-xl ml-16 mt-80' >Add Section</button>
