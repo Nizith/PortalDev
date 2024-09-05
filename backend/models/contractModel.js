@@ -1,46 +1,94 @@
 const mongoose = require("mongoose");
 
-const ContractSchema = new mongoose.Schema({
-    TenderNo: {
-        type: Number,
-        required: true
-    },
-    cusCntrctSD: {
-        type: Date,
-        required: true
-    },
-    cusCntrctED: {
-        type: Date,
-        required: true
-    },
-    supcntrctSD: {
-        type: Date,
-        required: true
-    },
-    supcntrctED: {
-        type: Date,
-        required: true
-    },
-    solutionDes: {
+const AMCSchema = new mongoose.Schema({// since its an Array of AMC Detailss
+    AMCpaymentterms: {
         type: String,
         required: true
     },
-    AccountManager: {
+    AMCcurrency: {
         type: String,
         required: true
     },
-    Manager: {
-        type: String,
+    AMCamount: {
+        type: [String], // Array of strings for 5 years of amounts
         required: true
     },
-    SalesEngineer: {
-        type: String,
-        required: true
-    },
-    SolutionEngineer: {
+    paymentDescription: {
         type: String,
         required: true
     }
 })
+
+const ContractSchema = new mongoose.Schema({
+    supplier: {
+        type: String,
+        required: true
+    },
+    customer: {
+        type: String,
+        required: true
+    },
+    tenderNo: {
+        type: String,
+        required: true
+    },
+    customerContStartDate: {
+        type: Date,
+        required: true
+    },
+    customerContEndDate: {
+        type: Date,
+        required: true
+    },
+    supplierContStartDate: {
+        type: Date,
+        required: true
+    },
+    supplierContEndDate: {
+        type: Date,
+        required: true
+    },
+    subjectClerk: {
+        type: String,
+        required: true
+    },
+    salesTeam: {
+        type: String,
+        required: true
+    },
+    accountManager: {
+        type: String,
+        required: true
+    },
+    manager: {
+        type: String,
+        required: true
+    },
+    solutionTeam: {
+        type: String,
+        required: true
+    },
+    salesEngineer: {
+        type: String,
+        required: true
+    },
+    solutionEngineer: {
+        type: String,
+        required: true
+    },
+    contractStatus: {
+        type: String,
+        required: true
+    },
+    solutionDescription: {
+        type: String,
+        required: true
+    },
+    remarks: {
+        type: String,
+        required: true
+    },
+    AMCDetails: [AMCSchema] 
+});
 
 module.exports = mongoose.model('contract', ContractSchema);
