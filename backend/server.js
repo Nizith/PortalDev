@@ -41,3 +41,5 @@ app.use(UserreqRoute);
 const paymentRoutes = require("./routes/paymentRoutes.js");
 app.use(paymentRoutes);
 
+const userRoutes = require("./routes/userRoutes.js");
+app.use(userRoutes);
