@@ -2,7 +2,6 @@ import React, { useState, UseEffect } from 'react';
 import axios from 'axios';
 
 export default function Cordinator() {
-    const [sectionName, setsectionName] = useState("")
     const [SalesCategory, setSalesCategory] = useState("")
     const [SolutionCategory, setSolutionCategory] = useState("")
     const [AccountManager, setAccountManager] = useState("")
