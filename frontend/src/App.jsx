@@ -13,6 +13,7 @@ import Customer from './Components/Admin/Customer.jsx'
 import Section from "./Components/Admin/Section.jsx"
 import SupplierTable from "./Components/Admin/SupplierTable.jsx"
 import Cordinator from "./Components/Cordinators.jsx"
+import CordinatorTable from "./Components/Admin/CordinatorTable.jsx"
 
 function App() {
   return (
@@ -35,6 +36,8 @@ function App() {
 
             <Route path="/section" element={<Section/>} />
             <Route path="/suppliertable" element={<SupplierTable/>} />
+            <Route path="/addcordinator" element={<Cordinator />} />
+            <Route path="/cordinatortable" element={<CordinatorTable/>} />
 
           </Routes>
         </div>

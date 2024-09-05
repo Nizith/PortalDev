@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react'; // Corrected the useEffect i
 import axios from 'axios';
 
 export default function Cordinator() {
-    const [sectionName, setSectionName] = useState(""); // Corrected camelCase naming for consistency
-    const [SalesCategory, setSalesCategory] = useState("");
-    const [SolutionCategory, setSolutionCategory] = useState("");
-    const [AccountManager, setAccountManager] = useState("");
-    const [Manager, setManager] = useState("");
-    const [SalesEngineer, setSalesEngineer] = useState("");
-    const [SolutionEngineer, setSolutionEngineer] = useState("");
+    const [SalesCategory, setSalesCategory] = useState("")
+    const [SolutionCategory, setSolutionCategory] = useState("")
+    const [AccountManager, setAccountManager] = useState("")
+    const [Manager, setManager] = useState("")
+    const [SalesEngineer, setSalesEngineer] = useState("")
+    const [SolutionEngineer, setSolutionEngineer] = useState("")
 
     // Added useEffect to fetch sections from the backend when the component mounts.
     useEffect(() => {

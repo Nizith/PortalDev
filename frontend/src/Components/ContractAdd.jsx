@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { IoMdAdd } from "react-icons/io";
-import { IoMdRemove } from "react-icons/io";
-import { IoIosWarning } from "react-icons/io";
+import { IoMdAdd, IoMdRemove, IoIosWarning } from 'react-icons/io';
 import toast, { Toaster } from 'react-hot-toast';
+import ContractBgImg from "../images/landImage.jpg"
 
 // Main Component
 export default function ContractAdd() {
     const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState([{
+    const [formData, setFormData] = useState({
         supplier: '',
         customer: '',
         customerContStartDate: '',
@@ -26,31 +25,82 @@ export default function ContractAdd() {
         contractStatus: '',
         solutionDescription: '',
         remarks: '',
-        AMCpaymentterms: '',
-        AMCcurrency: '',
-        AMCamount: ['', '', '', '', ''] // Initialize with 5 empty strings for 5 years
-    }]);
+        AMCDetails: [{ AMCpaymentterms: '', AMCcurrency: '', AMCamount: ['', '', '', '', ''], paymentDescription: '' }] //Array of the AMC Details
+    });
 
     // Handle input change
     // Adjust handleChange to handle the dynamic form fields
     const handleChange = (e, index, yearIndex) => {
         const { name, value } = e.target;
-        const newFormData = [...formData];
-        if (name === 'AMCamount') {
-            newFormData[index] = {
-                ...newFormData[index],
-                AMCamount: newFormData[index].AMCamount.map((amount, i) =>
-                    i === yearIndex ? value : amount
-                )
-            };
-        } else {
-            newFormData[index] = {
-                ...newFormData[index],
-                [name]: value
-            };
-        }
-        setFormData(newFormData);
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value
+        }));
     };
+
+    const handleAMCDetailsChange = (index, field, value) => {
+        const newAMCDetails = [...formData.AMCDetails];
+        if (field === 'AMCamount') {
+            newAMCDetails[index].AMCamount = value;
+        } else {
+            newAMCDetails[index][field] = value;
+        }
+        setFormData((prevData) => ({
+            ...prevData,
+            AMCDetails: newAMCDetails
+        }));
+    };
+
+    // "You can add only upto 4 forms!", { duration: 1000}
+    // Event to Add new Fields
+    const handleAddAMCDetail = (e) => {
+        e.preventDefault(); // Prevent form submission
+        if (formData.length >= 4) {
+            return
+        }
+        setFormData((prevData) => ({
+            ...prevData,
+            AMCDetails: [...prevData.AMCDetails, { AMCpaymentterms: '', AMCcurrency: '', AMCamount: ['', '', '', '', ''], paymentDescription: '' }]
+        }));
+    };
+
+
+    // Event to delete fields
+    const handleDeleteAMCDetail = (index) => {
+        const newAMCDetails = formData.AMCDetails.filter((_, idx) => idx !== index);
+        setFormData((prevData) => ({
+            ...prevData,
+            AMCDetails: newAMCDetails
+        }));
+    };
+
+    // Handle final form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const contractData = { ...formData };
+
+
+        console.log('Sending contract data:', contractData);
+
+
+        try {
+            const response = await axios.post("http://localhost:4500/portaldev/createcontract", contractData)
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+            toast.success("Contract Created successfully!")
+
+            console.log("Contract Details :- ", response.data)
+        } catch (error) {
+
+            toast.error("Contract Creation Failed!")
+
+            console.error("Contract creation Failed!", error.response.data)
+        }
+    };
+
 
     // Proceed to next step
     const nextStep = () => {
@@ -69,28 +119,8 @@ export default function ContractAdd() {
         setStep(step - 3)
     }
 
-    // Handle final form submission
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    };
-    // "You can add only upto 4 forms!", { duration: 1000}
-    // Event to Add new Fields
-    const AddnewFeilds = (e) => {
-        e.preventDefault(); // Prevent form submission
-        if (formData.length >= 4) {
-            return
-        }
-        setFormData([...formData, { AMCpaymentterms: '', AMCcurrency: '', AMCamount: ['', '', '', '', ''] }]);
-    };
 
-    // Event to delete fields
-    const DeleteFields = (index) => {
-        const updatedFormData = [...formData];
-        updatedFormData.splice(index, 1);
-        setFormData(updatedFormData);
-    };
-
-
+    // Area toFetch the Data From the DataBase
     const [suppliers, setSuppliers] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [coordinators, setCoordinators] = useState([])
@@ -121,12 +151,21 @@ export default function ContractAdd() {
         fetchData();
     }, []);
 
+
     return (
         <>
             <Toaster />
-
-            <div>
-                {step === 4 && (
+            <div
+                className="relative min-h-screen overflow-auto bg-orange-100"
+                style={{
+                    // backgroundImage: `url(${ContractBgImg})`,
+                    // backgroundSize: 'cover',
+                    // backgroundPosition: 'center',
+                    // backgroundAttachment: 'fixed'
+                    backgroundColor: '#ffedd5', // Ensures the background stays in place
+                }}
+            >
+                {step === 1 && (
                     <StepOne
                         formData={formData}
                         handleChange={handleChange}
@@ -152,21 +191,20 @@ export default function ContractAdd() {
                         nextStep={nextStep}
                     />
                 )}
-                {step === 1 && (
+                {step === 4 && (
                     <StepFour
                         formData={formData}
-                        handleChange={handleChange}
-                        AddnewFeilds={AddnewFeilds}
-                        DeleteFields={DeleteFields}
+                        handleAMCDetailsChange={handleAMCDetailsChange}
+                        handleAddAMCDetail={handleAddAMCDetail}
+                        handleDeleteAMCDetail={handleDeleteAMCDetail}
                         prevStep={prevStep}
-                        nextStep={nextStep}
+                        handleSubmit={handleSubmit}
                     />
                 )}
                 {step === 5 && (
                     <StepFive
                         formData={formData}
                         editCurrent={editCurrent}
-                        handleSubmit={handleSubmit}
                         nextStep={nextStep}
                     />
                 )}
@@ -176,17 +214,18 @@ export default function ContractAdd() {
 }
 
 // Step 1 Component
-const StepOne = ({ formData, handleChange, nextStep, suppliers, customers }) => {
+const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handleSubmit }) => {
     return (
         <>
-            <div className='w-screen h-screen fixed flex justify-center'>
-                <div className='w-2/5 my-auto bg-white bg-opacity-50 rounded'>
-                    <form className='m-10'>
+            <div className='absolute inset-0 flex justify-center items-center'>
+                <div className='w-2/5 my-auto bg-neutral-500 bg-opacity-50 rounded-2xl'>
+                    <form className='m-10' onSubmit={handleSubmit}>
                         <div className='mb-5'>
                             <label>Tender No :</label>
                             <input
                                 className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
                                 type="text"
+                                id="tenderNo"
                                 name="tenderNo"
                                 value={formData.tenderNo}
                                 onChange={handleChange}
@@ -203,7 +242,7 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers }) => 
                             >
                                 <option value=""></option>
                                 {Array.isArray(suppliers.data) && suppliers.data.map((supplier) => (
-                                    <option key={supplier._id} value={supplier.category}>{supplier.category}</option>
+                                    <option key={supplier._id} value={supplier.name}>{supplier.name}</option>
                                 ))}
                             </select>
                         </div>
@@ -275,17 +314,18 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers }) => 
 };
 
 // Step 2 Component
-const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators }) => {
+const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators, handleSubmit }) => {
     return (
         <>
             <div className='w-screen h-screen fixed flex justify-center'>
                 <div className='w-3/5 my-auto bg-white bg-opacity-50 rounded'>
-                    <form className='m-10'>
+                    <form className='m-10' onSubmit={handleSubmit}>
                         <div className='mb-5'>
                             <label>Subject Clerk :</label>
                             <input
                                 className='block w-full mt-1.5 h-8 rounded ps-2 outline-none'
                                 type="text"
+                                id="subjectClerk"
                                 name="subjectClerk"
                                 value={formData.subjectClerk}
                                 onChange={handleChange}
@@ -355,6 +395,7 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators }) =
                                                 <option value=""></option>
                                                 <option value="EDS">EDS</option>
                                                 <option value="PSBD">PSBD</option>
+                                                <option value="CMS">CMS</option>
                                             </select>
                                         </div>
                                         <div className='mb-3'>
@@ -407,22 +448,28 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators }) =
 };
 
 //step 3 Component
-const StepThree = ({ formData, handleChange, prevStep, nextStep }) => {
+const StepThree = ({ formData, handleChange, prevStep, nextStep, handleSubmit }) => {
     return (
         <>
             <div className='w-screen h-screen fixed flex justify-center'>
                 <div className='w-2/5 my-auto bg-white bg-opacity-50 rounded'>
-                    <form className='m-10'>
+                    <form className='m-10' onSubmit={handleSubmit}>
                         <div className='grid grid-cols-2 gap-x-5'>
                             <div>
                                 <label>Contract Status :</label>
                                 <select
                                     className='block w-full mt-1.5 h-8 rounded ps-2 outline-none pr-2'
                                     type="text"
+                                    id='contractStatus'
                                     name="contractStatus"
                                     value={formData.contractStatus}
                                     onChange={handleChange}
-                                />
+                                >
+                                    <option value=""></option>
+                                    <option value="active">Active</option>
+                                    <option value="deactive">Deactive</option>
+                                    <option value="terminated">Terminated</option>
+                                </select>
                             </div>
                         </div>
                         <div className='mb-3'>
@@ -456,94 +503,114 @@ const StepThree = ({ formData, handleChange, prevStep, nextStep }) => {
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     )
 };
 
 // Step 4 Component
-const StepFour = ({ formData, handleChange, prevStep, nextStep, AddnewFeilds, DeleteFields }) => {
+const StepFour = ({ formData, handleAMCDetailsChange, prevStep, handleAddAMCDetail, handleDeleteAMCDetail, handleSubmit }) => {
     return (
         <>
-            <div className='w-screen h-screen fixed flex justify-center'>
-                <div className='w-4/5 my-auto bg-white bg-opacity-50 rounded'>
+            <div className='flex justify-center'>
+                <div className='w-4/5 my-10 bg-white bg-opacity-50 rounded'>
                     <h1 className='underline font-bold text-3xl text-indigo-800 ml-10 mt-5'>AMC Payment Details</h1>
-                    <form className='m-10 mt-5 mb-5'>
-                        {formData.map((field, index) => (
-                            <div key={index} className='mb-3 grid grid-rows-1 grid-cols-6 gap-x-5'>
-                                <div className='grid grid-rows-2'>
-                                    <label>Payment Term :</label>
-                                    <input
-                                        className='block h-8 rounded ps-2 outline-none mt-5'
-                                        type="text"
-                                        name="AMCpaymentterms"
-                                        value={field.AMCpaymentterms}
-                                        onChange={(e) => handleChange(e, index)}
-                                    />
-                                </div>
-                                <div className='grid grid-rows-2 w-1/2 ml-1'>
-                                    <label>Currency :</label>
-                                    <input
-                                        className='block h-8 w-full rounded ps-2 py-1 outline-none mt-5'
-                                        type="text"
-                                        name="AMCcurrency"
-                                        value={field.AMCcurrency}
-                                        onChange={(e) => handleChange(e, index)}
-                                    />
-                                </div>
-                                <div className='-ml-24 grid grid-rows-2'>
-                                    <label className='text-center'>Amount :</label>
-                                    <div className='grid grid-rows-1 grid-cols-11 gap-x-2 bg-lime-00' style={{ width: '8.9in' }}>
-                                        {Array.from({ length: 5 }, (_, year) => (
-                                            <div key={year} className='text-center col-span-2 -mt-6'>
+                    <form className='m-10 mt-5 mb-5' onSubmit={handleSubmit}>
+                        {formData.AMCDetails.map((detail, index) => (
+                            <div>
+                                <div key={index} className='mb-3 grid grid-rows-1 grid-cols-6 gap-x-5'>
+                                    <div className='grid grid-rows-2'>
+                                        <label>Payment Term :</label>
+                                        <input
+                                            className='block h-8 rounded ps-2 outline-none mt-5'
+                                            type="text"
+                                            name={`AMCpaymentterms${index}`}
+                                            value={detail.AMCpaymentterms}
+                                            onChange={(e) => handleAMCDetailsChange(index, 'AMCpaymentterms', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className='grid grid-rows-2 w-1/2 ml-1'>
+                                        <label>Currency :</label>
+                                        <input
+                                            className='block h-8 w-full rounded ps-2 py-1 outline-none mt-5'
+                                            type="text"
+                                            name={`AMCcurrency${index}`}
+                                            value={detail.AMCcurrency}
+                                            onChange={(e) => handleAMCDetailsChange(index, 'AMCcurrency', e.target.value)}
+                                        />
+                                    </div>
+                                    <div className='-ml-24 grid grid-rows-2'>
+                                        <label className='text-center'>Amount :</label>
+                                        <div className='grid grid-rows-1 grid-cols-11 gap-x-2 bg-lime-00' style={{ width: '8.9in' }}>
+                                            {detail.AMCamount.map((amount, amtIndex) => (
+                                                <div key={amtIndex} className='text-center col-span-2 -mt-6'>
+                                                    <button
+                                                        onClick={(b) => { b.preventDefault() }}
+                                                        className='bg-indigo-700 bg-opacity-80 border-2 px-5 py-1 text-white border-indigo-800 rounded-md focus-within:bg-indigo-900 mx-auto'
+                                                    >
+                                                        Year {amtIndex + 1}
+                                                    </button>
+                                                    <input
+                                                        className='block rounded ps-2 py-1 outline-none w-full'
+                                                        style={{ marginTop: '9px' }}
+                                                        type="text"
+                                                        name={`AMCamount${index}${amtIndex}`}
+                                                        value={amount}
+                                                        onChange={(e) => {
+                                                            const newAmounts = [...detail.AMCamount];
+                                                            newAmounts[amtIndex] = e.target.value;
+                                                            handleAMCDetailsChange(index, 'AMCamount', newAmounts);
+                                                        }}
+                                                    />
+                                                </div>
+                                            ))}
+                                            <div className='ml-auto mt-auto flex justify-between gap-3'>
                                                 <button
-                                                    onClick={(b) => { b.preventDefault() }}
-                                                    className='bg-indigo-700 bg-opacity-80 border-2 px-5 py-1 text-white border-indigo-800 rounded-md focus-within:bg-indigo-900 mx-auto'
+                                                    type="button"
+                                                    className={`px-1 py-1 rounded-md ${formData.AMCDetails.length >= 4 ? 'hover:bg-none' : 'hover:bg-neutral-300'}`}
+                                                    disabled={formData.AMCDetails.length >= 4}
+                                                    onClick={handleAddAMCDetail}
                                                 >
-                                                    Year {year + 1}
+                                                    <IoMdAdd className={`size-5 ${formData.AMCDetails.length >= 4 ? 'text-gray-500' : ''}`} />
                                                 </button>
-                                                <input
-                                                    className='block rounded ps-2 py-1 outline-none w-full' style={{ marginTop: '9px' }}
-                                                    type="text"
-                                                    name="AMCamount"
-                                                    value={field.AMCamount[year]}
-                                                    onChange={(e) => handleChange(e, index, year)}
-                                                />
+                                                <button
+                                                    type="button"
+                                                    className={`px-1 py-1 rounded-md ${formData.AMCDetails.length == 1 ? 'hover:bg-none' : 'hover:bg-neutral-300'}`}
+                                                    disabled={formData.AMCDetails.length == 1}
+                                                    onClick={() => handleDeleteAMCDetail(index)}
+                                                >
+                                                    <IoMdRemove className={`size-5 ${formData.AMCDetails.length == 1 ? 'text-gray-500' : ''}`} />
+                                                </button>
                                             </div>
-                                        ))}
-                                        <div className='ml-auto mt-auto flex justify-between gap-3'>
-                                            <button type="button"
-                                                className={`px-1 py-1 rounded-md ${formData.length >= 4 ? 'hover:bg-none' : 'hover:bg-neutral-300'}`}
-                                                disabled={formData.length >= 4}
-                                                onClick={(e) => {
-                                                    if (formData.length < 4) {
-                                                        AddnewFeilds(e);
-                                                    } else {
-                                                        // Show message or handle max fields reached
-                                                    }
-                                                }}
-                                            >
-                                                <IoMdAdd className={`size-5 ${formData.length >= 4 ? 'text-gray-500' : ''}`} />
-                                            </button>
-                                            <button type="button" className='hover:bg-neutral-300 px-1 py-1 rounded-md' onClick={() => { DeleteFields(index) }}><IoMdRemove className='size-5' /></button>
                                         </div>
                                     </div>
-
+                                </div>
+                                <div className='grid grid-rows-2 mb-5'>
+                                    <label>Payment Description :</label>
+                                    <textarea
+                                        rows={1}
+                                        className='block w-full -mt-0.5 rounded ps-2 pt-2 outline-none'
+                                        type="textarea"
+                                        name={`paymentDescription${index}`}
+                                        value={formData.paymentDescription}
+                                        onChange={(e) => handleAMCDetailsChange(index, 'paymentDescription', e.target.value)}
+                                    />
                                 </div>
                             </div>
                         ))}
-                        {formData.length >= 4 && (
+                        {formData.AMCDetails.length >= 4 && (
                             <div className='bg-red-800 border-2 border-red-500 px-10 py-1.5 rounded-lg mb-3'>
-                                <IoIosWarning className='text-red-300 size-7' /><h3 className='text-red-300 text-lg ml-10 -mt-6'>You can only add upto 4 forms!</h3>
+                                <IoIosWarning className='text-red-300 size-7' />
+                                <h3 className='text-red-300 text-lg ml-10 -mt-7'>You can only add up to 4 forms!</h3>
                             </div>
                         )}
                         <div className='flex justify-between mt-6'>
                             <button type="button" onClick={prevStep} className='bg-blue-900 hover:bg-green-600 flex px-8 py-2 rounded text-white font-semibold'>
                                 Previous
                             </button>
-                            <button type="button" onClick={nextStep} className='bg-green-600 hover:bg-blue-900 px-8 py-2 rounded text-white font-semibold'>
-                                Next
+                            <button type="submit" className='bg-green-600 hover:bg-blue-900 px-8 py-2 rounded text-white font-semibold'>
+                                Submit
                             </button>
                         </div>
                     </form>
@@ -552,6 +619,7 @@ const StepFour = ({ formData, handleChange, prevStep, nextStep, AddnewFeilds, De
         </>
     );
 };
+
 
 //step 5 Component
 const StepFive = ({ formData, editCurrent, handleSubmit }) => {
@@ -673,3 +741,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
         </>
     )
 };
+
+
+// Export all components together
+export { StepOne, StepTwo, StepThree, StepFour, StepFive };
