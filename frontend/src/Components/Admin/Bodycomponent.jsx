@@ -6,7 +6,7 @@ function Bodycomponent() {
   const navigate = useNavigate();
 
   const navigateToSupplierRegistration = () => {
-    navigate('/addsupplier')
+    navigate('/suppliertable')
   };
 
   const navigateToSectionRegistration = () => {
@@ -15,7 +15,7 @@ function Bodycomponent() {
 
 
   const navigateToCoordinatorRegistration = () => {
-    navigate('/addcordinator')
+    navigate('/cordinatortable')
   };
 
   const navigateToCustomerRegistration = () => {
