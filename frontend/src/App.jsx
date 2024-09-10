@@ -25,8 +25,8 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admindash" element={< Bodycomponent />} />
-            <Route path="/addsection" element={<Sectionregistration />} />
-            <Route path="/addsupplier" element={<Supplier />} />
+            <Route path="/addsection" element={<Section />} />
+            <Route path="/addsupplier" element={<SupplierTable />} />
             <Route path="/addcustomer" element={<CustomerAdd />} />
             <Route path="/addcordinator" element={<Cordinator />} />
             <Route path="/addcontract" element={<ContractAdd />} />
@@ -36,8 +36,8 @@ function App() {
 
             <Route path="/section" element={<Section/>} />
             <Route path="/suppliertable" element={<SupplierTable/>} />
-            <Route path="/addcordinator" element={<Cordinator />} />
-            <Route path="/cordinatortable" element={<CordinatorTable/>} />
+            <Route path="/addcordinator" element={<Cordinator/>} />
+            <Route path="/cordinatortable" element={<Cordinator/>} />
 
           </Routes>
         </div>

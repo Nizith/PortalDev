@@ -71,38 +71,40 @@ const updatesupplier = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const updatesupplier = await supplierModel.findByIdAndUpdate(id, req.body);
+        const updatedSupplier = await supplierModel.findByIdAndUpdate(id, req.body);
 
-        return updatesupplier ? res.status(200).json({
+        return updatedSupplier ? res.status(200).json({
             message: "Supplier is updated",
-            data: updatesupplier
+            data: updatedSupplier
         })
-            : res.status(505).json({
-                message: "Supplier is not updated"
-            })
-    }
-    catch (error) {
-        console.log(error.message)
+        : res.status(500).json({
+            message: "Supplier is not updated"
+        });
+    } catch (error) {
+        console.log(error.message);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
-}
+};
+
 
 //Delete Supplier
 
-const deleteSupplier = async (req, res) => {
+const deleteSupplier = async(req, res) => {
     try {
         const { id } = req.params;
 
         const deleteSupplier = await supplierModel.findByIdAndDelete(id);
+        console.log('hello')
 
         return deleteSupplier ? res.status(200).json({
             message: "Supplier is deleted",
             data: deleteSupplier
         })
-            : res.status(505).json({
+            : res.status(500).json({
                 message: "Supplier is not deleted",
+                
             })
     } catch (error) {
         console.log(error.message)

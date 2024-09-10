@@ -25,7 +25,7 @@ const createSection = async (req, res) => {
 //getAll Sections
 const readSection = (async (req, res) => {
     try {
-        const allSections = await sectionModel.find({})
+        const allSections = await sectionModel.find();
         if (allSections) {
             res.status(200).json({
                 message: "All Sections are fetched",
