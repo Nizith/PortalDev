@@ -84,7 +84,7 @@ export default function Cordinator() {
       } else {
         // Add new cordinator logic
         const response = await axios.post(
-            'http://localhost:4500/portaldev/createCordinator',
+          'http://localhost:4500/portaldev/createCordinator',
           inputFields
         );
         setCordinators((prevCordinators) => [...prevCordinators, response.data.data]);
@@ -124,183 +124,185 @@ export default function Cordinator() {
 
   return (
     <>
-      <h3 className="text-center font-medium text-4xl mt-1">Cordinator Table</h3>
-      <div className="w-screen h-screen flex flex-col justify-center items-center py-2 table-fixed">
-        <div className="bg-white w-3/4 p-8 rounded-lg shadow-lg">
-          {/* Filter Inputs */}
-          <div className="flex mb-4 space-x-2">
-            <input
-              type="text"
-              name="SalesCategory"
-              placeholder="Filter by Sales Category"
-              onChange={handleFilterChange}
-              className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
-            />
-            <input
-              type="text"
-              name="SolutionCategory"
-              placeholder="Filter by Solution Category"
-              onChange={handleFilterChange}
-              className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
-            />
-            <button
-              className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
-              onClick={() => handleOpenModal()}
-            >
-              New
-            </button>
-          </div>
+      <div className="float-right w-full min-h-screen">
+        <h2 className="flex justify-center text-black">Cordinator Table</h2>
+        <div className="mx-8">
+          <div className="bg-white w-full p-8 rounded-lg shadow-lg">
+            {/* Filter Inputs */}
+            <div className="flex mb-4 space-x-2">
+              <input
+                type="text"
+                name="SalesCategory"
+                placeholder="Filter by Sales Category"
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+              />
+              <input
+                type="text"
+                name="SolutionCategory"
+                placeholder="Filter by Solution Category"
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+              />
+              <button
+                className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
+                onClick={() => handleOpenModal()}
+              >
+                New
+              </button>
+            </div>
 
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-2 px-4 border">Sales Category</th>
-                <th className="py-2 px-4 border">Solution Category</th>
-                <th className="py-2 px-4 border">Account Manager</th>
-                <th className="py-2 px-4 border">Manager</th>
-                <th className="py-2 px-4 border">Sales Engineer</th>
-                <th className="py-2 px-4 border">Solution Engineer</th>
-                <th className="py-2 px-4 border">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCordinators.length > 0 ? (
-                filteredCordinators.map((cordinator) => (
-                  <tr key={cordinator._id}>
-                    <td className="py-2 px-4 border">{cordinator.SalesCategory}</td>
-                    <td className="py-2 px-4 border">{cordinator.SolutionCategory}</td>
-                    <td className="py-2 px-4 border">{cordinator.AccountManager}</td>
-                    <td className="py-2 px-4 border">{cordinator.Manager}</td>
-                    <td className="py-2 px-4 border">{cordinator.SalesEngineer}</td>
-                    <td className="py-2 px-4 border">{cordinator.SolutionEngineer}</td>
-                    <td className="py-2 px-4 border">
-                      <button
-                        className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
-                        onClick={() => handleOpenModal(cordinator)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
-                        onClick={() => handleDeleteCordinator(cordinator._id)}
-                      >
-                        Delete
-                      </button>
+            <table className="min-w-full bg-white border border-gray-200">
+              <thead>
+                <tr className="bg-blue-500 text-white">
+                  <th className="py-2 px-4 border">Sales Category</th>
+                  <th className="py-2 px-4 border">Solution Category</th>
+                  <th className="py-2 px-4 border">Account Manager</th>
+                  <th className="py-2 px-4 border">Manager</th>
+                  <th className="py-2 px-4 border">Sales Engineer</th>
+                  <th className="py-2 px-4 border">Solution Engineer</th>
+                  <th className="py-2 px-4 border">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredCordinators.length > 0 ? (
+                  filteredCordinators.map((cordinator) => (
+                    <tr key={cordinator._id}>
+                      <td className="py-2 px-4 border">{cordinator.SalesCategory}</td>
+                      <td className="py-2 px-4 border">{cordinator.SolutionCategory}</td>
+                      <td className="py-2 px-4 border">{cordinator.AccountManager}</td>
+                      <td className="py-2 px-4 border">{cordinator.Manager}</td>
+                      <td className="py-2 px-4 border">{cordinator.SalesEngineer}</td>
+                      <td className="py-2 px-4 border">{cordinator.SolutionEngineer}</td>
+                      <td className="py-2 px-4 border">
+                        <button
+                          className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
+                          onClick={() => handleOpenModal(cordinator)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
+                          onClick={() => handleDeleteCordinator(cordinator._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="py-2 px-4 border text-center">
+                      No cordinators found
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="7" className="py-2 px-4 border text-center">
-                    No cordinators found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
 
-          {/* Modal for Add/Edit Cordinator */}
-          {isModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
-              <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
-                <h2 className="text-xl font-bold mb-4">
-                  {isEditMode ? 'Edit Cordinator' : 'Add Cordinator'}
-                </h2>
-                <form onSubmit={handleFormSubmit}>
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Sales Category:</label>
-                    <select
-                      name="SalesCategory"
-                      value={inputFields.SalesCategory}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                    >
-                      <option value=""></option>
-                      <option value="SMB">SMB</option>
-                      <option value="ICT">ICT</option>
-                      <option value="Carriers">Carriers</option>
-                    </select>
-                  </div>
+            {/* Modal for Add/Edit Cordinator */}
+            {isModalOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
+                <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
+                  <h2 className="text-xl font-bold mb-4">
+                    {isEditMode ? 'Edit Cordinator' : 'Add Cordinator'}
+                  </h2>
+                  <form onSubmit={handleFormSubmit}>
+                    <div className="mb-4">
+                      <label className="block text-gray-700">Sales Category:</label>
+                      <select
+                        name="SalesCategory"
+                        value={inputFields.SalesCategory}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      >
+                        <option value=""></option>
+                        <option value="SMB">SMB</option>
+                        <option value="ICT">ICT</option>
+                        <option value="Carriers">Carriers</option>
+                      </select>
+                    </div>
 
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Solution Category:</label>
-                    <select
-                      name="SolutionCategory"
-                      value={inputFields.SolutionCategory}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                    >
-                      <option value=""></option>
-                      <option value="Transmission">Transmission</option>
-                      <option value="Telecom">Telecom</option>
-                      <option value="Datacenter">Datacenter</option>
-                      <option value="Others">Others</option>
-                    </select>
-                  </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700">Solution Category:</label>
+                      <select
+                        name="SolutionCategory"
+                        value={inputFields.SolutionCategory}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      >
+                        <option value=""></option>
+                        <option value="Transmission">Transmission</option>
+                        <option value="Telecom">Telecom</option>
+                        <option value="Datacenter">Datacenter</option>
+                        <option value="Others">Others</option>
+                      </select>
+                    </div>
 
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Account Manager:</label>
-                    <input
-                      type="text"
-                      name="AccountManager"
-                      value={inputFields.AccountManager}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                    />
-                  </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700">Account Manager:</label>
+                      <input
+                        type="text"
+                        name="AccountManager"
+                        value={inputFields.AccountManager}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      />
+                    </div>
 
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Manager:</label>
-                    <input
-                      type="text"
-                      name="Manager"
-                      value={inputFields.Manager}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                    />
-                  </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700">Manager:</label>
+                      <input
+                        type="text"
+                        name="Manager"
+                        value={inputFields.Manager}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      />
+                    </div>
 
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Sales Engineer:</label>
-                    <input
-                      type="text"
-                      name="SalesEngineer"
-                      value={inputFields.SalesEngineer}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                    />
-                  </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700">Sales Engineer:</label>
+                      <input
+                        type="text"
+                        name="SalesEngineer"
+                        value={inputFields.SalesEngineer}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      />
+                    </div>
 
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Solution Engineer:</label>
-                    <input
-                      type="text"
-                      name="SolutionEngineer"
-                      value={inputFields.SolutionEngineer}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                    />
-                  </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700">Solution Engineer:</label>
+                      <input
+                        type="text"
+                        name="SolutionEngineer"
+                        value={inputFields.SolutionEngineer}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      />
+                    </div>
 
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={handleCloseModal}
-                      className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                    >
-                      {isEditMode ? 'Update' : 'Add'}
-                    </button>
-                  </div>
-                </form>
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={handleCloseModal}
+                        className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 mr-2"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                      >
+                        {isEditMode ? 'Update' : 'Add'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </>
