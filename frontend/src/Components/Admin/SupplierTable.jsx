@@ -1,169 +1,364 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const initialInputFields = {
-  SRno: "",
-  name: "",
-  category: "",
-  mobile: "",
-  description: "",
-};
+const SupplierComponent = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [suppliers, setSuppliers] = useState([]);
+  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
+  const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [formData, setFormData] = useState({
+    SRno: "",
+    name: "",
+    category: "",
+    mobile: "",
+    description: "",
+  });
+  const [filterData, setFilterData] = useState({
+    SRno: "",
+    name: "",
+    category: "",
+    mobile: "",
+  });
+  const [categories, setCategories] = useState([]);
 
-export default function DataTable() {
-  const [inputFields, setInputFields] = useState(initialInputFields);
-  const [tableData, setTableData] = useState([]);
-  const [createdata, setCreatedata] = useState([]);
+  // Fetch all suppliers and categories from the API
+  useEffect(() => {
+    const fetchSuppliers = async () => {
+      try {
+        const supplierResponse = await axios.get(
+          "http://localhost:4500/portaldev/readsupplier"
+        );
+        setSuppliers(supplierResponse.data.data); // Assuming response.data.data contains the list of suppliers
+        setFilteredSuppliers(supplierResponse.data.data); // Set filtered suppliers initially to all suppliers
 
-  const handleChange = (e) => {
-    setInputFields({
-      ...inputFields,
+        // Fetch categories
+        const categoryResponse = await axios.get(
+          "http://localhost:4500/portaldev/readcategories"
+        );
+        setCategories(categoryResponse.data.data); // Assuming response.data.data contains the list of categories
+      } catch (error) {
+        console.error("Error fetching suppliers or categories:", error);
+      }
+    };
+
+    fetchSuppliers();
+  }, []);
+
+  const handleOpenModal = (supplier = null) => {
+    if (supplier) {
+      setIsEditMode(true);
+      setFormData(supplier);
+    } else {
+      setIsEditMode(false);
+      setFormData({
+        SRno: "",
+        name: "",
+        category: "",
+        mobile: "",
+        description: "",
+      });
+    }
+    setSelectedSupplier(supplier);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setFormData({
+      SRno: "",
+      name: "",
+      category: "",
+      mobile: "",
+      description: "",
+    });
+  };
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleFilterChange = (e) => {
+    setFilterData({
+      ...filterData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const newEntry = { ...inputFields };
 
     try {
-      // Update tableData state with the new entry
-      setTableData([...tableData, newEntry]);
+      if (isEditMode) {
+        // Edit supplier logic
+        const response = await axios.put(
+          `http://localhost:4500/portaldev/updatesupplier/${selectedSupplier._id}`, // Assuming _id is the identifier field
+          formData
+        );
+        setSuppliers((prevSuppliers) =>
+          prevSuppliers.map((supplier) =>
+            supplier._id === selectedSupplier._id
+              ? response.data.data
+              : supplier
+          )
+        );
+        setFilteredSuppliers((prevSuppliers) =>
+          prevSuppliers.map((supplier) =>
+            supplier._id === selectedSupplier._id
+              ? response.data.data
+              : supplier
+          )
+        );
+      } else {
+        // Add new supplier logic
+        const response = await axios.post(
+          "http://localhost:4500/portaldev/createsupplier",
+          formData
+        );
+        setSuppliers((prevSuppliers) => [
+          ...prevSuppliers,
+          response.data.data,
+        ]);
+        setFilteredSuppliers((prevSuppliers) => [
+          ...prevSuppliers,
+          response.data.data,
+        ]);
+      }
 
-      // Post data to the server
-      await postData(newEntry);
-
-      // Clear inputFields state after submission
-      setInputFields(initialInputFields);
+      handleCloseModal();
     } catch (error) {
-      console.error("Error submitting the form: ", error);
+      console.error("Error submitting form:", error);
     }
   };
 
-  const fetchData = async () => {
+  const handleDeleteSupplier = async (SRno) => {
     try {
-      const response = await axios.get("http://localhost:4500/portaldev/readsupplier");
-      console.log(response);
-      setCreatedata(response.data);
+      const response = await axios.delete(
+        `http://localhost:4500/portaldev/deleteSupplier/${SRno}`
+      );
+      if (response.status === 200) {
+        setSuppliers((prevSuppliers) =>
+          prevSuppliers.filter((supplier) => supplier.SRno !== SRno)
+        );
+        setFilteredSuppliers((prevSuppliers) =>
+          prevSuppliers.filter((supplier) => supplier.SRno !== SRno)
+        );
+      }
     } catch (error) {
-      console.log(error.message);
+      console.error("Error deleting supplier:", error.response ? error.response.data : error.message);
     }
   };
 
-  const postData = async (newEntry) => {
-    try {
-      const res = await axios.post("http://localhost:4500/portaldev/createsupplier", newEntry);
-      console.log(res.data);
-    } catch (error) {
-      console.log(error.message);
-    }
+  const handleFilterSubmit = () => {
+    setFilteredSuppliers(
+      suppliers.filter((supplier) => {
+        return (
+          (filterData.SRno === "" ||
+            supplier.SRno
+              .toString()
+              .toLowerCase()
+              .includes(filterData.SRno.toLowerCase())) &&
+          (filterData.name === "" ||
+            supplier.name.toLowerCase().includes(filterData.name.toLowerCase())) &&
+          (filterData.category === "" ||
+            supplier.category
+              .toLowerCase()
+              .includes(filterData.category.toLowerCase())) &&
+          (filterData.mobile === "" ||
+            supplier.mobile
+              .toString()
+              .toLowerCase()
+              .includes(filterData.mobile.toLowerCase()))
+        );
+      })
+    );
   };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
-
     <>
-
-    <h2 className=" flex  justify-center text-white my-6">Supplier Table</h2>
-        <div className="p-4 bg-blue-50 mx-8 my-10 ">
-      <table className="w-full border-collapse bg-white shadow-lg">
-        <thead>
-          <tr className="bg-blue-500 text-white">
-            <th className="px-4 py-2 border border-blue-600">SR number</th>
-            <th className="px-4 py-2 border border-blue-600">Name</th>
-            <th className="px-4 py-2 border border-blue-600">Category</th>
-            <th className="px-4 py-2 border border-blue-600">Mobile</th>
-            <th className="px-4 py-2 border border-blue-600">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(createdata.data) && createdata.length !==0 ? (
-            createdata.data.map((data, index) => (
-              <tr key={index} className="bg-white even:bg-blue-100">
-                <td className="px-4 py-2 border border-gray-300">{data.SRno}</td>
-                <td className="px-4 py-2 border border-gray-300">{data.name}</td>
-                <td className="px-4 py-2 border border-gray-300">{data.category}</td>
-                <td className="px-4 py-2 border border-gray-300">{data.mobile}</td>
-                <td className="px-4 py-2 border border-gray-300">{data.description}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5" className="px-4 py-2 text-center border border-gray-300 text-gray-500">
-                No data available
-              </td>
-            </tr>
-          )}
-          <tr>
-            <td className="px-4 py-2">
+      <h3 className="text-center font-medium text-4xl mt-1">Supplier Table</h3>
+      <div className="w-screen h-screen flex flex-col justify-center items-center py-2  table-fixed">
+        <div className="bg-white w-3/4 p-8 rounded-lg shadow-lg">
+          <div>
+            {/* Filter Inputs */}
+            <div className="flex mb-4 space-x-2">
               <input
-                className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                 type="text"
                 name="SRno"
-                placeholder="SR number"
-                value={inputFields.SRno}
-                onChange={handleChange}
+                placeholder="Filter by SR No"
+                value={filterData.SRno}
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
               />
-            </td>
-            <td className="px-4 py-2">
               <input
-                className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                 type="text"
                 name="name"
-                placeholder="Supplier name"
-                value={inputFields.name}
-                onChange={handleChange}
+                placeholder="Filter by Name"
+                value={filterData.name}
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
               />
-            </td>
-            <td className="px-4 py-2">
-              <input
-                className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                type="text"
+              <select
                 name="category"
-                placeholder="Category"
-                value={inputFields.category}
-                onChange={handleChange}
-              />
-            </td>
-            <td className="px-4 py-2">
-              <input
-                className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                type="text"
-                name="mobile"
-                placeholder="Contact number"
-                value={inputFields.mobile}
-                onChange={handleChange}
-              />
-            </td>
-            <td className="px-4 py-2">
-              <input
-                className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-                type="text"
-                name="description"
-                placeholder="Description"
-                value={inputFields.description}
-                onChange={handleChange}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td colSpan="5" className="px-4 py-2 text-center">
-              <button
-                className="px-4 py-2 mt-2 text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
-                type="submit"
-                onClick={handleSubmit}
+                value={filterData.category}
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
               >
-                ADD
+                <option value="">Filter by Category</option>
+                {categories.map((category, index) => (
+                  <option key={index} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+              
+              <button
+                onClick={handleFilterSubmit}
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
+              >
+                Search
               </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+              <button
+                className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
+                onClick={() => handleOpenModal()}
+              >
+                New
+              </button>
+            </div>
+          </div>
+
+          <table className="min-w-full bg-white border border-gray-200">
+            <thead>
+              <tr className="bg-blue-500 text-white">
+                <th className="py-2 px-4 border">Supplier SR No</th>
+                <th className="py-2 px-4 border">Supplier Name</th>
+                <th className="py-2 px-4 border">Category</th>
+                <th className="py-2 px-4 border">Mobile</th>
+                <th className="py-2 px-4 border">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredSuppliers.length > 0 ? (
+                filteredSuppliers.map((supplier) => (
+                  <tr key={supplier.SRno}>
+                    <td className="py-2 px-4 border">{supplier.SRno}</td>
+                    <td className="py-2 px-4 border">{supplier.name}</td>
+                    <td className="py-2 px-4 border">{supplier.category}</td>
+                    <td className="py-2 px-4 border">{supplier.mobile}</td>
+                    <td className="py-2 px-4 border">
+                      <button
+                        className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
+                        onClick={() => handleOpenModal(supplier)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
+                        onClick={() => handleDeleteSupplier(supplier.SRno)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="5" className="py-2 px-4 border text-center">
+                    No suppliers found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+
+          {/* Modal for Add/Edit Supplier */}
+          {isModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
+              <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
+                <h2 className="text-xl font-bold mb-4">{isEditMode ? "Edit Supplier" : "Add Supplier"}</h2>
+                <form onSubmit={handleFormSubmit}>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">Supplier SR No:</label>
+                    <input
+                      type="text"
+                      name="SRno"
+                      value={formData.SRno}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                      readOnly={isEditMode}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">Supplier Name:</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">Category:</label>
+                    <select
+                      name="category"
+                      value={formData.category}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                    >
+                      <option value="">Select Category</option>
+                      {categories.map((category, index) => (
+                        <option key={index} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">Mobile:</label>
+                    <input
+                      type="text"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">Description:</label>
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                    ></textarea>
+                  </div>
+                  <div className="flex justify-end space-x-4">
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                    >
+                      {isEditMode ? "Update" : "Add"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCloseModal}
+                      className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </>
-
-
   );
-}
+};
+
+export default SupplierComponent;
