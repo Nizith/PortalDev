@@ -84,29 +84,29 @@ export default function Sidebar() {
                             <>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/suppliertable')}
-                                    className={`${linkClass('/suppliertable')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/addsupplier')}
+                                    className={`${linkClass('/addsupplier')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
                                     <BsPersonFillUp className='size-7' /> Create Supplier
                                 </button>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/customer')}
-                                    className={`${linkClass('/customer')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/addcustomer')}
+                                    className={`${linkClass('/addcustomer')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
                                     <BsPersonFillDown className='size-7' /> Create Customer
                                 </button>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/cordinatortable')}
-                                    className={`${linkClass('/cordinatortable')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/addcordinator')}
+                                    className={`${linkClass('/addcordinator')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
                                     <MdManageAccounts className='size-7' /> Create Cordinator
                                 </button>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/section')}
-                                    className={`${linkClass('/section')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/addsection')}
+                                    className={`${linkClass('/addsection')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
                                     <TbSectionFilled className='size-7' /> Create Section
                                 </button>

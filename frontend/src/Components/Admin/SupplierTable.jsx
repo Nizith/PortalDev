@@ -179,9 +179,10 @@ const SupplierComponent = () => {
 
   return (
     <>
-      <h3 className="text-center font-medium text-4xl mt-1">Supplier Table</h3>
-      <div className="w-screen h-screen flex flex-col justify-center items-center py-2  table-fixed">
-        <div className="bg-white w-3/4 p-8 rounded-lg shadow-lg">
+      <div className="float-right w-full min-h-screen">
+        <h2 className="flex justify-center text-black">Section Table</h2>
+        <div className="mx-8">
+
           <div>
             {/* Filter Inputs */}
             <div className="flex mb-4 space-x-2">
@@ -214,7 +215,7 @@ const SupplierComponent = () => {
                   </option>
                 ))}
               </select>
-              
+
               <button
                 onClick={handleFilterSubmit}
                 className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"

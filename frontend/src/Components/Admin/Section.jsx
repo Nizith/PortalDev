@@ -120,121 +120,123 @@ export default function DataTable() {
 
   return (
     <>
-      <h3 className="text-center font-medium text-4xl mt-1">Section Table</h3>
-      <div className="w-screen h-screen flex flex-col justify-center items-center py-2  table-fixed">
-        <div className="bg-white w-3/4 p-8 rounded-lg shadow-lg">
-          {/* Filter Inputs */}
-          <div className="flex mb-4 space-x-2">
-            <input
-              type="text"
-              name="sectionID"
-              placeholder="Filter by Section ID"
-              onChange={handleFilterChange}
-              className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
-            />
-            <input
-              type="text"
-              name="sectionName"
-              placeholder="Filter by Section Name"
-              onChange={handleFilterChange}
-              className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
-            />
-            <button
-              className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
-              onClick={() => handleOpenModal()}
-            >
-              New
-            </button>
-          </div>
+      <div className="float-right w-full min-h-screen">
+        <h2 className="flex justify-center text-black">Section Table</h2>
+        <div className="mx-8">
+          <div className="bg-white w-full p-8 rounded-lg shadow-lg">
+            {/* Filter Inputs */}
+            <div className="flex mb-4 space-x-2">
+              <input
+                type="text"
+                name="sectionID"
+                placeholder="Filter by Section ID"
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+              />
+              <input
+                type="text"
+                name="sectionName"
+                placeholder="Filter by Section Name"
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+              />
+              <button
+                className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
+                onClick={() => handleOpenModal()}
+              >
+                New
+              </button>
+            </div>
 
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-2 px-4 border">Section ID</th>
-                <th className="py-2 px-4 border">Section Name</th>
-                <th className="py-2 px-4 border">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredSections.length > 0 ? (
-                filteredSections.map((section) => (
-                  <tr key={section.sectionID}>
-                    <td className="py-2 px-4 border">{section.sectionID}</td>
-                    <td className="py-2 px-4 border">{section.sectionName}</td>
-                    <td className="py-2 px-4 border">
-                      <button
-                        className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
-                        onClick={() => handleOpenModal(section)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
-                        onClick={() => handleDeleteSection(section.sectionID)}
-                      >
-                        Delete
-                      </button>
+            <table className="min-w-full bg-white border border-gray-200">
+              <thead>
+                <tr className="bg-blue-500 text-white">
+                  <th className="py-2 px-4 border">Section ID</th>
+                  <th className="py-2 px-4 border">Section Name</th>
+                  <th className="py-2 px-4 border">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSections.length > 0 ? (
+                  filteredSections.map((section) => (
+                    <tr key={section.sectionID}>
+                      <td className="py-2 px-4 border">{section.sectionID}</td>
+                      <td className="py-2 px-4 border">{section.sectionName}</td>
+                      <td className="py-2 px-4 border">
+                        <button
+                          className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
+                          onClick={() => handleOpenModal(section)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
+                          onClick={() => handleDeleteSection(section.sectionID)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="py-2 px-4 border text-center">
+                      No sections found
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="3" className="py-2 px-4 border text-center">
-                    No sections found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
 
-          {/* Modal for Add/Edit Section */}
-          {isModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
-              <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
-                <h2 className="text-xl font-bold mb-4">
-                  {isEditMode ? 'Edit Section' : 'Add Section'}
-                </h2>
-                <form onSubmit={handleFormSubmit}>
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Section ID:</label>
-                    <input
-                      type="text"
-                      name="sectionID"
-                      value={inputFields.sectionID}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                      readOnly={isEditMode}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Section Name:</label>
-                    <input
-                      type="text"
-                      name="sectionName"
-                      value={inputFields.sectionName}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                    />
-                  </div>
-                  <div className="flex justify-end space-x-4">
-                    <button
-                      type="submit"
-                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-                    >
-                      {isEditMode ? 'Update' : 'Add'}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleCloseModal}
-                      className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
+            {/* Modal for Add/Edit Section */}
+            {isModalOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
+                <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
+                  <h2 className="text-xl font-bold mb-4">
+                    {isEditMode ? 'Edit Section' : 'Add Section'}
+                  </h2>
+                  <form onSubmit={handleFormSubmit}>
+                    <div className="mb-4">
+                      <label className="block text-gray-700">Section ID:</label>
+                      <input
+                        type="text"
+                        name="sectionID"
+                        value={inputFields.sectionID}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        readOnly={isEditMode}
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block text-gray-700">Section Name:</label>
+                      <input
+                        type="text"
+                        name="sectionName"
+                        value={inputFields.sectionName}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-4">
+                      <button
+                        type="submit"
+                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                      >
+                        {isEditMode ? 'Update' : 'Add'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCloseModal}
+                        className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </>
