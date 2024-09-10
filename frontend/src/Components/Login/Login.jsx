@@ -43,11 +43,11 @@ export default function Login() {
             // Redirect based on the role
             setTimeout(() => {
                 if (role === "admin") {
-                    navigate('/admindash');
+                    navigate('/admindashboard');
                 } else if (role === "superadmin") {
-                    navigate('/admindash');
+                    navigate('/admindashboard');
                 } else if (role === "user") {
-                    navigate('/addcontract');
+                    navigate('/userdashboard');
                 }
             }, 1500);
 
@@ -75,9 +75,9 @@ export default function Login() {
                     className="absolute inset-0 w-full h-full bg-gradient-to-t from-white to-black opacity-50"
                 />
                 <div className="absolute inset-0 flex justify-center items-center">
-                    <div className="bg-white bg-opacity-90 w-1/3 my-auto rounded-3xl shadow-2xl p-5">
+                    <div className="bg-white bg-opacity-70 w-1/3 my-auto rounded-3xl shadow-2xl p-5">
                         <form className="p-10 mt-3 font-bold" onSubmit={SubmitLogin}>
-                            <h1 className="flex justify-center -mt-3 mb-5 text-3xl text-center font-bold">
+                            <h1 className="flex justify-center -mt-8 mb-5 text-3xl text-center font-serif">
                                 Managed Services Contract Portal
                             </h1>
                             <div className="my-10">
@@ -87,7 +87,7 @@ export default function Login() {
                                     id="username"
                                     placeholder="Enter Username..."
                                     onChange={handleLoginChange}
-                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 rounded-3xl outline-0 border-b-4 border-slate-600 ps-5 text-black font-normal"
+                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 border border-green-600 outline-none focus:ring-1 ring-green-600 rounded-lg  ps-5 text-black font-normal"
                                 />
                             </div>
                             <div className="mb-5 relative">
@@ -97,18 +97,18 @@ export default function Login() {
                                     id="password"
                                     placeholder="Enter the Password..."
                                     onChange={handleLoginChange}
-                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 rounded-3xl outline-0 border-b-4 border-slate-600 ps-5 text-black font-normal"
+                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 border border-green-600 outline-none focus:ring-1 ring-green-600 rounded-lg  ps-5 text-black font-normal"
                                 />
                                 <button
                                     type="button"
                                     onClick={togglePasswordVisibility}
-                                    className="absolute inset-y-0 right-5 flex items-center text-gray-600 hover:text-gray-800 focus:outline-none"
+                                    className="absolute inset-y-0 right-5 flex items-center text-blue-600 hover:text-blue-800 focus:outline-none"
                                 >
                                     {showPassword ? <VscEyeClosed size={25} /> : <VscEye size={25} />}
                                 </button>
                             </div>
                             <div className="flex justify-center">
-                                <button className="w-full h-12 text-xl mt-5 py-2 px-10 rounded-3xl text-white bg-green-500 hover:bg-green-600 hover:duration-300 font-semibold">
+                                <button className="w-full h-12 text-xl mt-5 py-2 px-10 rounded-lg text-white bg-green-500 hover:bg-green-600 hover:duration-300 font-semibold">
                                     Login
                                 </button>
                             </div>
