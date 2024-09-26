@@ -4,32 +4,32 @@ const CordinatorSchema = mongoose.Schema({
 
   sectionName: {
     type: String,
-    required: true
+    //required: true
   },
 
   SalesCategory: {
     type: String,
-    required: true
+    //required: true
   },
   SolutionCategory: {
     type: String,
-    required: true
+    //required: true
   },
   AccountManager: {
     type: String,
-    required: true
+   // required: true
   },
   Manager: {
     type: String,
-    required: true
+   // required: true
   },
   SalesEngineer: {
     type: String,
-    required: true
+    //required: true
   },
   SolutionEngineer: {
     type: String,
-    required: true
+   // required: true
   }
 })
 

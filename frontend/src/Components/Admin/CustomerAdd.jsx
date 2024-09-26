@@ -8,38 +8,38 @@ const initialInputFields = {
   contact: "",
 };
 
-export default function SupplierTable() {
-  const [suppliers, setSuppliers] = useState([]);
-  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
+export default function customerTable() {
+  const [customer, setcustomer] = useState([]);
+  const [filteredcustomer, setFilteredcustomer] = useState([]);
   const [inputFields, setInputFields] = useState(initialInputFields);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [selectedcustomer, setSelectedcustomer] = useState(null);
 
-  // Fetch all suppliers from the API
+  // Fetch all customer from the API
   useEffect(() => {
-    const fetchSuppliers = async () => {
+    const fetchcustomer = async () => {
       try {
         const response = await axios.get("http://localhost:4500/portaldev/readcustomer");
-        setSuppliers(response.data.data); // Assuming response.data.data contains the list of suppliers
-        setFilteredSuppliers(response.data.data); // Set filtered suppliers initially to all suppliers
+        setcustomer(response.data.data); // Assuming response.data.data contains the list of customer
+        setFilteredcustomer(response.data.data); // Set filtered customer initially to all customer
       } catch (error) {
-        console.error("Error fetching suppliers:", error);
+        console.error("Error fetching customer:", error);
       }
     };
 
-    fetchSuppliers();
+    fetchcustomer();
   }, []);
 
-  const handleOpenModal = (supplier = null) => {
-    if (supplier) {
+  const handleOpenModal = (customer = null) => {
+    if (customer) {
       setIsEditMode(true);
-      setInputFields(supplier);
+      setInputFields(customer);
     } else {
       setIsEditMode(false);
       setInputFields(initialInputFields);
     }
-    setSelectedSupplier(supplier);
+    setSelectedcustomer(customer);
     setIsModalOpen(true);
   };
 
@@ -55,39 +55,39 @@ export default function SupplierTable() {
     });
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e,id) => {
     e.preventDefault();
 
     try {
       if (isEditMode) {
-        // Edit supplier logic
+        // Edit customer logic
         const response = await axios.put(
-          `http://localhost:4500/portaldev/updateCustomer/${selectedSupplier.BRnumber}`
+          `http://localhost:4500/portaldev/updateCustomer/${selectedcustomer._id}`
           ,
           inputFields
         );
-        setSuppliers((prevSuppliers) =>
-          prevSuppliers.map((supplier) =>
-            supplier.BRnumber === selectedSupplier.BRnumber
+        setcustomer((prevcustomer) =>
+          prevcustomer.map((customer) =>
+            customer.BRnumber === selectedcustomer.BRnumber
               ? response.data.data
-              : supplier
+              : customer
           )
         );
-        setFilteredSuppliers((prevSuppliers) =>
-          prevSuppliers.map((supplier) =>
-            supplier.BRnumber === selectedSupplier.BRnumber
+        setFilteredcustomer((prevcustomer) =>
+          prevcustomer.map((customer) =>
+            customer.BRnumber === selectedcustomer.BRnumber
               ? response.data.data
-              : supplier
+              : customer
           )
         );
       } else {
-        // Add new supplier logic
+        // Add new customer logic
         const response = await axios.post(
           "http://localhost:4500/portaldev/createcustomer",
           inputFields
         );
-        setSuppliers((prevSuppliers) => [...prevSuppliers, response.data.data]);
-        setFilteredSuppliers((prevSuppliers) => [...prevSuppliers, response.data.data]);
+        setcustomer((prevcustomer) => [...prevcustomer, response.data.data]);
+        setFilteredcustomer((prevcustomer) => [...prevcustomer, response.data.data]);
       }
 
       handleCloseModal();
@@ -96,27 +96,27 @@ export default function SupplierTable() {
     }
   };
 
-  const handleDeleteSupplier = async (BRnumber) => {
+  const handleDeletecustomer = async (BRnumber,id) => {
     try {
-      const response = await axios.delete(`http://localhost:4500/portaldev/deletesupplier/${BRnumber}`);
+      const response = await axios.delete(`http://localhost:4500/portaldev/deletecustomer/${id}`);
       if (response.status === 200) {
-        setSuppliers((prevSuppliers) =>
-          prevSuppliers.filter((supplier) => supplier.BRnumber !== BRnumber)
+        setcustomer((prevcustomer) =>
+          prevcustomer.filter((customer) => customer.BRnumber !== BRnumber)
         );
-        setFilteredSuppliers((prevSuppliers) =>
-          prevSuppliers.filter((supplier) => supplier.BRnumber !== BRnumber)
+        setFilteredcustomer((prevcustomer) =>
+          prevcustomer.filter((customer) => customer.BRnumber !== BRnumber)
         );
       }
     } catch (error) {
-      console.error("Error deleting supplier:", error.response ? error.response.data : error.message);
+      console.error("Error deleting customer:", error.response ? error.response.data : error.message);
     }
   };
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilteredSuppliers(
-      suppliers.filter((supplier) =>
-        supplier[name].toLowerCase().includes(value.toLowerCase())
+    setFilteredcustomer(
+      customer.filter((customer) =>
+        customer[name].toLowerCase().includes(value.toLowerCase())
       )
     );
   };
@@ -160,23 +160,23 @@ export default function SupplierTable() {
               </tr>
             </thead>
             <tbody>
-              {filteredSuppliers.length > 0 ? (
-                filteredSuppliers.map((supplier, index) => (
+              {filteredcustomer.length > 0 ? (
+                filteredcustomer.map((customer, index) => (
                   <tr key={index} className={`bg-${index % 2 === 0 ? "blue-50" : "white"}`}>
-                    <td className="py-2 px-4 border-b">{supplier.BRnumber}</td>
-                    <td className="py-2 px-4 border-b">{supplier.name}</td>
-                    <td className="py-2 px-4 border-b">{supplier.email}</td>
-                    <td className="py-2 px-4 border-b">{supplier.contact}</td>
+                    <td className="py-2 px-4 border-b">{customer.BRnumber}</td>
+                    <td className="py-2 px-4 border-b">{customer.name}</td>
+                    <td className="py-2 px-4 border-b">{customer.email}</td>
+                    <td className="py-2 px-4 border-b">{customer.contact}</td>
                     <td className="py-2 px-4 border-b">
                       <button
                         className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
-                        onClick={() => handleOpenModal(supplier)}
+                        onClick={() => handleOpenModal(customer)}
                       >
                         Edit
                       </button>
                       <button
                         className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
-                        onClick={() => handleDeleteSupplier(supplier.BRnumber)}
+                        onClick={() => handleDeletecustomer(customer.BRnumber,customer._id)}
                       >
                         Delete
                       </button>
@@ -186,19 +186,19 @@ export default function SupplierTable() {
               ) : (
                 <tr>
                   <td colSpan="5" className="py-2 px-4 border text-center">
-                    No suppliers found
+                    No customer found
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
 
-          {/* Modal for Add/Edit Supplier */}
+          {/* Modal for Add/Edit customer */}
           {isModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
               <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
                 <h2 className="text-xl font-bold mb-4">
-                  {isEditMode ? "Edit Supplier" : "Add Supplier"}
+                  {isEditMode ? "Edit customer" : "Add customer"}
                 </h2>
                 <form onSubmit={handleFormSubmit}>
                   <div className="mb-4">
@@ -213,7 +213,7 @@ export default function SupplierTable() {
                     />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-gray-700">Supplier Name:</label>
+                    <label className="block text-gray-700">customer Name:</label>
                     <input
                       type="text"
                       name="name"

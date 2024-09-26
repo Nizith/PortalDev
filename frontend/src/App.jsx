@@ -2,19 +2,13 @@ import React from "react"
 import './index.css'
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import Bodycomponent from "./Components/Admin/Bodycomponent.jsx"
-import Sectionregistration from "./Components/Admin/SectionAdd.jsx"
-import Supplier from "./Components/Admin/SupplierAdd.jsx"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
 import PaymentAdd from "./Components/PaymentAdd.jsx"
 import Login from "./Components/Login/Login.jsx"
 import LandingPage from "./Components/Login/LandingPage.jsx"
-import Customer from './Components/Admin/Customer.jsx'
 import Section from "./Components/Admin/Section.jsx"
 import SupplierTable from "./Components/Admin/SupplierTable.jsx"
-import Cordinator from "./Components/Cordinators.jsx"
-import CordinatorTable from "./Components/Admin/CordinatorTable.jsx"
-import ContractAdd from "./Components/contract/ContractAdd.jsx"
-import ViewContract from "./Components/contract/ViewContract.jsx"
+import CordinatorComponent from "./Components/Admin/CordinatorComponent.jsx"
 import Sidebar from "./Components/Login/Sidebar.jsx"
 
 
@@ -51,8 +45,9 @@ function App() {
 
           <Route path="/addsupplier" element={<SupplierTable />} />
           <Route path="/addcustomer" element={<CustomerAdd />} />
-          <Route path="/addcordinator" element={<Cordinator />} />
+          <Route path="/addcordinator" element={<CordinatorComponent/>} />
           <Route path="/addsection" element={<Section />} />
+          
 
           {/* 
           <Route path="/customer" element={<Customer />} />
@@ -63,8 +58,8 @@ function App() {
            */}
 
           {/* User Pages */}
-          <Route path="/addcontract" element={<ContractAdd />} />
-          <Route path="/viewcontract" element={<ViewContract />} />
+          {/* <Route path="/addcontract" element={<ContractAdd />} />
+          <Route path="/viewcontract" element={<ViewContract />} /> */}
           <Route path="/addpayment" element={<PaymentAdd />} />
 
         </Routes>

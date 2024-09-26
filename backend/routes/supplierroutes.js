@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const SupplierCtrl = require("../controllers/supplierController");
+const SupplierCtrl = require('../controllers/suppliercontroller');
 
 router.post('/portaldev/createsupplier',SupplierCtrl.createSupplier);
 router.get('/portaldev/readsupplier', SupplierCtrl.readSuppliers);
