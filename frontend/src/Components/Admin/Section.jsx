@@ -93,9 +93,9 @@ export default function DataTable() {
     }
   };
 
-  const handleDeleteSection = async (sectionID) => {
+  const handleDeleteSection = async (sectionID,id) => {
     try {
-      const response = await axios.delete(`http://localhost:4500/portaldev/deletesection/${sectionID}`);
+      const response = await axios.delete(`http://localhost:4500/portaldev/deletesection/${id}`);
       if (response.status === 200) {
         setSections((prevSections) =>
           prevSections.filter((section) => section.sectionID !== sectionID)
@@ -109,7 +109,7 @@ export default function DataTable() {
     }
   };
 
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e) => { 
     const { name, value } = e.target;
     setFilteredSections(
       sections.filter((section) =>
@@ -162,16 +162,16 @@ export default function DataTable() {
                     <tr key={section.sectionID}>
                       <td className="py-2 px-4 border">{section.sectionID}</td>
                       <td className="py-2 px-4 border">{section.sectionName}</td>
-                      <td className="py-2 px-4 border">
+                      <td className="py-2 px-4 border text-center">
                         <button
-                          className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
+                          className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600 ml-2 "
                           onClick={() => handleOpenModal(section)}
                         >
                           Edit
                         </button>
                         <button
-                          className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
-                          onClick={() => handleDeleteSection(section.sectionID)}
+                          className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2 "
+                          onClick={() => handleDeleteSection(section.sectionID,section._id)}
                         >
                           Delete
                         </button>

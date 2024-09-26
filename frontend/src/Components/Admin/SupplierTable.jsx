@@ -29,14 +29,14 @@ const SupplierComponent = () => {
         const supplierResponse = await axios.get(
           "http://localhost:4500/portaldev/readsupplier"
         );
-        setSuppliers(supplierResponse.data.data); // Assuming response.data.data contains the list of suppliers
-        setFilteredSuppliers(supplierResponse.data.data); // Set filtered suppliers initially to all suppliers
+        setSuppliers(supplierResponse.data.data);
+        setFilteredSuppliers(supplierResponse.data.data);
 
         // Fetch categories
         const categoryResponse = await axios.get(
           "http://localhost:4500/portaldev/readcategories"
         );
-        setCategories(categoryResponse.data.data); // Assuming response.data.data contains the list of categories
+        setCategories(categoryResponse.data.data);
       } catch (error) {
         console.error("Error fetching suppliers or categories:", error);
       }
@@ -82,10 +82,14 @@ const SupplierComponent = () => {
   };
 
   const handleFilterChange = (e) => {
-    setFilterData({
-      ...filterData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFilterData((prevFilterData) => ({
+      ...prevFilterData,
+      [name]: value,
+    }));
+    
+    // Apply filter immediately when input changes
+    handleFilterSubmit({ ...filterData, [name]: value });
   };
 
   const handleFormSubmit = async (e) => {
@@ -93,9 +97,8 @@ const SupplierComponent = () => {
 
     try {
       if (isEditMode) {
-        // Edit supplier logic
         const response = await axios.put(
-          `http://localhost:4500/portaldev/updatesupplier/${selectedSupplier._id}`, // Assuming _id is the identifier field
+          `http://localhost:4500/portaldev/updatesupplier/${selectedSupplier._id}`,
           formData
         );
         setSuppliers((prevSuppliers) =>
@@ -113,7 +116,6 @@ const SupplierComponent = () => {
           )
         );
       } else {
-        // Add new supplier logic
         const response = await axios.post(
           "http://localhost:4500/portaldev/createsupplier",
           formData
@@ -134,10 +136,10 @@ const SupplierComponent = () => {
     }
   };
 
-  const handleDeleteSupplier = async (SRno) => {
+  const handleDeleteSupplier = async (SRno,id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:4500/portaldev/deleteSupplier/${SRno}`
+        `http://localhost:4500/portaldev/deleteSupplier/${id}`
       );
       if (response.status === 200) {
         setSuppliers((prevSuppliers) =>
@@ -152,29 +154,20 @@ const SupplierComponent = () => {
     }
   };
 
-  const handleFilterSubmit = () => {
-    setFilteredSuppliers(
-      suppliers.filter((supplier) => {
-        return (
-          (filterData.SRno === "" ||
-            supplier.SRno
-              .toString()
-              .toLowerCase()
-              .includes(filterData.SRno.toLowerCase())) &&
-          (filterData.name === "" ||
-            supplier.name.toLowerCase().includes(filterData.name.toLowerCase())) &&
-          (filterData.category === "" ||
-            supplier.category
-              .toLowerCase()
-              .includes(filterData.category.toLowerCase())) &&
-          (filterData.mobile === "" ||
-            supplier.mobile
-              .toString()
-              .toLowerCase()
-              .includes(filterData.mobile.toLowerCase()))
-        );
-      })
-    );
+  const handleFilterSubmit = (currentFilterData = filterData) => {
+    const filtered = suppliers.filter((supplier) => {
+      return (
+        (currentFilterData.SRno === "" ||
+          supplier.SRno.toString().toLowerCase().includes(currentFilterData.SRno.toLowerCase())) &&
+        (currentFilterData.name === "" ||
+          supplier.name.toLowerCase().includes(currentFilterData.name.toLowerCase())) &&
+        (currentFilterData.category === "" ||
+          supplier.category.toLowerCase().includes(currentFilterData.category.toLowerCase())) &&
+        (currentFilterData.mobile === "" ||
+          supplier.mobile.toString().toLowerCase().includes(currentFilterData.mobile.toLowerCase()))
+      );
+    });
+    setFilteredSuppliers(filtered);
   };
 
   return (
@@ -182,9 +175,7 @@ const SupplierComponent = () => {
       <div className="float-right w-full min-h-screen">
         <h2 className="flex justify-center text-black">Section Table</h2>
         <div className="mx-8">
-
           <div>
-            {/* Filter Inputs */}
             <div className="flex mb-4 space-x-2">
               <input
                 type="text"
@@ -202,26 +193,22 @@ const SupplierComponent = () => {
                 onChange={handleFilterChange}
                 className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
               />
-              <select
+              <input
+                type="text"
                 name="category"
+                placeholder="Filter by category"
                 value={filterData.category}
                 onChange={handleFilterChange}
                 className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
-              >
-                <option value="">Filter by Category</option>
-                {categories.map((category, index) => (
-                  <option key={index} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                onClick={handleFilterSubmit}
-                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none"
-              >
-                Search
-              </button>
+              />
+              <input
+                type="text"
+                name="mobile"
+                placeholder="Filter by mobile"
+                value={filterData.mobile}
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+              />
               <button
                 className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
                 onClick={() => handleOpenModal()}
@@ -249,7 +236,7 @@ const SupplierComponent = () => {
                     <td className="py-2 px-4 border">{supplier.name}</td>
                     <td className="py-2 px-4 border">{supplier.category}</td>
                     <td className="py-2 px-4 border">{supplier.mobile}</td>
-                    <td className="py-2 px-4 border">
+                    <td className="py-2 px-4 border text-center">
                       <button
                         className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
                         onClick={() => handleOpenModal(supplier)}
@@ -258,7 +245,7 @@ const SupplierComponent = () => {
                       </button>
                       <button
                         className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
-                        onClick={() => handleDeleteSupplier(supplier.SRno)}
+                        onClick={() => handleDeleteSupplier(supplier.SRno, supplier._id)}
                       >
                         Delete
                       </button>
@@ -275,7 +262,6 @@ const SupplierComponent = () => {
             </tbody>
           </table>
 
-          {/* Modal for Add/Edit Supplier */}
           {isModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
               <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
@@ -304,19 +290,12 @@ const SupplierComponent = () => {
                   </div>
                   <div className="mb-4">
                     <label className="block text-gray-700">Category:</label>
-                    <select
+                    <input
                       name="category"
                       value={formData.category}
                       onChange={handleInputChange}
                       className="w-full p-2 border border-gray-300 rounded"
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map((category, index) => (
-                        <option key={index} value={category}>
-                          {category}
-                        </option>
-                      ))}
-                    </select>
+                    />
                   </div>
                   <div className="mb-4">
                     <label className="block text-gray-700">Mobile:</label>
