@@ -3,7 +3,8 @@ import './index.css'
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import Bodycomponent from "./Components/Admin/Bodycomponent.jsx"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
-import PaymentAdd from "./Components/PaymentAdd.jsx"
+import PaymentAdd from "./Components/Payment/PaymentAdd.jsx"
+import Payment from "./Components/Payment/Payment.jsx"
 import Login from "./Components/Login/Login.jsx"
 import LandingPage from "./Components/Login/LandingPage.jsx"
 import Section from "./Components/Admin/Section.jsx"
@@ -60,7 +61,8 @@ function App() {
           {/* User Pages */}
           {/* <Route path="/addcontract" element={<ContractAdd />} />
           <Route path="/viewcontract" element={<ViewContract />} /> */}
-          <Route path="/addpayment" element={<PaymentAdd />} />
+          <Route path="/addpayment" element={<PaymentAdd/>}/>
+          <Route path="/payment" element={<Payment/>}/>
 
         </Routes>
       </Layout>
