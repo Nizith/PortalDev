@@ -34,13 +34,12 @@ export default function PaymentAdd() {
     }
 
     return (
-        <div className=' w-full  h-screen flex justify-center items-center '>
-            <div className='w-1/2  px-5  bg-sky-700 bg-opacity-55  rounded-2xl shadow-md mt-1'>
+        <div className=' w-full  h-full flex justify-center items-center '>
+            <div className='w-3/4 h-full px-5  bg-sky-700 bg-opacity-55  rounded-2xl shadow-md mt-6'>
                 <form onSubmit={PaymentSubmit} >
-                    <fieldset className='border-2  p-3 my-4 rounded-xl mt-2'>
-                    <legend className='text-2xl font-semibold px-1'>Payments</legend>
+                    
 
-                        <div className='grid grid-cols-2  gap-x-8'>
+                        <div className='grid grid-cols-2  gap-x-8 mt-4'>
                             <div>
                                 <label className="block text-medium font-medium text-gray-950 ">PRnumber :</label>
                                 <input onChange={(e) => { setPRnumber(e.target.value) }}
@@ -102,12 +101,12 @@ export default function PaymentAdd() {
                         </div>
 
 
-                        <div className="flex justify-center mt-1">
+                        <div className="flex justify-center mt-4 mb-4">
                             <button className="w-2/3 py-1 bg-green-600 rounded-full text-white">Submit</button>
                         </div>
 
 
-                    </fieldset>
+                   
                 </form>
             </div>
         </div>
