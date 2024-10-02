@@ -109,7 +109,7 @@ const ExampleComponent = () => {
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      <h2 className="text-2xl font-bold mb-4">Coordinator Management</h2>
+      <h2 className="text-2xl font-bold mb-4">Solution Category</h2>
       <div className="flex gap-4 mb-4">
         <input
           type="text"
@@ -153,7 +153,7 @@ const ExampleComponent = () => {
                   onClick={() => handleOpenModal(coordinator)}
                   className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
                 >
-                  Edit
+                  Update
                 </button>
                 <button
                   onClick={() => handleDelete(coordinator._id)}

@@ -6,7 +6,7 @@ export default function Jojo() {
   const [activeTab, setActiveTab] = useState('sales'); // Manage active tab
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4">
+    <div className="w-full  mx-auto p-4">
       {/* Tab Buttons */}
       <div className="flex justify-center mb-6">
         <button
@@ -31,13 +31,13 @@ export default function Jojo() {
       <div className="bg-white shadow-md rounded-lg p-4">
         {activeTab === 'sales' && (
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Sales Category</h2>
+            
             <SalesCategoryComponent />
           </div>
         )}
         {activeTab === 'solution' && (
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Solution Category</h2>
+            
             <SolutionCategoryComponent />
           </div>
         )}
