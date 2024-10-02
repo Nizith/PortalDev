@@ -121,8 +121,8 @@ export default function DataTable() {
   return (
     <>
       <div className="float-right w-full min-h-screen">
-        <h2 className="flex justify-center text-black">Section Table</h2>
-        <div className="mx-8">
+        <h2 className="flex justify-center text-black text-2xl font-bold mt-4 ">Section Table</h2>
+        <div className="mx-8 mt-4">
           <div className="bg-white w-full p-8 rounded-lg shadow-lg">
             {/* Filter Inputs */}
             <div className="flex mb-4 space-x-2">
@@ -167,7 +167,7 @@ export default function DataTable() {
                           className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600 ml-2 "
                           onClick={() => handleOpenModal(section)}
                         >
-                          Edit
+                          Update
                         </button>
                         <button
                           className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2 "

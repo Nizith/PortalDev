@@ -124,8 +124,8 @@ export default function customerTable() {
   return (
     <>
       <div className="float-right w-full min-h-screen">
-        <h2 className="flex justify-center text-black">Customer Table</h2>
-        <div className="mx-8">
+        <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Customer Table</h2>
+        <div className="mx-8 mt-5">
           <div className="flex mb-4 space-x-2">
             <input
               type="text"
@@ -172,7 +172,7 @@ export default function customerTable() {
                         className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
                         onClick={() => handleOpenModal(customer)}
                       >
-                        Edit
+                        Update
                       </button>
                       <button
                         className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"

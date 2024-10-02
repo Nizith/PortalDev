@@ -173,8 +173,8 @@ const SupplierComponent = () => {
   return (
     <>
       <div className="float-right w-full min-h-screen">
-        <h2 className="flex justify-center text-black">Section Table</h2>
-        <div className="mx-8">
+        <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Supplier Table</h2>
+        <div className="mx-8 mt-4">
           <div>
             <div className="flex mb-4 space-x-2">
               <input
@@ -241,7 +241,7 @@ const SupplierComponent = () => {
                         className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
                         onClick={() => handleOpenModal(supplier)}
                       >
-                        Edit
+                        Update
                       </button>
                       <button
                         className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
@@ -284,8 +284,7 @@ const SupplierComponent = () => {
                       type="text"
                       name="name"
                       value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
+                      onChange={handleInputChange}                      className="w-full p-2 border border-gray-300 rounded"
                     />
                   </div>
                   <div className="mb-4">
@@ -315,7 +314,7 @@ const SupplierComponent = () => {
                       onChange={handleInputChange}
                       className="w-full p-2 border border-gray-300 rounded"
                     ></textarea>
-                  </div>
+                  </div> 
                   <div className="flex justify-end space-x-4">
                     <button
                       type="submit"
