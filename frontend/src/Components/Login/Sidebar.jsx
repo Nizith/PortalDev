@@ -21,13 +21,13 @@ export default function Sidebar() {
 
     const handleHomeNavigation = () => {
         if (role === 'superadmin') {
-            navigate('/admindash');
+            navigate('/admindashboard');
         }
         else if (role === 'admin') {
-            navigate('/admindash');
+            navigate('/admindashboard');
         }
         else if (role === 'user') {
-            navigate('/side');
+            navigate('/userdashboard');
         }
     };
 
@@ -51,8 +51,8 @@ export default function Sidebar() {
 
     const linkClass = (path) => {
         return activeRoute === path
-            ? "w-full py-3 bg-green-600  text-white pl-4 transition duration-300 "
-            : "w-full py-3 hover:bg-indigo-700 text-white pl-4 transition duration-300 ";
+            ? "w-full py-3 bg-indigo-600 bg-opacity-50 text-white pl-4 transition duration-300 "
+            : "w-full py-3 hover:ring-2 ring-indigo-600 text-white text-opacity-60 hover:text-white pl-4 transition duration-300 ";
     };
 
 

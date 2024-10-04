@@ -88,13 +88,13 @@ export default function ViewContract() {
 
       {!viewDetailsRow ? (
         <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl mx-8">
-          <table className="min-w-full table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
+          <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
             <thead>
-              <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                <th className="py-5 px-8 text-left font-bold uppercase">Supplier</th>
-                <th className="py-5 px-8 text-left font-bold uppercase">Customer</th>
-                <th className="py-5 px-8 text-left font-bold uppercase">Tender No</th>
-                <th className="py-5 px-8 text-center font-bold uppercase">View Details</th>
+              <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-center text-sm tracking-wide">
+                <th className="py-4 px-4 font-bold uppercase border">Supplier</th>
+                <th className="py-4 px-4 font-bold uppercase border">Customer</th>
+                <th className="py-4 px-4 font-bold uppercase border">Tender No</th>
+                <th className="py-4 px-4 font-bold uppercase border">View Details</th>
               </tr>
             </thead>
             <tbody>
@@ -104,21 +104,20 @@ export default function ViewContract() {
                     className={`${index % 2 === 0 ? "bg-white bg-opacity-80" : "bg-gray-50"
                       } hover:bg-gradient-to-r hover:from-blue-50 hover:via-gray-50 hover:to-blue-50 transition-all duration-300 ease-in-out`}
                   >
-                    <td className="py-4 px-8 text-gray-800 font-semibold">
+                    <td className="py-4 px-4 border text-gray-800 font-semibold">
                       {contract.supplier}
                     </td>
-                    <td className="py-4 px-8 text-gray-800 font-semibold">
+                    <td className="py-4 px-4 border text-gray-800 font-semibold">
                       {contract.customer}
                     </td>
-                    <td className="py-4 px-8 text-gray-800 font-semibold">
+                    <td className="py-4 px-4 border text-gray-800 font-semibold">
                       {contract.tenderNo}
                     </td>
-                    <td className="py-4 px-8 flex justify-center">
+                    <td className="py-4 px-4 text-center border text-indigo-500 hover:text-indigo-600 text-3xl rounded-lg transform hover:scale-105 transition-all">
                       <button
                         onClick={() => handleViewDetailsClick(contract)}
-                        className="text-indigo-500 hover:text-indigo-600 text-3xl font-bold px-5 py-2 rounded-lg transform hover:scale-105 transition-all"
                       >
-                        <TbExternalLink />
+                        <TbExternalLink/>
                       </button>
                     </td>
                   </tr>
@@ -130,12 +129,12 @@ export default function ViewContract() {
       ) : (
         <div className="p-5 bg-gray-100">
           <div className="flex justify-between items-center mb-4">
-            <div className="col-span-2 flex gap-4 mt-4">
+            <div className="col-span-2 flex gap-4">
               {isEditing ? (
                 <>
                   <button
                     onClick={() => handleSaveClick(viewDetailsRow)}
-                    className="bg-green-800 hover:ring-2 ring-green-600 text-green-200 font-semibold px-5 py-2 rounded-lg shadow-md"
+                    className="bg-green-800 hover:ring-2 ring-green-600 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
                   >
                     Save
                   </button>
@@ -150,7 +149,7 @@ export default function ViewContract() {
               ) : (
                 <button
                   onClick={() => setViewDetailsRow(null)}
-                  className="bg-gray-800 hover:ring-2 ring-gray-500 text-gray-200  font-semibold px-5 py-2 rounded-lg shadow-md"
+                  className="bg-gray-800 hover:ring-2 ring-gray-500 text-gray-200  font-semibold px-5 py-2 rounded-lg duration-200"
                 >
                   Back to List
                 </button>
@@ -159,14 +158,14 @@ export default function ViewContract() {
             <div className="inline-flex space-x-5">
               <button
                 onClick={handleEditClick}
-                className="bg-indigo-800 hover:ring-2 ring-indigo-600 text-indigo-100  font-semibold px-4 py-2 rounded-lg flex items-center"
+                className="bg-indigo-800 hover:ring-2 ring-indigo-600 text-indigo-100  font-semibold px-4 py-2 rounded-lg flex items-center duration-200"
               >
                 <FaEdit className="mr-2" />
                 Edit
               </button>
               <button
                 onClick={() => handleDeleteClick(viewDetailsRow)}
-                className="bg-red-800 hover:ring-2 ring-red-600 text-red-200  font-semibold px-5 py-2 rounded-lg shadow-md"
+                className="bg-red-800 hover:ring-2 ring-red-600 text-red-200  font-semibold px-5 py-2 rounded-lg duration-200"
               >
                 Delete
               </button>
