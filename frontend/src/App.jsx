@@ -11,6 +11,8 @@ import Section from "./Components/Admin/Section.jsx"
 import SupplierTable from "./Components/Admin/SupplierTable.jsx"
 import CordinatorComponent from "./Components/Admin/CordinatorComponent.jsx"
 import Sidebar from "./Components/Login/Sidebar.jsx"
+import ContractAdd from "./Components/contract/ContractAdd.jsx"
+import ViewContract from "./Components/contract/ViewContract.jsx"
 
 
 function Layout({ children }) {
@@ -46,9 +48,9 @@ function App() {
 
           <Route path="/addsupplier" element={<SupplierTable />} />
           <Route path="/addcustomer" element={<CustomerAdd />} />
-          <Route path="/addcordinator" element={<CordinatorComponent/>} />
+          <Route path="/addcordinator" element={<CordinatorComponent />} />
           <Route path="/addsection" element={<Section />} />
-          
+
 
           {/* 
           <Route path="/customer" element={<Customer />} />
@@ -59,10 +61,10 @@ function App() {
            */}
 
           {/* User Pages */}
-          {/* <Route path="/addcontract" element={<ContractAdd />} />
-          <Route path="/viewcontract" element={<ViewContract />} /> */}
-          <Route path="/addpayment" element={<PaymentAdd/>}/>
-          <Route path="/payment" element={<Payment/>}/>
+          <Route path="/addcontract" element={<ContractAdd />} />
+          <Route path="/viewcontract" element={<ViewContract />} />
+          <Route path="/addpayment" element={<PaymentAdd />} />
+          <Route path="/payment" element={<Payment />} />
 
         </Routes>
       </Layout>
