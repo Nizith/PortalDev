@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RiContractLine, RiLogoutCircleLine } from "react-icons/ri";
-import { MdManageAccounts, MdTableView } from "react-icons/md";
+import { MdManageAccounts, MdPayment, MdTableView } from "react-icons/md";
 import { BsPersonFillDown, BsPersonFillUp } from "react-icons/bs";
 import { TbSectionFilled } from "react-icons/tb";
 import { IoClose } from "react-icons/io5";
@@ -39,12 +39,12 @@ export default function Sidebar() {
     const handleLogout = () => {
         setConfirmlogout(true);
     };
-    
+
     const confirmLogout = () => {
         localStorage.removeItem('role');
         navigate('/login');
     };
-    
+
     const closelogout = () => {
         setConfirmlogout(false);
     }
@@ -84,31 +84,52 @@ export default function Sidebar() {
                             <>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/addsupplier')}
-                                    className={`${linkClass('/addsupplier')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/addcontract')}
+                                    className={`${linkClass('/addcontract')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
-                                    <BsPersonFillUp className='size-7' /> Create Supplier
+                                    <RiContractLine className='size-6' /> Create Contracts
                                 </button>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/addcustomer')}
-                                    className={`${linkClass('/addcustomer')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/contracts')}
+                                    className={`${linkClass('/contracts')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
-                                    <BsPersonFillDown className='size-7' /> Create Customer
+                                    <MdTableView className='size-7' /> Manage Contracts
                                 </button>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/addcordinator')}
-                                    className={`${linkClass('/addcordinator')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/payments')}
+                                    className={`${linkClass('/payments')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
-                                    <MdManageAccounts className='size-7' /> Create Cordinator
+                                    <MdPayment className='size-6' /> Manage Payments
                                 </button>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/addsection')}
-                                    className={`${linkClass('/addsection')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/suppliers')}
+                                    className={`${linkClass('/suppliers')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
-                                    <TbSectionFilled className='size-7' /> Create Section
+                                    <BsPersonFillUp className='size-7' /> Manage Suppliers
+                                </button>
+                                <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/customers')}
+                                    className={`${linkClass('/customers')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <BsPersonFillDown className='size-7' /> Manage Customers
+                                </button>
+                                <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/cordinators')}
+                                    className={`${linkClass('/cordinators')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <MdManageAccounts className='size-7' /> Manage Cordinators
+                                </button>
+                                <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/sections')}
+                                    className={`${linkClass('/sections')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <TbSectionFilled className='size-7' /> Manage Sections
                                 </button>
                                 <hr className='text-sky-900 my-2' />
                             </>
@@ -120,16 +141,8 @@ export default function Sidebar() {
                             <>
                                 <hr className='text-sky-900 my-2' />
                                 <button
-                                    onClick={() => handleNavigation('/addcontract')}
-                                    className={`${linkClass('/addcontract')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
-                                >
-                                    <RiContractLine className='size-6' />
-                                    Create Contract
-                                </button>
-                                <hr className='text-sky-900 my-2' />
-                                <button
-                                    onClick={() => handleNavigation('/viewcontract')}
-                                    className={`${linkClass('/viewcontract')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                    onClick={() => handleNavigation('/viewcontracts')}
+                                    className={`${linkClass('/viewcontracts')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
                                     <MdTableView className='size-7' />
                                     View Contract
@@ -139,23 +152,23 @@ export default function Sidebar() {
                         )}
                     </nav>
                 </div>
-                {confirmlogout && (
-                    <>
-                        <div className='w-screen h-screen absolute inset-0' onClick={closelogout}></div>
-                        <div className='relative  mb-4 text-center pt-2 rounded-lg bg-slate-800'>
-                            <button
-                                className='absolute right-4 top-3 text-lg hover:text-red-500 rounded-lg'
-                                onClick={closelogout}><IoClose />
-                            </button>
-                            <p className='font-bold'>Are you sure ?</p>
-                            <div className='inline-flex gap-x-20 my-3 font-semibold'>
-                                <button className='bg-red-900 px-6 py-0.5 rounded-lg hover:ring-1 ring-red-600'  onClick={confirmLogout}>Yes</button>
-                                <button className='bg-indigo-900 px-6 py-0.5 rounded-lg hover:ring-1 ring-indigo-600' onClick={closelogout}>No</button>
-                            </div>
-                        </div>
-                    </>
-                )}
                 <div className=''>
+                    {confirmlogout && (
+                        <>
+                            <div className='w-screen h-screen absolute inset-0 bg-yello-300' onClick={closelogout}></div>
+                            <div className='relative -mt-16 mb-4 text-center pt-2 rounded-lg bg-slate-800'>
+                                <button
+                                    className='absolute right-4 top-3 text-lg hover:text-red-500 rounded-lg'
+                                    onClick={closelogout}><IoClose />
+                                </button>
+                                <p className='font-bold'>Are you sure ?</p>
+                                <div className='inline-flex gap-x-20 my-3 font-semibold'>
+                                    <button className='bg-red-900 px-6 py-0.5 rounded-lg hover:ring-1 ring-red-600' onClick={confirmLogout}>Yes</button>
+                                    <button className='bg-indigo-900 px-6 py-0.5 rounded-lg hover:ring-1 ring-indigo-600' onClick={closelogout}>No</button>
+                                </div>
+                            </div>
+                        </>
+                    )}
                     <button
                         className='flex items-center justify-center w-full py-2 font-semibold duration-300 bg-indigo-900 rounded-lg hover:ring-2 ring-indigo-700 gap-x-2'
                         onClick={handleLogout}

@@ -44,6 +44,7 @@ export default function CordinatorComponent() {
         </div>
       ) : (
         <div className="w-full min-h-screen px-8 py-5">
+        <h2 className="flex justify-center text-black text-2xl font-bold mb-4 ">Cordinators Table</h2>
           {/* Tab Buttons */}
           <div className="flex justify-center mb-6">
             <button

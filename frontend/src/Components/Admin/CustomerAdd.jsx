@@ -172,22 +172,22 @@ export default function customerTable() {
             <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
               <thead>
                 <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                  <th className="py-4 px-4 font-bold uppercase border">BR number</th>
-                  <th className="py-4 px-4 font-bold uppercase border">Name</th>
-                  <th className="py-4 px-4 font-bold uppercase border">Email</th>
-                  <th className="py-4 px-4 font-bold uppercase border">Contact</th>
-                  <th className="py-4 px-4 font-bold uppercase border">Action</th>
+                  <th className="py-3 px-4 font-bold uppercase border">BR number</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Name</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Email</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Contact</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredcustomer.length > 0 ? (
                   filteredcustomer.map((customer, index) => (
                     <tr key={index} className="hover:bg-gray-200 transition-all duration-300 ease-in-out">
-                      <td className="py-4 px-4 font-semibold border">{customer.BRnumber}</td>
-                      <td className="py-4 px-4 font-semibold border">{customer.name}</td>
-                      <td className="py-4 px-4 font-semibold border">{customer.email}</td>
-                      <td className="py-4 px-4 font-semibold border">{customer.contact}</td>
-                      <td className="py-4 px-2 font-semibold border text-center space-x-6">
+                      <td className="py-2 px-2 font-semibold border">{customer.BRnumber}</td>
+                      <td className="py-2 px-2 font-semibold border">{customer.name}</td>
+                      <td className="py-2 px-2 font-semibold border">{customer.email}</td>
+                      <td className="py-2 px-2 font-semibold border">{customer.contact}</td>
+                      <td className="py-2 px-2 font-semibold border text-center space-x-6">
                         <button onClick={() => handleOpenModal(customer)} >
                           <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                         </button>

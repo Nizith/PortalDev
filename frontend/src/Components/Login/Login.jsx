@@ -75,7 +75,7 @@ export default function Login() {
                     className="absolute inset-0 w-full h-full bg-gradient-to-t from-white to-black opacity-50"
                 />
                 <div className="absolute inset-0 flex justify-center items-center">
-                    <div className="bg-white bg-opacity-70 w-1/3 my-auto rounded-3xl shadow-2xl p-5">
+                    <div className="bg-white bg-opacity-30 border-2 w-1/3 my-auto rounded-3xl shadow-2xl p-5">
                         <form className="p-10 mt-3 font-bold" onSubmit={SubmitLogin}>
                             <h1 className="flex justify-center -mt-8 mb-5 text-3xl text-center font-serif">
                                 Managed Services Contract Portal
@@ -108,8 +108,8 @@ export default function Login() {
                                 </button>
                             </div>
                             <div className="flex justify-center">
-                                <button className="w-full h-12 text-xl mt-5 py-2 px-10 rounded-lg text-white bg-green-500 hover:bg-green-600 hover:duration-300 font-semibold">
-                                    Login
+                                <button className="w-full h-12 text-xl mt-5 py-2 px-10 rounded-lg text-white border bg-green-500 hover:bg-green-600 hover:duration-300 font-bold font-mono">
+                                    Log In
                                 </button>
                             </div>
                         </form>

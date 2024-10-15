@@ -169,18 +169,18 @@ export default function DataTable() {
             <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
               <thead>
                 <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                  <th className="py-4 px-4 font-bold uppercase borderr">Section ID</th>
-                  <th className="py-4 px-4 font-bold uppercase borderr">Section Name</th>
-                  <th className="py-4 px-4 font-bold uppercase borderr">Action</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Section ID</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Section Name</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredSections.length > 0 ? (
                   filteredSections.map((section) => (
                     <tr key={section.sectionID} className='hover:bg-gray-200 transition-all duration-300 ease-in-out'>
-                      <td className="py-4 px-4 font-semibold border">{section.sectionID}</td>
-                      <td className="py-4 px-4 font-semibold border">{section.sectionName}</td>
-                      <td className="py-4 px-2 font-semibold border text-center space-x-6">
+                      <td className="py-2 px-2 font-semibold border">{section.sectionID}</td>
+                      <td className="py-2 px-2 font-semibold border">{section.sectionName}</td>
+                      <td className="py-2 px-2 font-semibold border text-center space-x-6">
                         <button onClick={() => handleOpenModal(section)} >
                           <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                         </button>

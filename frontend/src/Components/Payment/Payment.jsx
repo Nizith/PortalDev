@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FaDeleteLeft } from "react-icons/fa6";
+import { MdEdit } from "react-icons/md";
+import LoadingAnimation from "../Login/LoadingAnimation";
 
 const initialInputFields = {
   PRnumber: "",
@@ -25,16 +28,26 @@ export default function PaymentTable() {
     PRnumber: "",
     POnumber: "",
   });
+  const [loading, setLoading] = useState(true);
 
   // Fetch all payments from the API
   useEffect(() => {
     const fetchPayments = async () => {
       try {
         const response = await axios.get("http://localhost:4500/portaldev/Allpayments");
+
+        // Simulate minimum 2-second loading time
+        const delay = new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Wait for both data fetch and 2 seconds delay
+        await Promise.all([delay, response]);
+
         setPayments(response.data.data);
         setFilteredPayments(response.data.data); // Set both payments and filteredPayments
       } catch (error) {
         console.error("Error fetching payments:", error);
+      } finally {
+        setLoading(false); // Stop the loading animation after both conditions are met
       }
     };
 
@@ -168,10 +181,14 @@ export default function PaymentTable() {
 
   return (
     <>
-      <div className="w-full min-h-screen">
-        <h2 className="text-center text-black">Payment Table</h2>
-        <div className="mx-8">
-          <div>
+      {loading ? (
+        <>
+          <LoadingAnimation />
+        </>
+      ) : (
+        <div className="float-right w-full min-h-screen">
+          <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Payments Table</h2>
+          <div className="mx-8 my-5">
             <div className="flex mb-4 space-x-2">
               <input
                 type="text"
@@ -179,7 +196,7 @@ export default function PaymentTable() {
                 placeholder="Filter by PR Number"
                 value={filterData.PRnumber}
                 onChange={handleFilterChange}
-                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
               />
               <input
                 type="text"
@@ -187,60 +204,51 @@ export default function PaymentTable() {
                 placeholder="Filter by PO Number"
                 value={filterData.POnumber}
                 onChange={handleFilterChange}
-                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
               />
-
               <button
-                className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 mb-4"
+                className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
                 onClick={() => handleOpenModal()}
               >
                 New
               </button>
             </div>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 ">
+            <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
               <thead>
-                <tr className="bg-blue-500 text-white">
-                  <th className="py-2 px-4 border">PR number</th>
-                  <th className="py-2 px-4 border">PR Date</th>
-                  <th className="py-2 px-4 border">LOI Details</th>
-                  <th className="py-2 px-4 border">PO number</th>
-                  <th className="py-2 px-4 border">PO Date</th>
-                  <th className="py-2 px-4 border">Invoice Number</th>
-                  <th className="py-2 px-4 border">Invoice Date</th>
-                  <th className="py-2 px-4 border">Payment Status</th>
-                  <th className="py-2 px-4 border">Paid Date</th>
-                  <th className="py-2 px-4 border">Payment Remarks</th>
-                  <th className="py-2 px-4 border">Actions</th>
+                <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
+                  <th className="py-3 px-4 font-bold uppercase border">PR number</th>
+                  <th className="py-3 px-4 font-bold uppercase border">PR Date</th>
+                  <th className="py-3 px-4 font-bold uppercase border">LOI Details</th>
+                  <th className="py-3 px-4 font-bold uppercase border">PO number</th>
+                  <th className="py-3 px-4 font-bold uppercase border">PO Date</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Invoice Number</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Invoice Date</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Payment Status</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Paid Date</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Payment Remarks</th>
+                  <th className="py-3 px-4 font-bold uppercase border">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPayments.length > 0 ? (
                   filteredPayments.map((payment, index) => (
-                    <tr key={index} className={`bg-${index % 2 === 0 ? "blue-50" : "white"}`}>
-                      <td className="py-2 px-4 border">{payment.PRnumber}</td>
-                      <td className="py-2 px-4 border">{new Date(payment.PRdate).toLocaleDateString()}</td>
-                      <td className="py-2 px-4 border">{payment.LOIdetails}</td>
-                      <td className="py-2 px-4 border">{payment.POnumber}</td>
-                      <td className="py-2 px-4 border">{new Date(payment.POdate).toLocaleDateString()}</td>
-                      <td className="py-2 px-4 border">{payment.InvoiceNumber}</td>
-                      <td className="py-2 px-4 border">{new Date(payment.InvoiceDate).toLocaleDateString()}</td>
-                      <td className="py-2 px-4 border">{payment.Paymentstatus}</td>
-                      <td className="py-2 px-4 border">{new Date(payment.Paiddate).toLocaleDateString()}</td>
-                      <td className="py-2 px-4 border">{payment.Paymentremarks}</td>
-                      <td className="py-2 px-4 border inline-flex">
-                        <button
-                          className="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600 mr-2"
-                          onClick={() => handleOpenModal(payment)}
-                        >
-                          Edit
+                    <tr key={index} className="hover:bg-gray-200 transition-all duration-300 ease-in-out">
+                      <td className="py-2 px-2 font-semibold border">{payment.PRnumber}</td>
+                      <td className="py-2 px-2 font-semibold border">{new Date(payment.PRdate).toLocaleDateString()}</td>
+                      <td className="py-2 px-2 font-semibold border">{payment.LOIdetails}</td>
+                      <td className="py-2 px-2 font-semibold border">{payment.POnumber}</td>
+                      <td className="py-2 px-2 font-semibold border">{new Date(payment.POdate).toLocaleDateString()}</td>
+                      <td className="py-2 px-2 font-semibold border">{payment.InvoiceNumber}</td>
+                      <td className="py-2 px-2 font-semibold border">{new Date(payment.InvoiceDate).toLocaleDateString()}</td>
+                      <td className="py-2 px-2 font-semibold border">{payment.Paymentstatus}</td>
+                      <td className="py-2 px-2 font-semibold border">{new Date(payment.Paiddate).toLocaleDateString()}</td>
+                      <td className="py-2 px-2 font-semibold border">{payment.Paymentremarks}</td>
+                      <td className="py-2 px-2 font-semibold border text-center space-x-6">
+                        <button onClick={() => handleOpenModal(payment)} >
+                          <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                         </button>
-                        <button
-                          className="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600"
-                          onClick={() => handleDeletePayment(payment._id)}
-                        >
-                          Delete
+                        <button onClick={() => handleDeletePayment(payment._id)} >
+                          <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
                         </button>
                       </td>
                     </tr>
@@ -254,154 +262,156 @@ export default function PaymentTable() {
                 )}
               </tbody>
             </table>
-          </div>
-        </div>
-      </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg w-11/12 max-w-3xl h-3/4 overflow-y-auto">
-            <h2 className="text-center text-xl font-bold mb-4">
-              {isEditMode ? "Edit Payment" : "Create Payment"}
-            </h2>
-            <form onSubmit={handleFormSubmit}>
-              {/* First section of the form */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label className="block text-gray-700">PR Number</label>
-                  <input
-                    type="text"
-                    name="PRnumber"
-                    value={inputFields.PRnumber}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
 
-                <div>
-                  <label className="block text-gray-700">PR Date</label>
-                  <input
-                    type="date"
-                    name="PRdate"
-                    value={inputFields.PRdate}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
 
-                <div>
-                  <label className="block text-gray-700">LOI Details</label>
-                  <input
-                    type="text"
-                    name="LOIdetails"
-                    value={inputFields.LOIdetails}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
+            {isModalOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
+                <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
+                  <h2 className="text-center text-xl font-bold mb-4">
+                    {isEditMode ? "Edit Payment" : "Create Payment"}
+                  </h2>
+                  <form onSubmit={handleFormSubmit}>
+                    {/* First section of the form */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <label className="block text-gray-700">PR Number</label>
+                        <input
+                          type="text"
+                          name="PRnumber"
+                          value={inputFields.PRnumber}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
 
-                <div>
-                  <label className="block text-gray-700">PO Number</label>
-                  <input
-                    type="text"
-                    name="POnumber"
-                    value={inputFields.POnumber}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
+                      <div>
+                        <label className="block text-gray-700">PR Date</label>
+                        <input
+                          type="date"
+                          name="PRdate"
+                          value={inputFields.PRdate}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
 
-                <div>
-                  <label className="block text-gray-700">PO Date</label>
-                  <input
-                    type="date"
-                    name="POdate"
-                    value={inputFields.POdate}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
+                      <div>
+                        <label className="block text-gray-700">LOI Details</label>
+                        <input
+                          type="text"
+                          name="LOIdetails"
+                          value={inputFields.LOIdetails}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
 
-                <div>
-                  <label className="block text-gray-700">Invoice Number</label>
-                  <input
-                    type="text"
-                    name="InvoiceNumber"
-                    value={inputFields.InvoiceNumber}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
+                      <div>
+                        <label className="block text-gray-700">PO Number</label>
+                        <input
+                          type="text"
+                          name="POnumber"
+                          value={inputFields.POnumber}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-700">PO Date</label>
+                        <input
+                          type="date"
+                          name="POdate"
+                          value={inputFields.POdate}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-700">Invoice Number</label>
+                        <input
+                          type="text"
+                          name="InvoiceNumber"
+                          value={inputFields.InvoiceNumber}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Second section of the form */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div>
+                        <label className="block text-gray-700">Invoice Date</label>
+                        <input
+                          type="date"
+                          name="InvoiceDate"
+                          value={inputFields.InvoiceDate}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-700">Payment Status</label>
+                        <input
+                          type="text"
+                          name="Paymentstatus"
+                          value={inputFields.Paymentstatus}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-700">Paid Date</label>
+                        <input
+                          type="date"
+                          name="Paiddate"
+                          value={inputFields.Paiddate}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-700">Payment Remarks</label>
+                        <input
+                          type="text"
+                          name="Paymentremarks"
+                          value={inputFields.Paymentremarks}
+                          onChange={handleInputChange}
+                          className="w-full p-2 border border-gray-300 rounded"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="mt-4 flex justify-end space-x-2">
+                      <button
+                        type="submit"
+                        className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
+                      >
+                        {isEditMode ? "Update" : "Create"}
+                      </button>
+                      <button
+                        type="button"
+                        className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-800 hover:ring-2 ring-gray-500 duration-200"
+                        onClick={handleCloseModal}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
+            )}
 
-              {/* Second section of the form */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                  <label className="block text-gray-700">Invoice Date</label>
-                  <input
-                    type="date"
-                    name="InvoiceDate"
-                    value={inputFields.InvoiceDate}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700">Payment Status</label>
-                  <input
-                    type="text"
-                    name="Paymentstatus"
-                    value={inputFields.Paymentstatus}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700">Paid Date</label>
-                  <input
-                    type="date"
-                    name="Paiddate"
-                    value={inputFields.Paiddate}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-gray-700">Payment Remarks</label>
-                  <input
-                    type="text"
-                    name="Paymentremarks"
-                    value={inputFields.Paymentremarks}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border border-gray-300 rounded"
-                  />
-                </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="mt-4 flex justify-end space-x-2">
-                <button
-                  type="button"
-                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                  onClick={handleCloseModal}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  {isEditMode ? "Update" : "Create"}
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       )}
-
     </>
   );
 }
