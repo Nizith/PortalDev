@@ -239,22 +239,22 @@ const SupplierComponent = () => {
           <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
             <thead>
               <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                <th className="py-4 px-4 font-bold uppercase border">Supplier SR No</th>
-                <th className="py-4 px-4 font-bold uppercase border">Supplier Name</th>
-                <th className="py-4 px-4 font-bold uppercase border">Category</th>
-                <th className="py-4 px-4 font-bold uppercase border">Mobile</th>
-                <th className="py-4 px-4 font-bold uppercase border">Action</th>
+                <th className="py-3 px-4 font-bold uppercase border">Supplier SR No</th>
+                <th className="py-3 px-4 font-bold uppercase border">Supplier Name</th>
+                <th className="py-3 px-4 font-bold uppercase border">Category</th>
+                <th className="py-3 px-4 font-bold uppercase border">Mobile</th>
+                <th className="py-3 px-4 font-bold uppercase border">Action</th>
               </tr>
             </thead>
             <tbody>
               {filteredSuppliers.length > 0 ? (
                 filteredSuppliers.map((supplier) => (
                   <tr key={supplier.SRno} className="hover:bg-gray-200 transition-all duration-300 ease-in-out">
-                    <td className="py-4 px-4 font-semibold border">{supplier.SRno}</td>
-                    <td className="py-4 px-4 font-semibold border">{supplier.name}</td>
-                    <td className="py-4 px-4 font-semibold border">{supplier.category}</td>
-                    <td className="py-4 px-4 font-semibold border">{supplier.mobile}</td>
-                    <td className="py-4 px-2 font-semibold border text-center space-x-6">
+                    <td className="py-2 px-2 font-semibold border">{supplier.SRno}</td>
+                    <td className="py-2 px-2 font-semibold border">{supplier.name}</td>
+                    <td className="py-2 px-2 font-semibold border">{supplier.category}</td>
+                    <td className="py-2 px-2 font-semibold border">{supplier.mobile}</td>
+                    <td className="py-2 px-2 font-semibold border text-center space-x-6">
                       <button onClick={() => handleOpenModal(supplier)} >
                         <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                       </button>

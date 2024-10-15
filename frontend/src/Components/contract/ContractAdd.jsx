@@ -154,8 +154,8 @@ export default function ContractAdd() {
     return (
         <>
             <Toaster />
-            <div className='flex justify-center bg-red-600'>
-                <div className='w-full bg-sky-700'>
+            <div className='flex justify-center'>
+                <div className='w-full'>
                     <div
                         className="relative min-h-screen overflow-hidden"
                         style={{
@@ -239,12 +239,12 @@ export default function ContractAdd() {
 const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handleSubmit }) => {
     return (
         <div className='flex items-center justify-center min-h-screen'>
-            <div className='bg-white border border-neutral-500 rounded-2xl p-8 w-full max-w-4xl'>
+            <div className='bg-zinc-200 bg border border-neutral-500 rounded-2xl p-8 w-full max-w-4xl'>
                 <form className='m-0' onSubmit={handleSubmit}>
                     <div className='mb-5'>
                         <label>Tender No :</label>
                         <input
-                            className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                            className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                             type="text"
                             id="tenderNo"
                             name="tenderNo"
@@ -255,7 +255,7 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handl
                     <div className='mb-5'>
                         <label>Supplier :</label>
                         <select
-                            className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                            className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                             id="supplier"
                             name="supplier"
                             value={formData.supplier}
@@ -270,7 +270,7 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handl
                     <div className='mb-8'>
                         <label>Customer :</label>
                         <select
-                            className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                            className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                             id="customer"
                             name="customer"
                             value={formData.customer}
@@ -286,7 +286,7 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handl
                         <div>
                             <label>Customer Contract Start Date</label>
                             <input
-                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600 pr-2'
+                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600 pr-2'
                                 type="date"
                                 name="customerContStartDate"
                                 value={formData.customerContStartDate}
@@ -296,7 +296,7 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handl
                         <div>
                             <label>Customer Contract End Date</label>
                             <input
-                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600 pr-2'
+                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600 pr-2'
                                 type="date"
                                 name="customerContEndDate"
                                 value={formData.customerContEndDate}
@@ -306,7 +306,7 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handl
                         <div>
                             <label>Supplier Contract Start Date</label>
                             <input
-                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600 pr-2'
+                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600 pr-2'
                                 type="date"
                                 name="supplierContStartDate"
                                 value={formData.supplierContStartDate}
@@ -316,7 +316,7 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handl
                         <div>
                             <label>Supplier Contract End Date</label>
                             <input
-                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600 pr-2'
+                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600 pr-2'
                                 type="date"
                                 name="supplierContEndDate"
                                 value={formData.supplierContEndDate}
@@ -333,18 +333,17 @@ const StepOne = ({ formData, handleChange, nextStep, suppliers, customers, handl
     );
 };
 
-
 // Step 2 Component
 const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators, handleSubmit }) => {
     return (
         <>
             <div className='flex items-center justify-center min-h-screen'>
-                <div className='bg-white border border-neutral-500 rounded-2xl p-8 w-full max-w-4xl'>
+                <div className='bg-zinc-200 border border-neutral-500 rounded-2xl p-8 w-full max-w-4xl'>
                     <form className='m-5' onSubmit={handleSubmit}>
                         <div className='mb-5'>
                             <label>Subject Clerk :</label>
                             <input
-                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                 type="text"
                                 id="subjectClerk"
                                 name="subjectClerk"
@@ -360,7 +359,7 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators, han
                                         <div className='mb-3'>
                                             <label>Sales Team :</label>
                                             <select
-                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                                 id="salesTeam"
                                                 name="salesTeam"
                                                 value={formData.salesTeam}
@@ -375,7 +374,7 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators, han
                                         <div className='mb-3'>
                                             <label>AccountManager :</label>
                                             <select
-                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                                 id="accountManager"
                                                 name="accountManager"
                                                 value={formData.accountManager}
@@ -390,7 +389,7 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators, han
                                         <div className='mb-3'>
                                             <label>Manager :</label>
                                             <select
-                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                                 id="manager"
                                                 name="manager"
                                                 value={formData.manager}
@@ -407,7 +406,7 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators, han
                                         <div className='mb-3'>
                                             <label>Solution Team :</label>
                                             <select
-                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                                 id="solutionTeam"
                                                 name="solutionTeam"
                                                 value={formData.solutionTeam}
@@ -422,7 +421,7 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators, han
                                         <div className='mb-3'>
                                             <label>Sales Engineer:</label>
                                             <select
-                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                                 id="salesEngineer"
                                                 name="salesEngineer"
                                                 value={formData.salesEngineer}
@@ -437,7 +436,7 @@ const StepTwo = ({ formData, handleChange, prevStep, nextStep, coordinators, han
                                         <div>
                                             <label>Solution Engineer :</label>
                                             <select
-                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                                className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                                 id="solutionEngineer"
                                                 name="solutionEngineer"
                                                 value={formData.solutionEngineer}
@@ -473,13 +472,13 @@ const StepThree = ({ formData, handleChange, prevStep, nextStep, handleSubmit })
     return (
         <>
             <div className='flex items-center justify-center min-h-screen'>
-                <div className='bg-white border border-neutral-500 rounded-2xl p-8 w-full max-w-4xl'>
+                <div className='bg-zinc-200 border border-neutral-500 rounded-2xl p-8 w-full max-w-4xl'>
                     <form className='m-5' onSubmit={handleSubmit}>
                         <div className='grid grid-cols-2 gap-x-5'>
                             <div>
                                 <label>Contract Status :</label>
                                 <select
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600 pr-2'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600 pr-2'
                                     type="text"
                                     id='contractStatus'
                                     name="contractStatus"
@@ -497,7 +496,7 @@ const StepThree = ({ formData, handleChange, prevStep, nextStep, handleSubmit })
                             <label>Solution Description :</label>
                             <textarea
                                 rows={5}
-                                className='block w-full mt-1.5 rounded ps-2 pt-2 border border-gray-400 focus:outline-indigo-600'
+                                className='block w-full mt-1.5 rounded ps-2 pt-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                 type="textarea"
                                 name="solutionDescription"
                                 value={formData.solutionDescription}
@@ -508,7 +507,7 @@ const StepThree = ({ formData, handleChange, prevStep, nextStep, handleSubmit })
                             <label>Remarks :</label>
                             <textarea
                                 rows={5}
-                                className='block w-full mt-1.5 rounded ps-2 pt-2 border border-gray-400 focus:outline-indigo-600'
+                                className='block w-full mt-1.5 rounded ps-2 pt-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                 type="textarea"
                                 name="remarks"
                                 value={formData.remarks}
@@ -535,7 +534,7 @@ const StepFour = ({ formData, handleAMCDetailsChange, prevStep, handleAddAMCDeta
     return (
         <>
             <div className='flex justify-center'>
-                <div className='my-10 mx-4 border border-neutral-500 bg-white rounded'>
+                <div className='my-10 mx-4 border border-neutral-500 bg-zinc-200 rounded'>
                     <h1 className='underline font-bold text-3xl text-indigo-800 ml-10 mt-5'>AMC Payment Details</h1>
                     <form className='m-10 mt-5 mb-5' onSubmit={handleSubmit}>
                         {formData.AMCDetails.map((detail, index) => (
@@ -544,7 +543,7 @@ const StepFour = ({ formData, handleAMCDetailsChange, prevStep, handleAddAMCDeta
                                     <div className='grid grid-rows-2'>
                                         <label>Payment Term :</label>
                                         <input
-                                            className='block h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600 mt-5'
+                                            className='block h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600 mt-5'
                                             type="text"
                                             name={`AMCpaymentterms${index}`}
                                             value={detail.AMCpaymentterms}
@@ -554,7 +553,7 @@ const StepFour = ({ formData, handleAMCDetailsChange, prevStep, handleAddAMCDeta
                                     <div className='grid grid-rows-2 w-1/2 ml-1'>
                                         <label>Currency :</label>
                                         <input
-                                            className='block h-8 w-full rounded ps-2 py-1 border border-gray-400 focus:outline-indigo-600 mt-5'
+                                            className='block h-8 w-full rounded ps-2 py-1 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600 mt-5'
                                             type="text"
                                             name={`AMCcurrency${index}`}
                                             value={detail.AMCcurrency}
@@ -573,7 +572,7 @@ const StepFour = ({ formData, handleAMCDetailsChange, prevStep, handleAddAMCDeta
                                                         Year {amtIndex + 1}
                                                     </button>
                                                     <input
-                                                        className='block rounded ps-2 py-1 border border-gray-400 focus:outline-indigo-600 w-full'
+                                                        className='block rounded ps-2 py-1 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600 w-full'
                                                         style={{ marginTop: '9px' }}
                                                         type="text"
                                                         name={`AMCamount${index}${amtIndex}`}
@@ -611,7 +610,7 @@ const StepFour = ({ formData, handleAMCDetailsChange, prevStep, handleAddAMCDeta
                                     <label>Payment Description :</label>
                                     <textarea
                                         rows={1}
-                                        className='block w-full -mt-0.5 rounded ps-2 py-2 border border-gray-400 focus:outline-indigo-600'
+                                        className='block w-full -mt-0.5 rounded ps-2 py-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                         type="textarea"
                                         name={`paymentDescription${index}`}
                                         value={formData.paymentDescription}
@@ -653,7 +652,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Supplier :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.supplier}
                                     disabled />
@@ -661,7 +660,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Customer :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.customer}
                                     disabled />
@@ -669,7 +668,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">AccountManager :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.accountManager}
                                     disabled />
@@ -677,7 +676,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Manager :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.manager}
                                     disabled />
@@ -685,7 +684,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Sales Engineer :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.salesEngineer}
                                     disabled />
@@ -693,7 +692,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Solution Engineer :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.solutionEngineer}
                                     disabled />
@@ -701,7 +700,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Tender No :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.tenderNo}
                                     disabled />
@@ -709,7 +708,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Customer Contract Start Date :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.customerContStartDate}
                                     disabled />
@@ -717,7 +716,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Customer Contract End Date :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.customerContEndDate}
                                     disabled />
@@ -725,7 +724,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Supplier Contract Start Date :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.supplierContStartDate}
                                     disabled />
@@ -733,7 +732,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Supplier Contract End Date :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.supplierContEndDate}
                                     disabled />
@@ -741,7 +740,7 @@ const StepFive = ({ formData, editCurrent, handleSubmit }) => {
                             <div>
                                 <label htmlFor="">Solution Description :</label>
                                 <input
-                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-indigo-600'
+                                    className='block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-2 focus:border-indigo-600'
                                     type="text"
                                     value={formData.solutionDescription}
                                     disabled />
