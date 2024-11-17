@@ -31,8 +31,9 @@ const ExampleComponent = () => {
   const fetchCoordinators = async () => {
     try {
       const response = await axios.get('http://localhost:4500/portaldev/allcordinator');
-      setCoordinators(response.data.data);
-      setFilteredCoordinators(response.data.data); // Initialize filtered list with full data
+      const sortedData = response.data.data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      setCoordinators(sortedData);
+      setFilteredCoordinators(sortedData); // Initialize filtered list with sorted data
     } catch (error) {
       console.error('Error fetching coordinators:', error);
     }

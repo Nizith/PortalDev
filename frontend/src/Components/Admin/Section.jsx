@@ -19,8 +19,8 @@ export default function DataTable() {
     const fetchSections = async () => {
       try {
         const response = await axios.get('http://localhost:4500/portaldev/readsection');
-        setSections(response.data.data); // Assuming response.data.data contains the list of sections
-        setFilteredSections(response.data.data); // Set filtered sections initially to all sections
+        setSections(response.data.data); // The data should be sorted by createdAt in descending order
+        setFilteredSections(response.data.data);
       } catch (error) {
         console.error('Error fetching sections:', error);
       }
@@ -60,7 +60,7 @@ export default function DataTable() {
       if (isEditMode) {
         // Edit section logic
         const response = await axios.put(
-          `http://localhost:4500/portaldev/updatesection/${selectedSection._id}`, // Assuming _id is the identifier field
+          `http://localhost:4500/portaldev/updatesection/${selectedSection._id}`,
           inputFields
         );
         setSections((prevSections) =>
@@ -83,8 +83,8 @@ export default function DataTable() {
           'http://localhost:4500/portaldev/createsection',
           inputFields
         );
-        setSections((prevSections) => [...prevSections, response.data.data]);
-        setFilteredSections((prevSections) => [...prevSections, response.data.data]);
+        setSections((prevSections) => [response.data.data, ...prevSections]);
+        setFilteredSections((prevSections) => [response.data.data, ...prevSections]);
       }
 
       handleCloseModal();
@@ -93,7 +93,7 @@ export default function DataTable() {
     }
   };
 
-  const handleDeleteSection = async (sectionID,id) => {
+  const handleDeleteSection = async (sectionID, id) => {
     try {
       const response = await axios.delete(`http://localhost:4500/portaldev/deletesection/${id}`);
       if (response.status === 200) {
@@ -109,7 +109,7 @@ export default function DataTable() {
     }
   };
 
-  const handleFilterChange = (e) => { 
+  const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilteredSections(
       sections.filter((section) =>
@@ -121,7 +121,7 @@ export default function DataTable() {
   return (
     <>
       <div className="float-right w-full min-h-screen">
-        <h2 className="flex justify-center text-black text-2xl font-bold mt-4 ">Section Table</h2>
+        <h2 className="flex justify-center text-black text-2xl font-bold mt-4">Section Table</h2>
         <div className="mx-8 mt-4">
           <div className="bg-white w-full p-8 rounded-lg shadow-lg">
             {/* Filter Inputs */}
@@ -164,14 +164,14 @@ export default function DataTable() {
                       <td className="py-2 px-4 border">{section.sectionName}</td>
                       <td className="py-2 px-4 border text-center">
                         <button
-                          className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600 ml-2 "
+                          className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600 ml-2"
                           onClick={() => handleOpenModal(section)}
                         >
                           Update
                         </button>
                         <button
-                          className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2 "
-                          onClick={() => handleDeleteSection(section.sectionID,section._id)}
+                          className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
+                          onClick={() => handleDeleteSection(section.sectionID, section._id)}
                         >
                           Delete
                         </button>

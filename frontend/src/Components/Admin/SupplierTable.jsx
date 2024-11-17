@@ -29,8 +29,10 @@ const SupplierComponent = () => {
         const supplierResponse = await axios.get(
           "http://localhost:4500/portaldev/readsupplier"
         );
-        setSuppliers(supplierResponse.data.data);
-        setFilteredSuppliers(supplierResponse.data.data);
+        // Sorting the suppliers by createdAt in descending order
+        const sortedData = supplierResponse.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setSuppliers(sortedData);
+        setFilteredSuppliers(sortedData);
 
         // Fetch categories
         const categoryResponse = await axios.get(
@@ -103,16 +105,12 @@ const SupplierComponent = () => {
         );
         setSuppliers((prevSuppliers) =>
           prevSuppliers.map((supplier) =>
-            supplier._id === selectedSupplier._id
-              ? response.data.data
-              : supplier
+            supplier._id === selectedSupplier._id ? response.data.data : supplier
           )
         );
         setFilteredSuppliers((prevSuppliers) =>
           prevSuppliers.map((supplier) =>
-            supplier._id === selectedSupplier._id
-              ? response.data.data
-              : supplier
+            supplier._id === selectedSupplier._id ? response.data.data : supplier
           )
         );
       } else {
@@ -120,14 +118,9 @@ const SupplierComponent = () => {
           "http://localhost:4500/portaldev/createsupplier",
           formData
         );
-        setSuppliers((prevSuppliers) => [
-          ...prevSuppliers,
-          response.data.data,
-        ]);
-        setFilteredSuppliers((prevSuppliers) => [
-          ...prevSuppliers,
-          response.data.data,
-        ]);
+        const newSupplier = response.data.data;
+        setSuppliers((prevSuppliers) => [newSupplier, ...prevSuppliers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+        setFilteredSuppliers((prevSuppliers) => [newSupplier, ...prevSuppliers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       }
 
       handleCloseModal();
@@ -136,17 +129,17 @@ const SupplierComponent = () => {
     }
   };
 
-  const handleDeleteSupplier = async (SRno,id) => {
+  const handleDeleteSupplier = async (SRno, id) => {
     try {
       const response = await axios.delete(
         `http://localhost:4500/portaldev/deleteSupplier/${id}`
       );
       if (response.status === 200) {
         setSuppliers((prevSuppliers) =>
-          prevSuppliers.filter((supplier) => supplier.SRno !== SRno)
+          prevSuppliers.filter((supplier) => supplier.SRno !== SRno).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         );
         setFilteredSuppliers((prevSuppliers) =>
-          prevSuppliers.filter((supplier) => supplier.SRno !== SRno)
+          prevSuppliers.filter((supplier) => supplier.SRno !== SRno).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         );
       }
     } catch (error) {
@@ -166,7 +159,7 @@ const SupplierComponent = () => {
         (currentFilterData.mobile === "" ||
           supplier.mobile.toString().toLowerCase().includes(currentFilterData.mobile.toLowerCase()))
       );
-    });
+    }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     setFilteredSuppliers(filtered);
   };
 
@@ -248,6 +241,7 @@ const SupplierComponent = () => {
                         onClick={() => handleDeleteSupplier(supplier.SRno, supplier._id)}
                       >
                         Delete
+                      
                       </button>
                     </td>
                   </tr>
@@ -284,7 +278,8 @@ const SupplierComponent = () => {
                       type="text"
                       name="name"
                       value={formData.name}
-                      onChange={handleInputChange}                      className="w-full p-2 border border-gray-300 rounded"
+                      onChange={handleInputChange}
+                      className="w-full p-2 border border-gray-300 rounded"
                     />
                   </div>
                   <div className="mb-4">

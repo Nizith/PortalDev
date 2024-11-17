@@ -9,26 +9,27 @@ const initialInputFields = {
 };
 
 export default function customerTable() {
-  const [customer, setcustomer] = useState([]);
-  const [filteredcustomer, setFilteredcustomer] = useState([]);
+  const [customer, setCustomer] = useState([]);
+  const [filteredCustomer, setFilteredCustomer] = useState([]);
   const [inputFields, setInputFields] = useState(initialInputFields);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedcustomer, setSelectedcustomer] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
 
-  // Fetch all customer from the API
+  // Fetch all customers from the API
   useEffect(() => {
-    const fetchcustomer = async () => {
+    const fetchCustomers = async () => {
       try {
         const response = await axios.get("http://localhost:4500/portaldev/readcustomer");
-        setcustomer(response.data.data); // Assuming response.data.data contains the list of customer
-        setFilteredcustomer(response.data.data); // Set filtered customer initially to all customer
+        const sortedData = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sorting by createdAt
+        setCustomer(sortedData); // Set sorted data
+        setFilteredCustomer(sortedData); // Set filtered customers to sorted data initially
       } catch (error) {
-        console.error("Error fetching customer:", error);
+        console.error("Error fetching customers:", error);
       }
     };
 
-    fetchcustomer();
+    fetchCustomers();
   }, []);
 
   const handleOpenModal = (customer = null) => {
@@ -39,7 +40,7 @@ export default function customerTable() {
       setIsEditMode(false);
       setInputFields(initialInputFields);
     }
-    setSelectedcustomer(customer);
+    setSelectedCustomer(customer);
     setIsModalOpen(true);
   };
 
@@ -55,56 +56,56 @@ export default function customerTable() {
     });
   };
 
-  const handleFormSubmit = async (e,id) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      if (isEditMode) {
-        // Edit customer logic
-        const response = await axios.put(
-          `http://localhost:4500/portaldev/updateCustomer/${selectedcustomer._id}`
-          ,
-          inputFields
-        );
-        setcustomer((prevcustomer) =>
-          prevcustomer.map((customer) =>
-            customer.BRnumber === selectedcustomer.BRnumber
-              ? response.data.data
-              : customer
-          )
-        );
-        setFilteredcustomer((prevcustomer) =>
-          prevcustomer.map((customer) =>
-            customer.BRnumber === selectedcustomer.BRnumber
-              ? response.data.data
-              : customer
-          )
-        );
-      } else {
-        // Add new customer logic
-        const response = await axios.post(
-          "http://localhost:4500/portaldev/createcustomer",
-          inputFields
-        );
-        setcustomer((prevcustomer) => [...prevcustomer, response.data.data]);
-        setFilteredcustomer((prevcustomer) => [...prevcustomer, response.data.data]);
-      }
+        if (isEditMode) {
+            // Edit customer logic
+            const response = await axios.put(
+                `http://localhost:4500/portaldev/updateCustomer/${selectedCustomer._id}`,
+                inputFields
+            );
 
-      handleCloseModal();
+            const updatedCustomer = response.data.data;
+            setCustomer((prevCustomers) => 
+                prevCustomers.map((customer) =>
+                    customer.BRnumber === selectedCustomer.BRnumber ? updatedCustomer : customer
+                )
+            );
+            setFilteredCustomer((prevCustomers) =>
+                prevCustomers.map((customer) =>
+                    customer.BRnumber === selectedCustomer.BRnumber ? updatedCustomer : customer
+                )
+            );
+        } else {
+            // Add new customer logic
+            const response = await axios.post(
+                "http://localhost:4500/portaldev/createcustomer",
+                inputFields
+            );
+
+            const newCustomer = response.data.data;
+            setCustomer((prevCustomers) => [newCustomer, ...prevCustomers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+            setFilteredCustomer((prevCustomers) => [newCustomer, ...prevCustomers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+        }
+
+        handleCloseModal();
     } catch (error) {
-      console.error("Error submitting form:", error);
+        console.error("Error submitting form:", error);
     }
-  };
+};
 
-  const handleDeletecustomer = async (BRnumber,id) => {
+
+  const handleDeleteCustomer = async (BRnumber, id) => {
     try {
       const response = await axios.delete(`http://localhost:4500/portaldev/deletecustomer/${id}`);
       if (response.status === 200) {
-        setcustomer((prevcustomer) =>
-          prevcustomer.filter((customer) => customer.BRnumber !== BRnumber)
+        setCustomer((prevCustomers) =>
+          prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         );
-        setFilteredcustomer((prevcustomer) =>
-          prevcustomer.filter((customer) => customer.BRnumber !== BRnumber)
+        setFilteredCustomer((prevCustomers) =>
+          prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         );
       }
     } catch (error) {
@@ -114,10 +115,10 @@ export default function customerTable() {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilteredcustomer(
+    setFilteredCustomer(
       customer.filter((customer) =>
         customer[name].toLowerCase().includes(value.toLowerCase())
-      )
+      ).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     );
   };
 
@@ -160,8 +161,8 @@ export default function customerTable() {
               </tr>
             </thead>
             <tbody>
-              {filteredcustomer.length > 0 ? (
-                filteredcustomer.map((customer, index) => (
+              {filteredCustomer.length > 0 ? (
+                filteredCustomer.map((customer, index) => (
                   <tr key={index} className={`bg-${index % 2 === 0 ? "blue-50" : "white"}`}>
                     <td className="py-2 px-4 border-b">{customer.BRnumber}</td>
                     <td className="py-2 px-4 border-b">{customer.name}</td>
@@ -176,7 +177,7 @@ export default function customerTable() {
                       </button>
                       <button
                         className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
-                        onClick={() => handleDeletecustomer(customer.BRnumber,customer._id)}
+                        onClick={() => handleDeleteCustomer(customer.BRnumber, customer._id)}
                       >
                         Delete
                       </button>
@@ -213,7 +214,18 @@ export default function customerTable() {
                     />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-gray-700">customer Name:</label>
+                    <label className="block text-gray-700">BR number:</label>
+                    <input
+                      type="text"
+                      name="BRnumber"
+                      value={inputFields.BRnumber}
+                      onChange={handleInputChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                      readOnly={isEditMode}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">Customer Name:</label>
                     <input
                       type="text"
                       name="name"

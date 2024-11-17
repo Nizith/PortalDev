@@ -23,7 +23,7 @@ const createSupplier = async (req, res) => {
 const readSuppliers = (async (req, res) => {
 
     try {
-        const suppliers = await supplierModel.find();
+        const suppliers = await supplierModel.find().sort({ createdAt: -1 });
         if (suppliers) {
             res.status(200).json({
                 message: "All suppliers are fetched",

@@ -31,8 +31,9 @@ const SalesCategoryComponent = () => {
   const fetchCoordinators = async () => {
     try {
       const response = await axios.get('http://localhost:4500/portaldev/allcordinator');
-      setCoordinators(response.data.data);
-      setFilteredCoordinators(response.data.data); // Initialize filtered list with full data
+      const sortedData = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sorting by createdAt
+      setCoordinators(sortedData);
+      setFilteredCoordinators(sortedData); // Initialize filtered list with sorted data
     } catch (error) {
       console.error('Error fetching coordinators:', error);
     }
@@ -93,8 +94,10 @@ const SalesCategoryComponent = () => {
         await axios.put(`http://localhost:4500/portaldev/updatecordinator/${selectedCoordinator._id}`, formData);
         fetchCoordinators();
       } else {
-        await axios.post('http://localhost:4500/portaldev/createCordinator', formData);
-        fetchCoordinators();
+        const response = await axios.post('http://localhost:4500/portaldev/createCordinator', formData);
+        const newCoordinator = response.data.data;
+        setCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+        setFilteredCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       }
       handleCloseModal();
     } catch (error) {
@@ -112,8 +115,6 @@ const SalesCategoryComponent = () => {
   };
 
   return (
-    <>
-    
     <div className="p-8 bg-gray-100 min-h-screen">
       <h2 className="text-2xl font-bold mb-4">Sales Category </h2>
       <div className="flex gap-4 mb-4 ">
@@ -132,11 +133,11 @@ const SalesCategoryComponent = () => {
           onChange={(e) => setManagerFilter(e.target.value)}
         />
         <button
-        onClick={() => handleOpenModal()}
-        className="bg-green-500 text-white px-4 py-2 rounded mb-4"
-      >
-        Add New
-      </button>
+          onClick={() => handleOpenModal()}
+          className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        >
+          Add New
+        </button>
       </div>
       
       <table className="min-w-full bg-white shadow-md rounded-lg">
@@ -259,8 +260,6 @@ const SalesCategoryComponent = () => {
         </div>
       )}
     </div>
-    
-    </>
   );
 };
 
