@@ -3,13 +3,17 @@ import './index.css'
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import Bodycomponent from "./Components/Admin/Bodycomponent.jsx"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
-import PaymentAdd from "./Components/PaymentAdd.jsx"
+import PaymentAdd from "./Components/Payment/PaymentAdd.jsx"
+import Payment from "./Components/Payment/Payment.jsx"
 import Login from "./Components/Login/Login.jsx"
 import LandingPage from "./Components/Login/LandingPage.jsx"
 import Section from "./Components/Admin/Section.jsx"
 import SupplierTable from "./Components/Admin/SupplierTable.jsx"
 import CordinatorComponent from "./Components/Admin/CordinatorComponent.jsx"
 import Sidebar from "./Components/Login/Sidebar.jsx"
+import ContractAdd from "./Components/contract/ContractAdd.jsx"
+import ViewContract from "./Components/contract/ViewContract.jsx"
+import ManageContracts from "./Components/contract/ManageContracts.jsx"
 
 
 function Layout({ children }) {
@@ -43,11 +47,14 @@ function App() {
           {/* Admin Pages */}
           <Route path="/admindashboard" element={< Bodycomponent />} />
 
-          <Route path="/addsupplier" element={<SupplierTable />} />
-          <Route path="/addcustomer" element={<CustomerAdd />} />
-          <Route path="/addcordinator" element={<CordinatorComponent/>} />
-          <Route path="/addsection" element={<Section />} />
-          
+          <Route path="/addcontract" element={<ContractAdd />} />
+          <Route path="/contracts" element={<ManageContracts />} />
+          <Route path="/payments" element={<Payment />} />
+          <Route path="/suppliers" element={<SupplierTable />} />
+          <Route path="/customers" element={<CustomerAdd />} />
+          <Route path="/cordinators" element={<CordinatorComponent />} />
+          <Route path="/sections" element={<Section />} />
+
 
           {/* 
           <Route path="/customer" element={<Customer />} />
@@ -58,8 +65,9 @@ function App() {
            */}
 
           {/* User Pages */}
-          {/* <Route path="/addcontract" element={<ContractAdd />} />
-          <Route path="/viewcontract" element={<ViewContract />} /> */}
+          <Route path="/addcontract" element={<ContractAdd />} />
+          <Route path="/viewcontracts" element={<ViewContract />} />
+          <Route path="/payments" element={<Payment />} />
           <Route path="/addpayment" element={<PaymentAdd />} />
 
         </Routes>

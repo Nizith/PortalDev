@@ -21,7 +21,7 @@ export default function PaymentAdd() {
 
         const newPayment = { PRnumber, PRdate, LOIdetails, POnumber, POdate, InvoiceNumber, InvoiceDate, Paymentstatus, Paiddate, Paymentremarks }
 
-        axios.post("http://localhost:4500/portaldev/createPayment", newPayment)
+        axios.post("http://localhost:4500/portaldev/createpayment", newPayment)
             .then(() => {
                 alert("Payment Successful!")
             })
@@ -34,13 +34,12 @@ export default function PaymentAdd() {
     }
 
     return (
-        <div className=' w-screen  h-screen flex justify-center items-center'>
-            <div className='w-1/2  px-5  bg-sky-700 bg-opacity-55  rounded-2xl shadow-md '>
+        <div className=' w-full  h-full flex justify-center items-center '>
+            <div className='w-3/4 h-full px-5  bg-sky-700 bg-opacity-55  rounded-2xl shadow-md mt-6'>
                 <form onSubmit={PaymentSubmit} >
-                    <fieldset className='border-2  p-3 my-4 rounded-xl'>
-                    <legend className='text-2xl font-semibold px-1 '>Payments</legend>
+                    
 
-                        <div className='grid grid-cols-2  gap-x-8'>
+                        <div className='grid grid-cols-2  gap-x-8 mt-4'>
                             <div>
                                 <label className="block text-medium font-medium text-gray-950 ">PRnumber :</label>
                                 <input onChange={(e) => { setPRnumber(e.target.value) }}
@@ -88,7 +87,7 @@ export default function PaymentAdd() {
                                     type='date' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
                             </div>
                         </div>
-                        <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
+                        <div className='grid grid-cols-2  gap-x-8'>
                             <div className='mb-5'>
                                 <label className="block text-medium font-medium text-gray-950">Paymentstatus:</label>
                                 <input onChange={(e) => setPaymentstatus(e.target.value)}
@@ -102,12 +101,12 @@ export default function PaymentAdd() {
                         </div>
 
 
-                        <div className="flex justify-center mt-8">
-                            <button className="w-2/3 py-1.5 bg-green-600 rounded-full text-white">Submit</button>
+                        <div className="flex justify-center mt-4 mb-4">
+                            <button className="w-2/3 py-1 bg-green-600 rounded-full text-white">Submit</button>
                         </div>
 
 
-                    </fieldset>
+                   
                 </form>
             </div>
         </div>

@@ -56,7 +56,7 @@ export default function customerTable() {
     });
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e) => { 
     e.preventDefault();
 
     try {
