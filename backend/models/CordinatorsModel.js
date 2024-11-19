@@ -31,7 +31,7 @@ const CordinatorSchema = mongoose.Schema({
     type: String,
    // required: true
   }
-})
+}, { timestamps: true }); // Enable timestamps
 
 const cordinatorModel = mongoose.model("Cordinators", CordinatorSchema);
 

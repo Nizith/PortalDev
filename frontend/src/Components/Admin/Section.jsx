@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FaDeleteLeft } from "react-icons/fa6";
-import { MdEdit } from "react-icons/md";
-import LoadingAnimation from '../Login/LoadingAnimation';
 
 const initialInputFields = {
   sectionID: '',
@@ -16,27 +13,16 @@ export default function DataTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedSection, setSelectedSection] = useState(null);
-  const [loading, setLoading] = useState(true);
-
 
   // Fetch all sections from the API
   useEffect(() => {
     const fetchSections = async () => {
       try {
         const response = await axios.get('http://localhost:4500/portaldev/readsection');
-        setSections(response.data.data); // Assuming response.data.data contains the list of sections
-        setFilteredSections(response.data.data); // Set filtered sections initially to all sections
-
-        
-        // Simulate minimum 2-second loading time
-        const delay = new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Wait for both data fetch and 2 seconds delay
-        await Promise.all([delay, response]);
+        setSections(response.data.data); // The data should be sorted by createdAt in descending order
+        setFilteredSections(response.data.data);
       } catch (error) {
         console.error('Error fetching sections:', error);
-      }finally {
-        setLoading(false); // Stop the loading animation after both conditions are met
       }
     };
 
@@ -74,7 +60,7 @@ export default function DataTable() {
       if (isEditMode) {
         // Edit section logic
         const response = await axios.put(
-          `http://localhost:4500/portaldev/updatesection/${selectedSection._id}`, // Assuming _id is the identifier field
+          `http://localhost:4500/portaldev/updatesection/${selectedSection._id}`,
           inputFields
         );
         setSections((prevSections) =>
@@ -97,8 +83,8 @@ export default function DataTable() {
           'http://localhost:4500/portaldev/createsection',
           inputFields
         );
-        setSections((prevSections) => [...prevSections, response.data.data]);
-        setFilteredSections((prevSections) => [...prevSections, response.data.data]);
+        setSections((prevSections) => [response.data.data, ...prevSections]);
+        setFilteredSections((prevSections) => [response.data.data, ...prevSections]);
       }
 
       handleCloseModal();
@@ -133,15 +119,11 @@ export default function DataTable() {
   };
 
   return (
-    <>{loading ? (
-      <>
-        <LoadingAnimation />
-      </>
-    ) : (
+    <>
       <div className="float-right w-full min-h-screen">
-        <h2 className="flex justify-center text-black text-2xl font-bold mt-4 ">Section Table</h2>
-        <div className="mx-8 my-5">
-          <div>
+        <h2 className="flex justify-center text-black text-2xl font-bold mt-4">Section Table</h2>
+        <div className="mx-8 mt-4">
+          <div className="bg-white w-full p-8 rounded-lg shadow-lg">
             {/* Filter Inputs */}
             <div className="flex mb-4 space-x-2">
               <input
@@ -149,43 +131,49 @@ export default function DataTable() {
                 name="sectionID"
                 placeholder="Filter by Section ID"
                 onChange={handleFilterChange}
-                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
               />
               <input
                 type="text"
                 name="sectionName"
                 placeholder="Filter by Section Name"
                 onChange={handleFilterChange}
-                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
               />
               <button
-                className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
+                className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
                 onClick={() => handleOpenModal()}
               >
                 New
               </button>
             </div>
 
-            <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
+            <table className="min-w-full bg-white border border-gray-200">
               <thead>
-                <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                  <th className="py-3 px-4 font-bold uppercase border">Section ID</th>
-                  <th className="py-3 px-4 font-bold uppercase border">Section Name</th>
-                  <th className="py-3 px-4 font-bold uppercase border">Action</th>
+                <tr className="bg-blue-500 text-white">
+                  <th className="py-2 px-4 border">Section ID</th>
+                  <th className="py-2 px-4 border">Section Name</th>
+                  <th className="py-2 px-4 border">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredSections.length > 0 ? (
                   filteredSections.map((section) => (
-                    <tr key={section.sectionID} className='hover:bg-gray-200 transition-all duration-300 ease-in-out'>
-                      <td className="py-2 px-2 font-semibold border">{section.sectionID}</td>
-                      <td className="py-2 px-2 font-semibold border">{section.sectionName}</td>
-                      <td className="py-2 px-2 font-semibold border text-center space-x-6">
-                        <button onClick={() => handleOpenModal(section)} >
-                          <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
+                    <tr key={section.sectionID}>
+                      <td className="py-2 px-4 border">{section.sectionID}</td>
+                      <td className="py-2 px-4 border">{section.sectionName}</td>
+                      <td className="py-2 px-4 border text-center">
+                        <button
+                          className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600 ml-2"
+                          onClick={() => handleOpenModal(section)}
+                        >
+                          Update
                         </button>
-                        <button onClick={() => handleDeleteSection(section.sectionID, section._id)} >
-                          <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
+                        <button
+                          className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
+                          onClick={() => handleDeleteSection(section.sectionID, section._id)}
+                        >
+                          Delete
                         </button>
                       </td>
                     </tr>
@@ -232,14 +220,14 @@ export default function DataTable() {
                     <div className="flex justify-end space-x-4">
                       <button
                         type="submit"
-                        className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
+                        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
                       >
                         {isEditMode ? 'Update' : 'Add'}
                       </button>
                       <button
                         type="button"
                         onClick={handleCloseModal}
-                        className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-800 hover:ring-2 ring-gray-500 duration-200"
+                        className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
                       >
                         Cancel
                       </button>
@@ -251,7 +239,6 @@ export default function DataTable() {
           </div>
         </div>
       </div>
-    )}
     </>
   );
 }

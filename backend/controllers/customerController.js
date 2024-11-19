@@ -1,93 +1,88 @@
 const customerModel = require('../models/customerModel.js');
 
-//create Customers
+// Create Customer
 const createCustomer = async (req, res) => {
     try {
-        const newCustomer = await customerModel.create(req.body)
+        const newCustomer = await customerModel.create(req.body);
 
         return newCustomer ? res.status(200).json({
             message: "Customer is created",
             data: newCustomer
-        }) :
-            res.status(500).json({
-                message: "Customer is not created"
-            })
+        }) : res.status(500).json({
+            message: "Customer is not created"
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
-//getAll customers
-const readCustomers = (async (req, res) => {
+
+// Get All Customers
+const readCustomers = async (req, res) => {
     try {
-        const customers = await customerModel.find({})
+        const customers = await customerModel.find().sort({ createdAt: -1 }); // Sorting by createdAt in descending order
         if (customers) {
             res.status(200).json({
                 message: "All customers are fetched",
                 data: customers
-            })
-        }
-        else {
+            });
+        } else {
             res.status(500).json({
                 message: "All customers are not fetched",
                 data: customers
-            })
+            });
         }
     } catch (error) {
         console.log(error);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
-})
+}
 
-//getOne Customer
+// Get One Customer
 const getOneCustomer = async (req, res) => {
     const { id } = req.params;
 
     try {
         const OneCustomer = await customerModel.findById(id);
         return OneCustomer ? res.status(200).json({
-            message: "find the Customer",
+            message: "Find the Customer",
             data: OneCustomer
-        })
-            : res.status(500).json({
-                message: "Customer is not found",
-            })
-    }
-    catch (error) {
+        }) : res.status(500).json({
+            message: "Customer is not found"
+        });
+    } catch (error) {
         console.log(error.message);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
 
-//Update Customer
+// Update Customer
 const updateCustomer = async (req, res) => {
     try {
         const { id } = req.params;
         const updateCustomer = await customerModel.findByIdAndUpdate(id, req.body);
 
         return updateCustomer ? res.status(200).json({
-            message: "customer is Updated",
+            message: "Customer is updated",
             data: updateCustomer
-        })
-            : res.status(505).json({
-                message: "Customer is not updated"
-            })
-    }
-    catch (error) {
-        console.log(error.message)
+        }) : res.status(505).json({
+            message: "Customer is not updated"
+        });
+    } catch (error) {
+        console.log(error.message);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
 
-//Delete Customer
+// Delete Customer
 const deleteCustomer = async (req, res) => {
     try {
         const { id } = req.params;
@@ -97,18 +92,17 @@ const deleteCustomer = async (req, res) => {
         return deleteCustomer ? res.status(200).json({
             message: "Customer is deleted",
             data: deleteCustomer
-        })
-            : res.status(500).json({
-                message: "Customer is not deleted",
-            })
-    }
-    catch (error) {
+        }) : res.status(500).json({
+            message: "Customer is not deleted"
+        });
+    } catch (error) {
         console.log(error.message);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
+
 module.exports = {
     createCustomer,
     readCustomers,
