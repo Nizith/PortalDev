@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FaDeleteLeft } from "react-icons/fa6";
+import { MdEdit } from "react-icons/md";
+import LoadingAnimation from "../Login/LoadingAnimation";
 
 const SupplierComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -167,7 +170,7 @@ const SupplierComponent = () => {
     <>
       <div className="float-right w-full min-h-screen">
         <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Supplier Table</h2>
-        <div className="mx-8 mt-4">
+        <div className="mx-8 mt-5">
           <div>
             <div className="flex mb-4 space-x-2">
               <input
@@ -176,7 +179,7 @@ const SupplierComponent = () => {
                 placeholder="Filter by SR No"
                 value={filterData.SRno}
                 onChange={handleFilterChange}
-                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
               />
               <input
                 type="text"
@@ -192,7 +195,7 @@ const SupplierComponent = () => {
                 placeholder="Filter by category"
                 value={filterData.category}
                 onChange={handleFilterChange}
-                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
               />
               <input
                 type="text"
@@ -200,10 +203,10 @@ const SupplierComponent = () => {
                 placeholder="Filter by mobile"
                 value={filterData.mobile}
                 onChange={handleFilterChange}
-                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
               />
               <button
-                className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
+                className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
                 onClick={() => handleOpenModal()}
               >
                 New
@@ -211,44 +214,38 @@ const SupplierComponent = () => {
             </div>
           </div>
 
-          <table className="min-w-full bg-white border border-gray-200">
+          <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
             <thead>
-              <tr className="bg-blue-500 text-white">
-                <th className="py-2 px-4 border">Supplier SR No</th>
-                <th className="py-2 px-4 border">Supplier Name</th>
-                <th className="py-2 px-4 border">Category</th>
-                <th className="py-2 px-4 border">Mobile</th>
-                <th className="py-2 px-4 border">Action</th>
+              <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
+                <th className="py-3 px-4 font-bold uppercase border">Supplier SR No</th>
+                <th className="py-3 px-4 font-bold uppercase border">Supplier Name</th>
+                <th className="py-3 px-4 font-bold uppercase border">Category</th>
+                <th className="py-3 px-4 font-bold uppercase border">Mobile</th>
+                <th className="py-3 px-4 font-bold uppercase border">Action</th>
               </tr>
             </thead>
             <tbody>
               {filteredSuppliers.length > 0 ? (
                 filteredSuppliers.map((supplier) => (
                   <tr key={supplier.SRno}>
-                    <td className="py-2 px-4 border">{supplier.SRno}</td>
-                    <td className="py-2 px-4 border">{supplier.name}</td>
-                    <td className="py-2 px-4 border">{supplier.category}</td>
-                    <td className="py-2 px-4 border">{supplier.mobile}</td>
-                    <td className="py-2 px-4 border text-center">
-                      <button
-                        className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
-                        onClick={() => handleOpenModal(supplier)}
-                      >
-                        Update
+                    <td className="py-2 px-2 font-semibold border">{supplier.SRno}</td>
+                    <td className="py-2 px-2 font-semibold border">{supplier.name}</td>
+                    <td className="py-2 px-2 font-semibold border">{supplier.category}</td>
+                    <td className="py-2 px-2 font-semibold border">{supplier.mobile}</td>
+                    <td className="py-2 px-2 font-semibold border">
+                      <button onClick={() => handleOpenModal(supplier)}>
+                      <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                       </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
-                        onClick={() => handleDeleteSupplier(supplier.SRno, supplier._id)}
-                      >
-                        Delete
-                      
+                      <button  onClick={() => handleDeleteSupplier(supplier.SRno, supplier._id)}>
+                       
+                      <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
                       </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="py-2 px-4 border text-center">
+                  <td colSpan="14" className="py-2 text-center">
                     No suppliers found
                   </td>
                 </tr>
@@ -259,7 +256,7 @@ const SupplierComponent = () => {
           {isModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
               <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
-                <h2 className="text-xl font-bold mb-4">{isEditMode ? "Edit Supplier" : "Add Supplier"}</h2>
+                <h2 className="text-center text-xl font-bold mb-4">{isEditMode ? "Edit Supplier" : "Add Supplier"}</h2>
                 <form onSubmit={handleFormSubmit}>
                   <div className="mb-4">
                     <label className="block text-gray-700">Supplier SR No:</label>
@@ -310,17 +307,17 @@ const SupplierComponent = () => {
                       className="w-full p-2 border border-gray-300 rounded"
                     ></textarea>
                   </div> 
-                  <div className="flex justify-end space-x-4">
+                  <div className="flex justify-end space-x-2">
                     <button
                       type="submit"
-                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                      className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
                     >
                       {isEditMode ? "Update" : "Add"}
                     </button>
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                      className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
                     >
                       Cancel
                     </button>
