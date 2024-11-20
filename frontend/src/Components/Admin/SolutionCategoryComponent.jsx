@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FaDeleteLeft } from "react-icons/fa6";
+import { MdEdit } from "react-icons/md";
+import LoadingAnimation from "../Login/LoadingAnimation";
 
 const ExampleComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -109,20 +112,21 @@ const ExampleComponent = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h2 className="text-2xl font-bold mb-4">Solution Category</h2>
-      <div className="flex gap-4 mb-4">
+    <div className="float-right w-full min-h-screen">
+      <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Solution Category</h2>
+      <div className="mx-8 my-5">
+      <div className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600">
         <input
           type="text"
           placeholder=""
-          className="border p-2 rounded w-1/3"
+          className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
           value={SolutionCategory}
           onChange={(e) => setSolutionCategory(e.target.value)}
         />
         <input
           type="text"
           placeholder="Filter by Section Name"
-          className="border p-2 rounded w-1/3"
+          className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
           value={filterSectionName}
           onChange={(e) => setFilterSectionName(e.target.value)}
         />
@@ -130,37 +134,31 @@ const ExampleComponent = () => {
       </div>
       <button
         onClick={() => handleOpenModal()}
-        className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+        className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
       >
         Add New 
       </button>
-      <table className="min-w-full bg-white shadow-md rounded-lg">
+      <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
         <thead>
-          <tr className="bg-blue-500">
-            <th className="py-2 px-4">Section Name</th>
-            <th className="py-2 px-4">Solution Category</th>
-            <th className="py-2 px-4">Solution Engineer</th>
-            <th className="py-2 px-4">Actions</th>
+          <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
+            <th className="py-3 px-4 font-bold uppercase border">Section Name</th>
+            <th className="py-3 px-4 font-bold uppercase border">Solution Category</th>
+            <th className="py-3 px-4 font-bold uppercase border">Solution Engineer</th>
+            <th className="py-3 px-4 font-bold uppercase border">Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredCoordinators.map((coordinator) => (
             <tr key={coordinator._id} className="border-t">
-              <td className="py-2 px-4">{coordinator.sectionName}</td>
-              <td className="py-2 px-4">{coordinator.SolutionCategory}</td>
-              <td className="py-2 px-4">{coordinator.SolutionEngineer}</td>
-              <td className="py-2 px-4">
-                <button
-                  onClick={() => handleOpenModal(coordinator)}
-                  className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
-                >
-                  Update
+              <td className="py-2 px-2 font-semibold border">{coordinator.sectionName}</td>
+              <td className="py-2 px-2 font-semibold border">{coordinator.SolutionCategory}</td>
+              <td className="py-2 px-2 font-semibold border">{coordinator.SolutionEngineer}</td>
+              <td className="py-2 px-2 font-semibold border">
+                <button onClick={() => handleOpenModal(coordinator)}>  
+                <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                 </button>
-                <button
-                  onClick={() => handleDelete(coordinator._id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  Delete
+                <button  onClick={() => handleDelete(coordinator._id)}> 
+                <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
                 </button>
               </td>
             </tr>
@@ -169,64 +167,68 @@ const ExampleComponent = () => {
       </table>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-            <h3 className="text-xl font-bold mb-4">
+            <h3 className="text-center text-xl font-bold mb-4">
               {isEditMode ? 'Edit Coordinator' : 'Add New Coordinator'}
             </h3>
             <form onSubmit={handleFormSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 mb-6">
               <div>
-                <label className="block font-bold mb-2">Section Name</label>
+                <label className="block text-gray-700">Section Name</label>
                 <input
                   type="text"
                   name="sectionName"
-                  className="w-full border p-2 rounded"
+                  className="w-full p-2 border border-gray-300 rounded"
                   value={formData.sectionName}
                   onChange={handleInputChange}
                   required
                 />
               </div>
               <div>
-                <label className="block font-bold mb-2">Solution Category</label>
+                <label className="block text-gray-700">Solution Category</label>
                 <input
                   type="text"
                   name="SolutionCategory"
-                  className="w-full border p-2 rounded"
+                  className="w-full p-2 border border-gray-300 rounded"
                   value={formData.SolutionCategory}
                   onChange={handleInputChange}
                   required
                 />
               </div>
               <div>
-                <label className="block font-bold mb-2">Solution Engineer</label>
+                <label className="block text-gray-700">Solution Engineer</label>
                 <input
                   type="text"
                   name="SolutionEngineer"
-                  className="w-full border p-2 rounded"
+                  className="w-full p-2 border border-gray-300 rounded"
                   value={formData.SolutionEngineer}
                   onChange={handleInputChange}
                   required
                 />
               </div>
-              <div className="flex justify-end gap-4">
+              <div className="mt-4 flex justify-end space-x-2">
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="bg-gray-400 text-white px-4 py-2 rounded"
+                  className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-800 hover:ring-2 ring-gray-500 duration-200"
                 >
                   {isEditMode ? 'Update' : 'Add'}
                 </button>
               </div>
+              </div>
             </form>
           </div>
         </div>
+        
       )}
+      </div>
     </div>
   );
 };

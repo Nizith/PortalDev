@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FaDeleteLeft } from "react-icons/fa6";
+import { MdEdit } from "react-icons/md";
+import LoadingAnimation from "../Login/LoadingAnimation";
 
 const initialInputFields = {
   BRnumber: "",
@@ -133,54 +136,48 @@ export default function customerTable() {
               name="BRnumber"
               placeholder="Filter by BR number"
               onChange={handleFilterChange}
-              className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+              className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
             />
             <input
               type="text"
               name="name"
               placeholder="Filter by Name"
               onChange={handleFilterChange}
-              className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+              className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
             />
             <button
-              className="bg-green-500 text-white font-bold py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none"
+              className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
               onClick={() => handleOpenModal()}
             >
               New
             </button>
           </div>
 
-          <table className="min-w-full bg-white border border-gray-200">
+          <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
             <thead>
-              <tr className="bg-blue-500 text-white text-left">
-                <th className="py-2 px-4 border-b">BR number</th>
-                <th className="py-2 px-4 border-b">Name</th>
-                <th className="py-2 px-4 border-b">Email</th>
-                <th className="py-2 px-4 border-b">Contact</th>
-                <th className="py-2 px-4 border-b">Action</th>
+              <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
+                <th className="py-3 px-4 font-bold uppercase border">BR number</th>
+                <th className="py-3 px-4 font-bold uppercase border">Name</th>
+                <th className="py-3 px-4 font-bold uppercase border">Email</th>
+                <th className="py-3 px-4 font-bold uppercase border">Contact</th>
+                <th className="py-3 px-4 font-bold uppercase border">Action</th>
               </tr>
             </thead>
             <tbody>
               {filteredCustomer.length > 0 ? (
                 filteredCustomer.map((customer, index) => (
                   <tr key={index} className={`bg-${index % 2 === 0 ? "blue-50" : "white"}`}>
-                    <td className="py-2 px-4 border-b">{customer.BRnumber}</td>
-                    <td className="py-2 px-4 border-b">{customer.name}</td>
-                    <td className="py-2 px-4 border-b">{customer.email}</td>
-                    <td className="py-2 px-4 border-b">{customer.contact}</td>
-                    <td className="py-2 px-4 border-b">
-                      <button
-                        className="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600"
-                        onClick={() => handleOpenModal(customer)}
-                      >
-                        Update
+                    <td className="py-2 px-2 font-semibold border">{customer.BRnumber}</td>
+                    <td className="py-2 px-2 font-semibold border">{customer.name}</td>
+                    <td className="py-2 px-2 font-semibold border">{customer.email}</td>
+                    <td className="py-2 px-2 font-semibold border">{customer.contact}</td>
+                    <td className="py-2 px-2 font-semibold border">
+                      <button  onClick={() => handleOpenModal(customer)}>
+                      <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                       </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600 ml-2"
-                        onClick={() => handleDeleteCustomer(customer.BRnumber, customer._id)}
-                      >
-                        Delete
-                      </button>
+                      <button onClick={() => handleDeletePayment(payment._id)} >
+                          <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
+                        </button>
                     </td>
                   </tr>
                 ))
@@ -257,14 +254,14 @@ export default function customerTable() {
                   <div className="flex justify-end space-x-4">
                     <button
                       type="button"
-                      className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+                      className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
                       onClick={handleCloseModal}
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
-                      className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+                      className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
                     >
                       {isEditMode ? "Update" : "Add"}
                     </button>
