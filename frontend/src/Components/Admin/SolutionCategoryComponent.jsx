@@ -114,30 +114,29 @@ const ExampleComponent = () => {
   return (
     <div className="float-right w-full min-h-screen">
       <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Solution Category</h2>
-      <div className="mx-8 my-5">
-      <div className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600">
+    <div className="mx-4 my-5">
         <input
           type="text"
-          placeholder=""
-          className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+          placeholder="filter  by  solution category"
+          className="my-5 px-28 mx-8 flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
           value={SolutionCategory}
           onChange={(e) => setSolutionCategory(e.target.value)}
         />
         <input
           type="text"
           placeholder="Filter by Section Name"
-          className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+          className="my-5 px-28 mx-8 flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
           value={filterSectionName}
           onChange={(e) => setFilterSectionName(e.target.value)}
         />
-        <div></div>
-      </div>
-      <button
+        <button
         onClick={() => handleOpenModal()}
-        className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
+        className="my-5 bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
       >
         Add New 
       </button>
+       
+      
       <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
         <thead>
           <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
