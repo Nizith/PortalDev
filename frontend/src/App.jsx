@@ -14,6 +14,8 @@ import ContractAdd from "./Components/contract/ContractAdd.jsx"
 import ViewContract from "./Components/contract/ViewContract.jsx"
 import ManageContracts from "./Components/contract/ManageContracts.jsx"
 import Dashboard from "./Components/Admin/Dashboard.jsx"
+import UserManagement from "./Components/Admin/UserManagement.jsx"
+import UserDashboard from "./Components/Admin/UserDashboard.jsx"
 
 
 function Layout({ children }) {
@@ -46,6 +48,8 @@ function App() {
 
           {/* Admin Pages */}
           <Route path="/admindashboard" element={< Dashboard />} />
+          <Route path="/userdashboard" element={< UserDashboard />} />
+          <Route path="/usemanagement" element={< UserManagement />} />
 
           <Route path="/addcontract" element={<ContractAdd />} />
           <Route path="/contracts" element={<ManageContracts />} />

@@ -29,7 +29,6 @@ export default function Login() {
             const response = await axios.post("http://localhost:4500/portaldev/login", logindata);
 
             toast.success("Login Successful!");
-            console.log("Login Data : ", logindata);
 
             const { token, role } = response.data;
 
@@ -42,11 +41,11 @@ export default function Login() {
 
             // Redirect based on the role
             setTimeout(() => {
-                if (role === "admin") {
+                if (role === "Admin") {
                     navigate('/admindashboard');
-                } else if (role === "superadmin") {
-                    navigate('/admindashboard');
-                } else if (role === "user") {
+                } else if (role === "MsStaff") {
+                    navigate('/userdashboard');
+                } else if (role === "SalesTeam") {
                     navigate('/userdashboard');
                 }
             }, 1500);

@@ -20,13 +20,13 @@ export default function Sidebar() {
     }, [location.pathname]);
 
     const handleHomeNavigation = () => {
-        if (role === 'superadmin') {
+        if (role === 'Admin') {
             navigate('/admindashboard');
         }
-        else if (role === 'admin') {
-            navigate('/admindashboard');
+        else if (role === 'MsStaff') {
+            navigate('/userdashboard');
         }
-        else if (role === 'user') {
+        else if (role === 'SalesTeam') {
             navigate('/userdashboard');
         }
     };
@@ -80,7 +80,7 @@ export default function Sidebar() {
 
 
                         {/* Admin tabs */}
-                        {role === 'admin' && (
+                        {role === 'Admin' && (
                             <>
                                 <hr className='text-sky-900 my-2' />
                                 <button
@@ -137,7 +137,7 @@ export default function Sidebar() {
 
 
                         {/* User tabs */}
-                        {(role === 'user') && (
+                        {(role === 'SalesTeam' || role === 'MsStaff') && (
                             <>
                                 <hr className='text-sky-900 my-2' />
                                 <button
