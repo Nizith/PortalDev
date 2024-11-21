@@ -4,13 +4,18 @@ import { TbExternalLink } from "react-icons/tb";
 import { FaEdit } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import LoadingAnimation from "../Login/LoadingAnimation";
+import { MdPayment } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import PaymentAdd from "../Payment/PaymentAdd";
 
 export default function ManageContracts() {
   const [contracts, setContracts] = useState([]);
   const [viewDetailsRow, setViewDetailsRow] = useState(null);
   const [editedContract, setEditedContract] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [openPay, setOpenPay] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -43,21 +48,31 @@ export default function ManageContracts() {
     setIsEditing(true);
   };
 
+  const dopay = () => {
+    setOpenPay(true)
+  }
+
+  const handleCloseDoPay = () => {
+    setOpenPay(false);
+  };
+
   const handleInputChange = (e, field) => {
     setEditedContract({ ...editedContract, [field]: e.target.value });
   };
 
-  const handleAMCChange = (e, field) => {
+  const handleAMCChange = (e, field, amcIndex) => {
     const updatedAMC = [...editedContract.AMCDetails];
-    updatedAMC[0][field] = e.target.value;
+    updatedAMC[amcIndex][field] = e.target.value;
     setEditedContract({ ...editedContract, AMCDetails: updatedAMC });
   };
+  
 
-  const handleAMCAmountChange = (e, index) => {
-    const updatedAMC = [...editedContract.AMCDetails];
-    updatedAMC[0].AMCamount[index] = e.target.value;
-    setEditedContract({ ...editedContract, AMCDetails: updatedAMC });
-  };
+ const handleAMCAmountChange = (e, amcIndex, amountIndex) => {
+  const updatedAMC = [...editedContract.AMCDetails];
+  updatedAMC[amcIndex].AMCamount[amountIndex] = e.target.value;
+  setEditedContract({ ...editedContract, AMCDetails: updatedAMC });
+};
+
 
   const handleSaveClick = (id) => {
     axios
@@ -100,7 +115,7 @@ export default function ManageContracts() {
         </>
       ) : (
         <div className="float-right w-full min-h-screen">
-          <h1 className="text-4xl font-bold text-gray-900 my-5 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 my-5 ms-8">
             Contract Details
           </h1>
 
@@ -190,6 +205,62 @@ export default function ManageContracts() {
                 </div>
               </div>
 
+
+              <div className="py-5 border-4 border-emerald-600 rounded-lg px-4">
+
+                <div className="grid gap-4 mt-5">
+                  {editedContract.AMCDetails?.map((amcDetail, amcIndex) => (
+                    <div key={amcIndex} className="border p-4 rounded-lg bg-white shadow-sm">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label>AMC Payment Terms:</label>
+                          <input
+                            type="text"
+                            value={amcDetail.AMCpaymentterms || ""}
+                            onChange={(e) => handleAMCChange(e, "AMCpaymentterms", amcIndex)}
+                            disabled
+                            className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                          />
+                        </div>
+                        <div>
+                          <label>AMC Currency:</label>
+                          <input
+                            type="text"
+                            value={amcDetail.AMCcurrency || ""}
+                            onChange={(e) => handleAMCChange(e, "AMCcurrency", amcIndex)}
+                            disabled
+                            className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-5 gap-3 mt-4">
+                        {amcDetail.AMCamount?.map((amount, amountIndex) => (
+                          <div key={amountIndex} className="col-span-1">
+                            <label>Year {amountIndex + 1}:</label>
+                            <div className="inline-flex">
+                              <input
+                                type="text"
+                                value={amount || ""}
+                                onChange={(e) => handleAMCAmountChange(e, amcIndex, amountIndex)}
+                                disabled
+                                className="border border-gray-300 rounded-lg px-4 py-2 w-3/5"
+                              />
+                              <button onClick={dopay}>
+                                <MdPayment className="text-indigo-600 size-8" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+
+              </div>
+
+              <hr className="bg-indigo-600 h-1 my-3" />
 
               <div className="grid py-5">
                 <div>
@@ -403,55 +474,16 @@ export default function ManageContracts() {
                     </div>
                   </div>
                 </div>
-
-                <hr className="bg-indigo-600 h-1 my-3" />
-
-                <div className="py-5">
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label>AMC Payment Terms:</label>
-                      <input
-                        type="text"
-                        value={editedContract.AMCDetails[0]?.AMCpaymentterms}
-                        onChange={(e) => handleAMCChange(e, "AMCpaymentterms")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
-                    <div>
-                      <label>AMC Currency:</label>
-                      <input
-                        type="text"
-                        value={editedContract.AMCDetails[0]?.AMCcurrency}
-                        onChange={(e) => handleAMCChange(e, "AMCcurrency")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-5 gap-3 mt-4">
-                    {editedContract.AMCDetails[0]?.AMCamount.map((amount, index) => (
-                      <div key={index} className="col-span-1">
-                        <label>AMC Amount {index + 1}:</label>
-                        <input
-                          type="text"
-                          value={amount}
-                          onChange={(e) => handleAMCAmountChange(e, index)}
-                          disabled={!isEditing}
-                          className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                        />
-                      </div>
-                    ))}
-                  </div>
-
-                </div>
-
-
               </div>
             </div>
           )}
+          {openPay &&
+            <PaymentAdd
+              handleCloseModal={handleCloseDoPay}
+              tenderNumber={editedContract.tenderNo}
+              AMCterm={editedContract.AMCDetails[0]?.AMCpaymentterms}
+              AMCCurrency={editedContract.AMCDetails[0]?.AMCcurrency}
+            />}
         </div>
       )}
     </>

@@ -1,7 +1,6 @@
 import React from "react"
 import './index.css'
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
-import Bodycomponent from "./Components/Admin/Bodycomponent.jsx"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
 import PaymentAdd from "./Components/Payment/PaymentAdd.jsx"
 import Payment from "./Components/Payment/Payment.jsx"
@@ -14,6 +13,7 @@ import Sidebar from "./Components/Login/Sidebar.jsx"
 import ContractAdd from "./Components/contract/ContractAdd.jsx"
 import ViewContract from "./Components/contract/ViewContract.jsx"
 import ManageContracts from "./Components/contract/ManageContracts.jsx"
+import Dashboard from "./Components/Admin/Dashboard.jsx"
 
 
 function Layout({ children }) {
@@ -45,7 +45,7 @@ function App() {
           <Route path="/login" element={<Login />} />
 
           {/* Admin Pages */}
-          <Route path="/admindashboard" element={< Bodycomponent />} />
+          <Route path="/admindashboard" element={< Dashboard />} />
 
           <Route path="/addcontract" element={<ContractAdd />} />
           <Route path="/contracts" element={<ManageContracts />} />

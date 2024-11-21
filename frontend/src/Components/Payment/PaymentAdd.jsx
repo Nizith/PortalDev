@@ -1,117 +1,200 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function PaymentAdd() {
+export default function PaymentAdd({ handleCloseModal, tenderNumber, AMCCurrency, AMCterm }) {
+    const [payData, setPayData] = useState({
+        PRnumber: "",
+        PRdate: "",
+        LOIdetails: "",
+        POnumber: "",
+        POdate: "",
+    });
 
-    const [PRnumber, setPRnumber] = useState("")
-    const [PRdate, setPRdate] = useState("")
-    const [LOIdetails, setLOIdetails] = useState("")
-    const [POnumber, setPOnumber] = useState(0)
-    const [POdate, setPOdate] = useState("")
-    const [InvoiceNumber, setInvoiceNumber] = useState(0)
-    const [InvoiceDate, setInvoiceDate] = useState("")
-    const [Paymentstatus, setPaymentstatus] = useState("")
-    const [Paiddate, setPaiddate] = useState("")
-    const [Paymentremarks, setPaymentremarks] = useState("")
+    const [partialPay, setPartialPay] = useState([
+        { InvoiceNumber: "", InvoiceDate: "", Paymentstatus: "", Paiddate: "", Paymentremarks: "" }
+    ]);    
+    const [error, setError] = useState("");
 
+    const maxEntries = {
+        "Annually in advance": 1,
+        "Annually in arrears": 1,
+        "Monthly in arrears": 12,
+        "Quarterly In Arrears": 4
+    };
 
+    const requiredEntries = maxEntries[AMCterm] || 1; // Default to 1 if term not recognized
 
-    const PaymentSubmit = (e) => {
-        e.preventDefault()
+    useEffect(() => {
+        // Reset dynamic fields if AMCterm changes
+        setPartialPay(Array(requiredEntries).fill({ InvoiceNumber: "", InvoiceDate: "", Paymentstatus: "", Paiddate: "", Paymentremarks: "" }));
+    }, [AMCterm]);
+    
 
-        const newPayment = { PRnumber, PRdate, LOIdetails, POnumber, POdate, InvoiceNumber, InvoiceDate, Paymentstatus, Paiddate, Paymentremarks }
+    const inputChange = (e) => {
+        const { name, value } = e.target;
+        setPayData((paydata) => ({
+            ...paydata,
+            [name]: value
+        }));
+    };
 
-        axios.post("http://localhost:4500/portaldev/createpayment", newPayment)
-            .then(() => {
-                alert("Payment Successful!")
-            })
-            .catch((err) => {
-                console.error(err)
-                alert("Payment Unsuccessful!")
-            })
+    const handlePartialPayChange = (index, e) => {
+        const { name, value } = e.target;
+        setPartialPay((prevPartialPay) =>
+            prevPartialPay.map((item, i) =>
+                i === index ? { ...item, [name]: value } : item
+            )
+        );
+    };
 
-        console.log("Payment Added : ", { PRnumber, PRdate, LOIdetails, POnumber, POdate, InvoiceNumber, InvoiceDate, Paymentstatus, Paiddate, Paymentremarks });
-    }
+    const addPartialPayField = () => {
+        if (partialPay.length < requiredEntries) {
+            setPartialPay([
+                ...partialPay,
+                { InvoiceNumber: "", InvoiceDate: "", Paymentstatus: "", Paiddate: "", Paymentremarks: "" }
+            ]);
+        } else {
+            setError(`You can only add up to ${requiredEntries} entries for this AMC term.`);
+        }
+    };
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        // Check if the number of filled partialPay entries matches requiredEntries
+        if (partialPay.length < requiredEntries) {
+            setError(`Please add ${requiredEntries - partialPay.length} more payment details.`);
+            return;
+        }
+
+        // Ensure all fields in each partialPay entry are filled
+        const incompleteEntry = partialPay.some((entry) =>
+            Object.values(entry).some((value) => !value)
+        );
+
+        if (incompleteEntry) {
+            setError("Please fill all fields in each entry before submitting.");
+            return;
+        }
+
+        try {
+            const response = await axios.patch("http://localhost:4500/portaldev/createpayment", { ...payData, partialPay });
+            console.log("Sent Payment Details: ", response.data);
+            handleCloseModal();
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        }
+    };
 
     return (
-        <div className=' w-full  h-full flex justify-center items-center '>
-            <div className='w-3/4 h-full px-5  bg-sky-700 bg-opacity-55  rounded-2xl shadow-md mt-6'>
-                <form onSubmit={PaymentSubmit} >
-                    
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="absolute inset-0 bg-transparent" onClick={handleCloseModal}></div>
+            <div className="relative bg-white p-8 rounded-lg shadow-lg w-1/2">
+                <h2 className="text-center text-2xl font-bold mb-6">Pay for "{tenderNumber}" Contract</h2>
+                <form onSubmit={handleFormSubmit}>
+                    {/* Static fields */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                            <label className="block text-gray-700">AMC Payment Term</label>
+                            <input
+                                type="text"
+                                value={AMCterm}
+                                className="w-full p-2 border border-gray-300 rounded"
+                                readOnly
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700">AMC Currency</label>
+                            <input
+                                type="text"
+                                value={AMCCurrency}
+                                className="w-full p-2 border border-gray-300 rounded"
+                                readOnly
+                            />
+                        </div>
+                    </div>
 
-                        <div className='grid grid-cols-2  gap-x-8 mt-4'>
+                    {/* Dynamic PartialPay Fields */}
+                    {partialPay.map((entry, index) => (
+                        <div key={index} className="grid grid-cols-5 gap-4 mb-4">
                             <div>
-                                <label className="block text-medium font-medium text-gray-950 ">PRnumber :</label>
-                                <input onChange={(e) => { setPRnumber(e.target.value) }}
-                                    type='text' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
+                                <label className="block text-gray-700">Invoice Number</label>
+                                <input
+                                    type="text"
+                                    name="InvoiceNumber"
+                                    value={entry.InvoiceNumber}
+                                    onChange={(e) => handlePartialPayChange(index, e)}
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
                             </div>
-                            <div
-                                className='mb-5'>
-                                <label className="block text-medium font-medium text-gray-950">PRdate :</label>
-                                <input onChange={(e) => { setPRdate(e.target.value) }}
-                                    type='date' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
+                            <div>
+                                <label className="block text-gray-700">Invoice Date</label>
+                                <input
+                                    type="date"
+                                    name="InvoiceDate"
+                                    value={entry.InvoiceDate}
+                                    onChange={(e) => handlePartialPayChange(index, e)}
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700">Payment Status</label>
+                                <input
+                                    type="text"
+                                    name="Paymentstatus"
+                                    value={entry.Paymentstatus}
+                                    onChange={(e) => handlePartialPayChange(index, e)}
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700">Paid Date</label>
+                                <input
+                                    type="date"
+                                    name="Paiddate"
+                                    value={entry.Paiddate}
+                                    onChange={(e) => handlePartialPayChange(index, e)}
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700">Payment Remarks</label>
+                                <input
+                                    type="text"
+                                    name="Paymentremarks"
+                                    value={entry.Paymentremarks}
+                                    onChange={(e) => handlePartialPayChange(index, e)}
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                />
                             </div>
                         </div>
-                        <div className='mb-5' >
-                            <label className="block text-medium font-medium text-gray-950">LOIdetails :</label>
-                            <input onChange={(e) => { setLOIdetails(e.target.value) }}
-                                type='text' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
-                        </div>
-                        <div className='mb-5'>
+                    ))}
 
-                            <label className="block text-medium font-medium text-gray-950">Paymentremarks :</label>
-                            <input onChange={(e) => { setPaymentremarks(e.target.value) }}
-                                type='text' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
-                        </div>
-                        <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
-                            <div className='mb-5'>
-                                <label className="block text-medium font-medium text-gray-950">POnumber:</label>
-                                <input onChange={(e) => setPOnumber(e.target.value)}
-                                    type='text' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
-                            </div>
-                            <div className='mb-5'>
-                                <label className="block text-medium font-medium text-gray-950">POdate:</label>
-                                <input onChange={(e) => setPOdate(e.target.value)}
-                                    type='date' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
-                            </div>
-                        </div>
-                        <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
-                            <div className='mb-5'>
-                                <label className="block text-medium font-medium text-gray-950">InvoiceNumber:</label>
-                                <input onChange={(e) => setInvoiceNumber(e.target.value)}
-                                    type='text' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded bg-gradient-to-t" />
-                            </div>
-                            <div className='mb-5'>
-                                <label className="block text-medium font-medium text-gray-950">InvoiceDate:</label>
-                                <input onChange={(e) => setInvoiceDate(e.target.value)}
-                                    type='date' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
-                            </div>
-                        </div>
-                        <div className='grid grid-cols-2  gap-x-8'>
-                            <div className='mb-5'>
-                                <label className="block text-medium font-medium text-gray-950">Paymentstatus:</label>
-                                <input onChange={(e) => setPaymentstatus(e.target.value)}
-                                    type='text' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
-                            </div>
-                            <div className='mb-5'>
-                                <label className="block text-medium font-medium text-gray-950">Paiddate:</label>
-                                <input onChange={(e) => setPaiddate(e.target.value)}
-                                    type='date' className="w-full mt-1 h-10 p-3 outline-1 border-b-2 border-slate-700 rounded" />
-                            </div>
-                        </div>
+                    {/* Button to add more partialPay fields */}
+                    <div className="mb-6">
+                        <button
+                            type="button"
+                            onClick={addPartialPayField}
+                            className="text-indigo-600 font-semibold px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+                        >
+                            Do More Payments
+                        </button>
+                    </div>
 
+                    {/* Display any error messages */}
+                    {error && <p className="text-red-500 mb-4">{error}</p>}
 
-                        <div className="flex justify-center mt-4 mb-4">
-                            <button className="w-2/3 py-1 bg-green-600 rounded-full text-white">Submit</button>
-                        </div>
-
-
-                   
+                    {/* Submit button */}
+                    <div className="mt-4 flex justify-end space-x-2">
+                        <button
+                            type="submit"
+                            className="text-blue-200 font-semibold px-8 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
+                        >
+                            Pay
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
-
-    )
+    );
 }
-
-
