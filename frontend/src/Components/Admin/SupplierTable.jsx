@@ -24,8 +24,6 @@ const SupplierComponent = () => {
     mobile: "",
   });
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-
 
   // Fetch all suppliers and categories from the API
   useEffect(() => {
@@ -34,23 +32,18 @@ const SupplierComponent = () => {
         const supplierResponse = await axios.get(
           "http://localhost:4500/portaldev/readsupplier"
         );
-        setSuppliers(supplierResponse.data.data);
-        setFilteredSuppliers(supplierResponse.data.data);
+        // Sorting the suppliers by createdAt in descending order
+        const sortedData = supplierResponse.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setSuppliers(sortedData);
+        setFilteredSuppliers(sortedData);
 
         // Fetch categories
         const categoryResponse = await axios.get(
           "http://localhost:4500/portaldev/readcategories"
         );
         setCategories(categoryResponse.data.data);
-
-
-        // Simulate minimum loading time
-        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for at least 1000ms
-
       } catch (error) {
         console.error("Error fetching suppliers or categories:", error);
-      } finally {
-        setLoading(false); // Stop the loading animation after both conditions are met
       }
     };
 
@@ -99,7 +92,7 @@ const SupplierComponent = () => {
       ...prevFilterData,
       [name]: value,
     }));
-
+    
     // Apply filter immediately when input changes
     handleFilterSubmit({ ...filterData, [name]: value });
   };
@@ -115,16 +108,12 @@ const SupplierComponent = () => {
         );
         setSuppliers((prevSuppliers) =>
           prevSuppliers.map((supplier) =>
-            supplier._id === selectedSupplier._id
-              ? response.data.data
-              : supplier
+            supplier._id === selectedSupplier._id ? response.data.data : supplier
           )
         );
         setFilteredSuppliers((prevSuppliers) =>
           prevSuppliers.map((supplier) =>
-            supplier._id === selectedSupplier._id
-              ? response.data.data
-              : supplier
+            supplier._id === selectedSupplier._id ? response.data.data : supplier
           )
         );
       } else {
@@ -132,14 +121,9 @@ const SupplierComponent = () => {
           "http://localhost:4500/portaldev/createsupplier",
           formData
         );
-        setSuppliers((prevSuppliers) => [
-          ...prevSuppliers,
-          response.data.data,
-        ]);
-        setFilteredSuppliers((prevSuppliers) => [
-          ...prevSuppliers,
-          response.data.data,
-        ]);
+        const newSupplier = response.data.data;
+        setSuppliers((prevSuppliers) => [newSupplier, ...prevSuppliers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+        setFilteredSuppliers((prevSuppliers) => [newSupplier, ...prevSuppliers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       }
 
       handleCloseModal();
@@ -149,22 +133,20 @@ const SupplierComponent = () => {
   };
 
   const handleDeleteSupplier = async (SRno, id) => {
-    if (window.confirm('Are you sure you want to delete this supplier?')) {
-      try {
-        const response = await axios.delete(
-          `http://localhost:4500/portaldev/deleteSupplier/${id}`
+    try {
+      const response = await axios.delete(
+        `http://localhost:4500/portaldev/deleteSupplier/${id}`
+      );
+      if (response.status === 200) {
+        setSuppliers((prevSuppliers) =>
+          prevSuppliers.filter((supplier) => supplier.SRno !== SRno).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         );
-        if (response.status === 200) {
-          setSuppliers((prevSuppliers) =>
-            prevSuppliers.filter((supplier) => supplier.SRno !== SRno)
-          );
-          setFilteredSuppliers((prevSuppliers) =>
-            prevSuppliers.filter((supplier) => supplier.SRno !== SRno)
-          );
-        }
-      } catch (error) {
-        console.error("Error deleting supplier:", error.response ? error.response.data : error.message);
+        setFilteredSuppliers((prevSuppliers) =>
+          prevSuppliers.filter((supplier) => supplier.SRno !== SRno).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        );
       }
+    } catch (error) {
+      console.error("Error deleting supplier:", error.response ? error.response.data : error.message);
     }
   };
 
@@ -180,19 +162,15 @@ const SupplierComponent = () => {
         (currentFilterData.mobile === "" ||
           supplier.mobile.toString().toLowerCase().includes(currentFilterData.mobile.toLowerCase()))
       );
-    });
+    }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     setFilteredSuppliers(filtered);
   };
 
   return (
-    <>{loading ? (
-      <>
-        <LoadingAnimation />
-      </>
-    ) : (
+    <>
       <div className="float-right w-full min-h-screen">
         <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Supplier Table</h2>
-        <div className="mx-8 my-5">
+        <div className="mx-8 mt-5">
           <div>
             <div className="flex mb-4 space-x-2">
               <input
@@ -209,7 +187,7 @@ const SupplierComponent = () => {
                 placeholder="Filter by Name"
                 value={filterData.name}
                 onChange={handleFilterChange}
-                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+                className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
               />
               <input
                 type="text"
@@ -236,7 +214,7 @@ const SupplierComponent = () => {
             </div>
           </div>
 
-          <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
+          <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
             <thead>
               <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
                 <th className="py-3 px-4 font-bold uppercase border">Supplier SR No</th>
@@ -249,24 +227,25 @@ const SupplierComponent = () => {
             <tbody>
               {filteredSuppliers.length > 0 ? (
                 filteredSuppliers.map((supplier) => (
-                  <tr key={supplier.SRno} className="hover:bg-gray-200 transition-all duration-300 ease-in-out">
+                  <tr key={supplier.SRno}>
                     <td className="py-2 px-2 font-semibold border">{supplier.SRno}</td>
                     <td className="py-2 px-2 font-semibold border">{supplier.name}</td>
                     <td className="py-2 px-2 font-semibold border">{supplier.category}</td>
                     <td className="py-2 px-2 font-semibold border">{supplier.mobile}</td>
-                    <td className="py-2 px-2 font-semibold border text-center space-x-6">
-                      <button onClick={() => handleOpenModal(supplier)} >
-                        <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
+                    <td className="py-2 px-2 font-semibold border">
+                      <button onClick={() => handleOpenModal(supplier)}>
+                      <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                       </button>
-                      <button onClick={() => handleDeleteSupplier(supplier.SRno, supplier._id)} >
-                        <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
+                      <button  onClick={() => handleDeleteSupplier(supplier.SRno, supplier._id)}>
+                       
+                      <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
                       </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="py-2 px-4 border text-center">
+                  <td colSpan="14" className="py-2 text-center">
                     No suppliers found
                   </td>
                 </tr>
@@ -277,7 +256,7 @@ const SupplierComponent = () => {
           {isModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
               <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
-                <h2 className="text-xl font-bold mb-4">{isEditMode ? "Edit Supplier" : "Add Supplier"}</h2>
+                <h2 className="text-center text-xl font-bold mb-4">{isEditMode ? "Edit Supplier" : "Add Supplier"}</h2>
                 <form onSubmit={handleFormSubmit}>
                   <div className="mb-4">
                     <label className="block text-gray-700">Supplier SR No:</label>
@@ -296,7 +275,8 @@ const SupplierComponent = () => {
                       type="text"
                       name="name"
                       value={formData.name}
-                      onChange={handleInputChange} className="w-full p-2 border border-gray-300 rounded"
+                      onChange={handleInputChange}
+                      className="w-full p-2 border border-gray-300 rounded"
                     />
                   </div>
                   <div className="mb-4">
@@ -326,8 +306,8 @@ const SupplierComponent = () => {
                       onChange={handleInputChange}
                       className="w-full p-2 border border-gray-300 rounded"
                     ></textarea>
-                  </div>
-                  <div className="flex justify-end space-x-4">
+                  </div> 
+                  <div className="flex justify-end space-x-2">
                     <button
                       type="submit"
                       className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
@@ -337,7 +317,7 @@ const SupplierComponent = () => {
                     <button
                       type="button"
                       onClick={handleCloseModal}
-                      className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-800 hover:ring-2 ring-gray-500 duration-200"
+                      className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
                     >
                       Cancel
                     </button>
@@ -348,7 +328,6 @@ const SupplierComponent = () => {
           )}
         </div>
       </div>
-    )}
     </>
   );
 };

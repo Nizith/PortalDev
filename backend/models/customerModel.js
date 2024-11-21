@@ -7,7 +7,7 @@ const CustomerSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        required:true
+        required: true
     },
     email: {
         type: String,
@@ -16,8 +16,7 @@ const CustomerSchema = new mongoose.Schema({
     contact: {
         type: Number,
         required: true
-        
-    },
-    
-});
-module.exports = mongoose.model('customer',CustomerSchema)
+    }
+}, { timestamps: true }); // Enabling timestamps to add createdAt and updatedAt fields automatically
+
+module.exports = mongoose.model('customer', CustomerSchema);

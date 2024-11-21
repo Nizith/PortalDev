@@ -1,123 +1,110 @@
 const sectionModel = require("../models/sectionModel.js");
-const Section = require("../models/sectionModel.js");
 
-//Create Customers
+// Create Section
 const createSection = async (req, res) => {
     try {
-        const newSection = await sectionModel.create(req.body)
+        const newSection = await sectionModel.create(req.body);
 
         return newSection ? res.status(200).json({
             message: "Section is created",
             data: newSection
-        }) :
-            res.status(500).json({
-                message: "Section is not created"
-            })
-    }
-    catch (error) {
+        }) : res.status(500).json({
+            message: "Section is not created"
+        });
+    } catch (error) {
         console.log(error);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
 
-//getAll Sections
-const readSection = (async (req, res) => {
+// Get All Sections
+const readSection = async (req, res) => {
     try {
-        const allSections = await sectionModel.find();
+        const allSections = await sectionModel.find().sort({ createdAt: -1 }); // Sorting by createdAt in descending order
         if (allSections) {
             res.status(200).json({
                 message: "All Sections are fetched",
                 data: allSections
-            })
-        }
-        else {
+            });
+        } else {
             res.status(500).json({
-                message: "All Sctions are not fetched",
-            })
+                message: "All Sections are not fetched",
+            });
         }
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
-        return res.statys(500).json({
+        return res.status(500).json({
             message: error.message
-        })
+        });
     }
+}
 
-})
-
-//Getone section
+// Get One Section
 const getOneSection = async (req, res) => {
     const { id } = req.params;
 
     try {
         const oneSection = await sectionModel.findById(id);
         return oneSection ? res.status(200).json({
-            message: "find the Section",
+            message: "Find the Section",
             data: oneSection
-        })
-            : res.status(500).json({
-                message: "Section is not found",
-            })
-    }
-    catch (error) {
+        }) : res.status(500).json({
+            message: "Section is not found"
+        });
+    } catch (error) {
         console.log(error.message);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
 
-//Update Section
-
+// Update Section
 const updateSection = async (req, res) => {
     try {
         const { id } = req.params;
+        const updatedSection = await sectionModel.findByIdAndUpdate(id, req.body, { new: true });
 
-        const updateSection = await sectionModel.findByIdAndUpdate(id, req.body);
-
-        return updateSection ? res.status(200).json({
-            message: "Section is Updated",
-            data: updateSection
-        })
-            : res.status(505).json({
-                message: "section is not updated"
-            })
-    }
-    catch (error) {
-        console.log(error.message)
+        return updatedSection ? res.status(200).json({
+            message: "Section is updated",
+            data: updatedSection
+        }) : res.status(500).json({
+            message: "Section is not updated"
+        });
+    } catch (error) {
+        console.log(error.message);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
 
-//Delete Section
-
+// Delete Section
 const deleteSection = async (req, res) => {
     try {
         const { id } = req.params;
+        const deletedSection = await sectionModel.findByIdAndDelete(id);
 
-        const deleteSection = await sectionModel.findByIdAndDelete(id);
-
-        return deleteSection ? res.status(200).json({
+        return deletedSection ? res.status(200).json({
             message: "Section is deleted",
-            data: deleteSection
-        })
-            : res.status(505).json({
-                message: "Section is not deleted",
-            })
-    }
-    catch (error) {
-        console.log(error.message)
+            data: deletedSection
+        }) : res.status(500).json({
+            message: "Section is not deleted"
+        });
+    } catch (error) {
+        console.log(error.message);
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
 
-
-
-
-module.exports = { createSection, readSection, getOneSection, updateSection, deleteSection }
+module.exports = {
+    createSection,
+    readSection,
+    getOneSection,
+    updateSection,
+    deleteSection
+};
