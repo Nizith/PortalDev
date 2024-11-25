@@ -100,21 +100,22 @@ export default function customerTable() {
 };
 
 
-  const handleDeleteCustomer = async (BRnumber, id) => {
-    try {
+const handleDeleteCustomer = async (BRnumber, id) => {
+  try {
       const response = await axios.delete(`http://localhost:4500/portaldev/deletecustomer/${id}`);
       if (response.status === 200) {
-        setCustomer((prevCustomers) =>
-          prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        );
-        setFilteredCustomer((prevCustomers) =>
-          prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        );
+          setCustomer((prevCustomers) =>
+              prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          );
+          setFilteredCustomer((prevCustomers) =>
+              prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          );
       }
-    } catch (error) {
+  } catch (error) {
       console.error("Error deleting customer:", error.response ? error.response.data : error.message);
-    }
-  };
+  }
+};
+
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -164,31 +165,32 @@ export default function customerTable() {
               </tr>
             </thead>
             <tbody>
-              {filteredCustomer.length > 0 ? (
-                filteredCustomer.map((customer, index) => (
-                  <tr key={index} className={`bg-${index % 2 === 0 ? "blue-50" : "white"}`}>
-                    <td className="py-2 px-2 font-semibold border">{customer.BRnumber}</td>
-                    <td className="py-2 px-2 font-semibold border">{customer.name}</td>
-                    <td className="py-2 px-2 font-semibold border">{customer.email}</td>
-                    <td className="py-2 px-2 font-semibold border">{customer.contact}</td>
-                    <td className="py-2 px-2 font-semibold border">
-                      <button  onClick={() => handleOpenModal(customer)}>
-                      <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
-                      </button>
-                      <button onClick={() => handleDeletePayment(payment._id)} >
-                          <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
-                        </button>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="5" className="py-2 px-4 border text-center">
-                    No customer found
-                  </td>
-                </tr>
-              )}
-            </tbody>
+    {filteredCustomer.length > 0 ? (
+        filteredCustomer.map((customer, index) => (
+            <tr key={index} className={`bg-${index % 2 === 0 ? "blue-50" : "white"}`}>
+                <td className="py-2 px-2 font-semibold border">{customer.BRnumber}</td>
+                <td className="py-2 px-2 font-semibold border">{customer.name}</td>
+                <td className="py-2 px-2 font-semibold border">{customer.email}</td>
+                <td className="py-2 px-2 font-semibold border">{customer.contact}</td>
+                <td className="py-2 px-2 font-semibold border">
+                    <button onClick={() => handleOpenModal(customer)}>
+                        <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
+                    </button>
+                    <button onClick={() => handleDeleteCustomer(customer.BRnumber, customer._id)}>
+                        <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
+                    </button>
+                </td>
+            </tr>
+        ))
+    ) : (
+        <tr>
+            <td colSpan="5" className="py-2 px-4 border text-center">
+                No customer found
+            </td>
+        </tr>
+    )}
+</tbody>
+
           </table>
 
           {/* Modal for Add/Edit customer */}
