@@ -93,11 +93,25 @@ export default function Dashboard() {
                 datasets: [{
                     label: 'New Contracts',
                     data: values,
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    tension: 0.1
+                    borderColor: 'rgba(34, 197, 94, 1)', // Solid green line
+                    backgroundColor: (ctx) => {
+                        const chart = ctx.chart;
+                        const { ctx: chartCtx } = chart;
+                        const gradient = chartCtx.createLinearGradient(0, 0, 0, chart.height);
+                        gradient.addColorStop(0, 'rgba(34, 197, 94, 0.6)'); // Green near the line
+                        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)'); // White fading out
+                        return gradient;
+                    },
+                    tension: 0.1,
+                    fill: true, // Enables the gradient fill
+                    borderWidth: 2, // Solid line width
+                    pointBackgroundColor: 'rgba(34, 197, 94, 1)',
+                    pointBorderColor: 'rgba(34, 197, 94, 1)',
+                    pointBorderWidth: 1,
+                    pointRadius: 3,
                 }]
             });
+            
     
             setNewContractsCount(newContractsCount);
     
@@ -189,63 +203,57 @@ export default function Dashboard() {
 
 
 
-    const processAndSetData = (data, dateField, setData, label) => {
-        if (!Array.isArray(data)) {
-            console.error("Data is not an array:", data);
-            return;
+   const processAndSetData = (data, dateField, setData, label) => {
+    if (!Array.isArray(data)) {
+        console.error("Data is not an array:", data);
+        return;
+    }
+    const today = new Date();
+    const startDate = new Date();
+    startDate.setDate(today.getDate() - 30);
+    const counts = {};
+    for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+        const dateString = d.toISOString().split('T')[0];
+        counts[dateString] = 0;
+    }
+    data.forEach(item => {
+        const date = new Date(item[dateField]);
+        if (date >= startDate && date <= today) {
+            const dateString = date.toISOString().split('T')[0];
+            counts[dateString]++;
         }
-        const today = new Date();
-        const startDate = new Date();
-        startDate.setDate(today.getDate() - 30);
-        const counts = {};
-        for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
-            const dateString = d.toISOString().split('T')[0];
-            counts[dateString] = 0;
-        }
-        data.forEach(item => {
-            const date = new Date(item[dateField]);
-            if (date >= startDate && date <= today) {
-                const dateString = date.toISOString().split('T')[0];
-                counts[dateString]++;
-            }
-        });
-        const labels = Object.keys(counts);
-        const values = Object.values(counts);
-        setData({
-            labels,
-            datasets: [{
-                label,
-                data: values,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            }]
-        });
-    };
-
-    const [trendData, setTrendData] = useState({
-        labels: Array.from({ length: 10 }, (_, i) => i + 1),
-        datasets: [
-            {
-                data: [],
-                fill: true,
-                backgroundColor: (ctx) => {
-                    const chart = ctx.chart;
-                    const { ctx: chartCtx } = chart;
-                    const gradient = chartCtx.createLinearGradient(0, 0, 0, chart.height);
-                    gradient.addColorStop(0, 'rgba(34, 197, 94, 0.4)');
-                    gradient.addColorStop(1, 'rgba(34, 197, 94, 0)');
-                    return gradient;
-                },
-                borderColor: 'rgba(34, 197, 94, 0.6)',
-                tension: 0,
-                borderWidth: 3,
-                pointBackgroundColor: 'rgba(34, 197, 94, 1)',
-                pointBorderColor: 'rgba(34, 197, 94, 1)',
-                pointBorderWidth: 1,
-                pointRadius: 3,
-            },
-        ],
     });
+    const labels = Object.keys(counts);
+    const values = Object.values(counts);
+    setData((prevData) => ({
+        ...prevData,
+        labels,
+        datasets: [{
+            label,
+            data: values,
+            borderColor: 'rgba(34, 197, 94, 1)', // Solid green for the line
+            borderWidth: 2,
+            tension: 0.2,
+            fill: true, // Enable area fill
+            backgroundColor: (context) => {
+                const chart = context.chart;
+                const { ctx, chartArea } = chart;
+                if (!chartArea) {
+                    return null;
+                }
+                const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                gradient.addColorStop(0, 'rgba(34, 197, 94, 0.6)'); // Green near the line
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)'); // White towards the outside
+                return gradient;
+            },
+            pointBackgroundColor: 'rgba(34, 197, 94, 1)', // Green dots
+            pointBorderColor: 'rgba(34, 197, 94, 1)',
+            pointRadius: 2.5,
+            pointHoverRadius: 5,
+        }],
+    }));
+};
+
 
     const fetchTrendData = async () => {
         try {
@@ -325,22 +333,6 @@ export default function Dashboard() {
             tooltip: { enabled: false },
         },
     };
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     const pieOptions = {
         responsive: false,
