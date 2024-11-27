@@ -13,7 +13,7 @@ export default function ManageContracts() {
   const [viewDetailsRow, setViewDetailsRow] = useState(null);
   const [editedContract, setEditedContract] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [openPay, setOpenPay] = useState(false);
   const navigate = useNavigate();
 
