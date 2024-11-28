@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -96,8 +97,10 @@ const ExampleComponent = () => {
         await axios.post('http://localhost:4500/portaldev/createCordinator', formData);
         fetchCoordinators();
       }
+      toast.success("Updated Successfully!");
       handleCloseModal();
     } catch (error) {
+      toast.error("Updated Failed!");
       console.error('Error saving data:', error);
     }
   };
@@ -112,6 +115,8 @@ const ExampleComponent = () => {
   };
 
   return (
+    <>
+    <Toaster/>
     <div className="float-right w-full min-h-screen">
       <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Solution Category</h2>
     <div className="mx-4 my-5">
@@ -229,6 +234,7 @@ const ExampleComponent = () => {
       )}
       </div>
     </div>
+    </>
   );
 };
 

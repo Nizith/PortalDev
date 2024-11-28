@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -123,6 +124,7 @@ export default function PaymentTable() {
           `http://localhost:4500/portaldev/updatepayments/${selectedPayment._id}`,
           inputFields
         );
+        
 
         // Immediately update the payment in the state
         setPayments((prevPayments) =>
@@ -135,6 +137,7 @@ export default function PaymentTable() {
             payment._id === selectedPayment._id ? response.data.data : payment
           )
         );
+        toast.success("Updated Successfully!");
       } else {
         const response = await axios.post("http://localhost:4500/portaldev/createpayment", inputFields);
 
@@ -145,8 +148,9 @@ export default function PaymentTable() {
       // Close the modal and reset the form fields
 
       handleCloseModal();
-      window.location.reload()
+      //window.location.reload()
     } catch (error) {
+      toast.error("Updated Failed!");
       console.error("Error submitting form:", error);
     }
   };
@@ -181,6 +185,7 @@ export default function PaymentTable() {
 
   return (
     <>
+    <Toaster/>
       {loading ? (
         <>
           <LoadingAnimation />

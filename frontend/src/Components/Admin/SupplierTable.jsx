@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -116,6 +117,7 @@ const SupplierComponent = () => {
             supplier._id === selectedSupplier._id ? response.data.data : supplier
           )
         );
+        toast.success("Updated Successfully!");
       } else {
         const response = await axios.post(
           "http://localhost:4500/portaldev/createsupplier",
@@ -128,6 +130,7 @@ const SupplierComponent = () => {
 
       handleCloseModal();
     } catch (error) {
+      toast.error("Updated Failed!");
       console.error("Error submitting form:", error);
     }
   };
@@ -168,6 +171,7 @@ const SupplierComponent = () => {
 
   return (
     <>
+    <Toaster />
       <div className="float-right w-full min-h-screen">
         <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Supplier Table</h2>
         <div className="mx-8 mt-5">
