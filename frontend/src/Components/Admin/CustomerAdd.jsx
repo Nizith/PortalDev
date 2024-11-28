@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -81,6 +82,7 @@ export default function customerTable() {
                     customer.BRnumber === selectedCustomer.BRnumber ? updatedCustomer : customer
                 )
             );
+            toast.success("Updated Successfully!");
         } else {
             // Add new customer logic
             const response = await axios.post(
@@ -95,6 +97,7 @@ export default function customerTable() {
 
         handleCloseModal();
     } catch (error) {
+      toast.error("Updated Failed!");
         console.error("Error submitting form:", error);
     }
 };
@@ -128,6 +131,7 @@ const handleDeleteCustomer = async (BRnumber, id) => {
 
   return (
     <>
+    <Toaster/>
       <div className="float-right w-full min-h-screen">
         <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Customer Table</h2>
         <div className="mx-8 mt-5">

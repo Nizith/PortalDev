@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -96,14 +97,18 @@ const SalesCategoryComponent = () => {
       if (isEditMode) {
         await axios.put(`http://localhost:4500/portaldev/updatecordinator/${selectedCoordinator._id}`, formData);
         fetchCoordinators();
-      } else {
+      } 
+      
+      else {
         const response = await axios.post('http://localhost:4500/portaldev/createCordinator', formData);
         const newCoordinator = response.data.data;
         setCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         setFilteredCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       }
+      toast.success("Updated Successfully!");
       handleCloseModal();
     } catch (error) {
+      toast.error("Updated Failed!");
       console.error('Error saving data:', error);
     }
   };
@@ -118,6 +123,8 @@ const SalesCategoryComponent = () => {
   };
 
   return (
+    <>
+    <Toaster/>
     <div className="float-right w-full min-h-screen">
       <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Sales Category </h2>
       <div className="flex mb-4 space-x-2">
@@ -259,6 +266,7 @@ const SalesCategoryComponent = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
