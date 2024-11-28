@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -80,6 +81,7 @@ export default function DataTable() {
               : section
           )
         );
+        toast.success("Updated Successfully!");
       } else {
         // Add new section logic
         const response = await axios.post(
@@ -92,6 +94,7 @@ export default function DataTable() {
 
       handleCloseModal();
     } catch (error) {
+      toast.error("Updated Failed!");
       console.error('Error submitting form:', error);
     }
   };
@@ -123,6 +126,7 @@ export default function DataTable() {
 
   return (
     <>
+    <Toaster/>
       <div className="float-right w-full min-h-screen">
         <h2 className="flex justify-center text-black text-2xl font-bold mt-4">Section Table</h2>
         <div className="mx-8 mt-5">

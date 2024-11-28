@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 import { TbExternalLink } from "react-icons/tb";
 import { FaEdit } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
@@ -13,7 +14,7 @@ export default function ManageContracts() {
   const [viewDetailsRow, setViewDetailsRow] = useState(null);
   const [editedContract, setEditedContract] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [openPay, setOpenPay] = useState(false);
   const navigate = useNavigate();
 
@@ -83,10 +84,12 @@ export default function ManageContracts() {
             contract._id === id ? response.data.data : contract
           )
         );
+        toast.success("Updated successfully!");
         setViewDetailsRow(null);
         setEditedContract({});
       })
       .catch((error) => {
+        toast.error("Update Failed!");
         console.error("Error updating contract:", error);
       });
   };
@@ -107,8 +110,11 @@ export default function ManageContracts() {
     }
   };
 
+  
+
   return (
     <>
+    <Toaster />
       {loading ? (
         <>
           <LoadingAnimation />
