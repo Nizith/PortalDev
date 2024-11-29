@@ -100,6 +100,7 @@ export default function DataTable() {
   };
 
   const handleDeleteSection = async (sectionID, id) => {
+    if(window.confirm('Are you sure you want to delete this payment?')){
     try {
       const response = await axios.delete(`http://localhost:4500/portaldev/deletesection/${id}`);
       if (response.status === 200) {
@@ -113,6 +114,7 @@ export default function DataTable() {
     } catch (error) {
       console.error('Error deleting section:', error.response ? error.response.data : error.message);
     }
+  }
   };
 
   const handleFilterChange = (e) => {

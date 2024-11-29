@@ -104,6 +104,7 @@ export default function customerTable() {
 
 
 const handleDeleteCustomer = async (BRnumber, id) => {
+  if(window.confirm('Are you sure you want to delete this cutomer?')){
   try {
       const response = await axios.delete(`http://localhost:4500/portaldev/deletecustomer/${id}`);
       if (response.status === 200) {
@@ -117,6 +118,7 @@ const handleDeleteCustomer = async (BRnumber, id) => {
   } catch (error) {
       console.error("Error deleting customer:", error.response ? error.response.data : error.message);
   }
+}
 };
 
 

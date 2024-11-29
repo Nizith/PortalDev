@@ -106,12 +106,14 @@ const ExampleComponent = () => {
   };
 
   const handleDelete = async (id) => {
+    if(window.confirm('Are you sure you want to delete this payment?')){
     try {
       await axios.delete(`http://localhost:4500/portaldev/deletecordinator/${id}`);
       fetchCoordinators();
     } catch (error) {
       console.error('Error deleting coordinator:', error);
     }
+  }
   };
 
   return (

@@ -136,6 +136,7 @@ const SupplierComponent = () => {
   };
 
   const handleDeleteSupplier = async (SRno, id) => {
+    if(window.confirm('Are you sure you want to delete this supplier?')){
     try {
       const response = await axios.delete(
         `http://localhost:4500/portaldev/deleteSupplier/${id}`
@@ -151,6 +152,7 @@ const SupplierComponent = () => {
     } catch (error) {
       console.error("Error deleting supplier:", error.response ? error.response.data : error.message);
     }
+  }
   };
 
   const handleFilterSubmit = (currentFilterData = filterData) => {
