@@ -156,6 +156,7 @@ export default function PaymentTable() {
   };
 
   const handleDeletePayment = async (id) => {
+    if(window.confirm('Are you sure you want to delete this payment?')){
     try {
       const response = await axios.delete(`http://localhost:4500/portaldev/deletepayment/${id}`);
       if (response.status === 200) {
@@ -169,6 +170,7 @@ export default function PaymentTable() {
     } catch (error) {
       console.error("Error deleting payment:", error.response ? error.response.data : error.message);
     }
+  }
   };
 
   const handleFilterSubmit = (currentFilterData = filterData) => {
