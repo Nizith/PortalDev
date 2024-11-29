@@ -217,17 +217,6 @@ const handleDeleteCustomer = async (BRnumber, id) => {
                     />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-gray-700">BR number:</label>
-                    <input
-                      type="text"
-                      name="BRnumber"
-                      value={inputFields.BRnumber}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                      readOnly={isEditMode}
-                    />
-                  </div>
-                  <div className="mb-4">
                     <label className="block text-gray-700">Customer Name:</label>
                     <input
                       type="text"
@@ -259,17 +248,17 @@ const handleDeleteCustomer = async (BRnumber, id) => {
                   </div>
                   <div className="flex justify-end space-x-4">
                     <button
-                      type="button"
+                      type="submit"
                       className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
+                    >
+                      {isEditMode ? "Update" : "Add"}
+                    </button>
+                    <button
+                      type="button"
+                      className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
                       onClick={handleCloseModal}
                     >
                       Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
-                    >
-                      {isEditMode ? "Update" : "Add"}
                     </button>
                   </div>
                 </form>
