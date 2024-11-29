@@ -130,7 +130,6 @@ export default function DataTable() {
       <div className="float-right w-full min-h-screen">
         <h2 className="flex justify-center text-black text-2xl font-bold mt-4">Section Table</h2>
         <div className="mx-8 mt-5">
-          <div className="bg-white w-full p-8 rounded-lg shadow-lg">
             {/* Filter Inputs */}
             <div className="flex mb-4 space-x-2">
               <input
@@ -237,7 +236,6 @@ export default function DataTable() {
                 </div>
               </div>
             )}
-          </div>
         </div>
       </div>
     </>
