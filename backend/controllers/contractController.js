@@ -21,7 +21,7 @@ const createContract = async (req, res) => {
 
 
 //retrieve all the contract details
-const getAllContracts = async (req, res) => {
+const getAllContracts = async (req, res) =>  {
 
     const allContracts = await Contract.find();
 

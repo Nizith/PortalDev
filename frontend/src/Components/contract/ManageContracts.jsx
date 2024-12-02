@@ -18,7 +18,7 @@ export default function ManageContracts() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchContracts = async () => {
+    const fetchContracts = async () =>  {
         try {
             const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
             const delay = new Promise((resolve) => setTimeout(resolve, 1000));

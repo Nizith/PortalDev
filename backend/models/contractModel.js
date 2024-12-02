@@ -62,7 +62,7 @@ const ContractSchema = new mongoose.Schema({
         required: true
     },
     manager: {
-        type: String,
+        type: String ,
         required: true
     },
     solutionTeam: {

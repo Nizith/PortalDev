@@ -347,7 +347,7 @@ export default function Dashboard() {
 
     const navigate = useNavigate();
     const navigateUserMng = () => {
-        navigate('/users');
+        navigate(' /users');
     };
 
     return (
