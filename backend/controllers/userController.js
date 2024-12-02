@@ -7,7 +7,7 @@ const insertUser = async (req, res) => {
 
     try {
         if (!username || !password || !role) {
-            return res.status(400).send({ message: "username, Password, and Role are required" });
+            return res.status(400).send({ message: "username, Password, and Role are required" }) ;
         }
         const existingUser = await UserModel.findOne({ username });
         if (existingUser) {

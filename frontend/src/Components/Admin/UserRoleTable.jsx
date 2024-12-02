@@ -15,13 +15,22 @@ export default function UserRoleTable() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch('http://localhost:4500/portaldev/users');
+                const response = await fetch('http://localhost:4500/portaldev/users', {
+                    headers: {
+                        'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Replace with your actual token
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`) ;
+                }
                 const data = await response.json();
                 setUsers(data);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
         };
+        
 
         fetchUsers();
     }, []);
