@@ -3,6 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
 import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
 import 'tailwindcss/tailwind.css';
+import UserManagement from './UserManagement';
 
 export default function UserRoleTable() {
     const [users, setUsers] = useState([]);
@@ -11,6 +12,8 @@ export default function UserRoleTable() {
     const [resetUserId, setResetUserId] = useState(null);
     const [newPassword, setNewPassword] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // New state for delete confirmation
+    const [userToDelete, setUserToDelete] = useState(null); // User to delete
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -65,13 +68,18 @@ export default function UserRoleTable() {
         }
     };
 
-    const handleDelete = async (userId) => {
+    const handleDeleteClick = (userId) => {
+        setUserToDelete(userId); // Set the user to be deleted
+        setIsDeleteModalOpen(true); // Open delete confirmation modal
+    }
+
+    const handleDeleteConfirm = async () => {
         try {
-            const response = await fetch(`http://localhost:4500/portaldev/users/${userId}`, {
+            const response = await fetch(`http://localhost:4500/portaldev/users/${userToDelete}`, {
                 method: 'DELETE',
             });
             if (response.ok) {
-                setUsers(users.filter(user => user._id !== userId));
+                setUsers(users.filter(user => user._id !== userToDelete));
                 toast.success('User deleted successfully.');
             } else {
                 toast.error('Failed to delete user.');
@@ -79,6 +87,7 @@ export default function UserRoleTable() {
         } catch (error) {
             console.error('Error deleting user:', error);
         }
+        setIsDeleteModalOpen(false); // Close delete confirmation modal
     };
 
     const handleResetPassword = (userId) => {
@@ -128,12 +137,18 @@ export default function UserRoleTable() {
         <div className="float-right w-full min-h-screen ">
             <h2 className="flex justify-center text-black text-2xl font-bold mt-4">User Role Table</h2>
 
+
+
+
             <div
                                 className="inline-flex space-x-4 border-2 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg "
                                 onClick={navigateUserMng}>
                                 <h1 className="font-semibold text-gray-600 text-lg">User Management</h1>
                                 <FaUser className="text-gray-800 size-6" />
                             </div>
+                            
+                            <div className='inline-flex space-x-4 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg ml-96 '><UserManagement/></div>
+
 
 
 
@@ -183,12 +198,12 @@ export default function UserRoleTable() {
                                 >
                                     {editingUserId === user._id ? 'Save' : 'Update'}
                                 </button>
-                                <button 
-                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" 
-                                    onClick={() => handleDelete(user._id)}
-                                >
-                                    Delete
-                                </button>
+                                <button
+                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                                        onClick={() => handleDeleteClick(user._id)} // Trigger delete confirmation modal
+                                    >
+                                        Delete
+                                    </button>
                                 <button 
                                     className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" 
                                     onClick={() => handleResetPassword(user._id)}
@@ -231,6 +246,30 @@ export default function UserRoleTable() {
                     </div>
                 </div>
             )}
+
+            {/* Delete Confirmation Modal */}
+            {isDeleteModalOpen && (
+                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                            <h3 className="text-xl font-semibold mb-2">Delete User</h3>
+                            <p className="mb-4 text-gray-600">Are you sure you want to delete this user?</p>
+                            <div className="flex justify-end">
+                                <button
+                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                    onClick={handleDeleteConfirm}
+                                >
+                                    Confirm
+                                </button>
+                                <button
+                                    className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded"
+                                    onClick={() => setIsDeleteModalOpen(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
         </div>
         </>
     );
