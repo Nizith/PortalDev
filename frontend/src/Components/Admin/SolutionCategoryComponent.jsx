@@ -120,7 +120,6 @@ const ExampleComponent = () => {
     <>
     <Toaster/>
     <div className="float-right w-full min-h-screen">
-      <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Solution Category</h2>
     <div className="flex mb-4 space-x-2">
         <input
           type="text"
