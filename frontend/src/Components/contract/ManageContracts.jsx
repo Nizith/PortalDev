@@ -19,25 +19,22 @@ export default function ManageContracts() {
   const navigate = useNavigate();
 
   useEffect(() => {
-
-    const fetchContracts = async () => {
-      try {
-        const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
-        // Simulate minimum 2-second loading time
-        const delay = new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Wait for both data fetch and 2 seconds delay
-        await Promise.all([delay, response]);
-        setContracts(response.data.data);
-
-      } catch (error) {
-        console.error("Error fetching customer:", error);
-      } finally {
-        setLoading(false); // Stop the loading animation after both conditions are met
-      }
+    const fetchContracts = async () =>  {
+        try {
+            const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
+            const delay = new Promise((resolve) => setTimeout(resolve, 1000));
+            await Promise.all([delay, response]);
+            setContracts(response.data.data);
+        } catch (error) {
+            console.error("Error fetching contracts:", error);
+        } finally {
+            setLoading(false);
+        }
     }
-    fetchContracts()
-  }, []);
+    fetchContracts();
+}, []);
+
+
 
   const handleViewDetailsClick = (contract) => {
     setViewDetailsRow(contract._id);

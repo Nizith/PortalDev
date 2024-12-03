@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const AMCSchema = new mongoose.Schema({// since its an Array of AMC Detailss
@@ -61,7 +62,7 @@ const ContractSchema = new mongoose.Schema({
         required: true
     },
     manager: {
-        type: String,
+        type: String ,
         required: true
     },
     solutionTeam: {
@@ -89,6 +90,7 @@ const ContractSchema = new mongoose.Schema({
         required: true
     },
     AMCDetails: [AMCSchema] 
-});
+}, { timestamps: true });
+
 
 module.exports = mongoose.model('contract', ContractSchema);

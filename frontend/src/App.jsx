@@ -16,6 +16,7 @@ import ManageContracts from "./Components/contract/ManageContracts.jsx"
 import Dashboard from "./Components/Admin/Dashboard.jsx"
 import UserManagement from "./Components/Admin/UserManagement.jsx"
 import UserDashboard from "./Components/Admin/UserDashboard.jsx"
+import UserRoleTable from "./Components/Admin/UserRoleTable.jsx"
 
 
 function Layout({ children }) {
@@ -73,6 +74,9 @@ function App() {
           <Route path="/viewcontracts" element={<ViewContract />} />
           <Route path="/payments" element={<Payment />} />
           <Route path="/addpayment" element={<PaymentAdd />} />
+          <Route path="/notifications" element={<Notification/>}/>
+          <Route path="/document" element ={<Document/>}/>
+          <Route path = "/users" element = {<UserRoleTable/>}/>
 
         </Routes>
       </Layout>

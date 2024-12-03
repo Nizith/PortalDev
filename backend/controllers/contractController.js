@@ -21,11 +21,12 @@ const createContract = async (req, res) => {
 
 
 //retrieve all the contract details
-const getAllContracts = async (req, res) => {
+const getAllContracts = async (req, res) =>  {
 
     const allContracts = await Contract.find();
 
     try {
+         const allContracts = await Contract.find().sort({ createdAt: -1 }); // Sort by createdAt in descending order
 
         if (!allContracts) {
             res.status(404).json({ message: 'No contracts there' })
