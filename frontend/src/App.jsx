@@ -50,7 +50,6 @@ function App() {
           {/* Admin Pages */}
           <Route path="/admindashboard" element={< Dashboard />} />
           <Route path="/userdashboard" element={< UserDashboard />} />
-          <Route path="/usemanagement" element={< UserManagement />} />
 
           <Route path="/addcontract" element={<ContractAdd />} />
           <Route path="/contracts" element={<ManageContracts />} />
@@ -76,7 +75,7 @@ function App() {
           <Route path="/addpayment" element={<PaymentAdd />} />
           <Route path="/notifications" element={<Notification/>}/>
           <Route path="/document" element ={<Document/>}/>
-          <Route path = "/users" element = {<UserRoleTable/>}/>
+          <Route path="/users" element = {<UserRoleTable/>}/>
 
         </Routes>
       </Layout>

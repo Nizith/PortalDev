@@ -66,7 +66,7 @@ export default function UserManagement() {
             <Toaster />
             <div>
                 <button
-                    className="w-[3in] bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 m-4 rounded-md"
+                    className="w-[2in] text-blue-200 font-semibold mb-3 px-4 py-1.5 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
                     onClick={toggleUserMng}
                 >
                     Add new user
@@ -123,9 +123,9 @@ export default function UserManagement() {
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md"
+                                    className="w-full text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
                                 >
-                                    Submit
+                                    Add New User
                                 </button>
                             </form>
                         </div>

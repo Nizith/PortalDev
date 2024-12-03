@@ -158,7 +158,7 @@ const ExampleComponent = () => {
               <td className="py-2 px-2 font-semibold border">{coordinator.sectionName}</td>
               <td className="py-2 px-2 font-semibold border">{coordinator.SolutionCategory}</td>
               <td className="py-2 px-2 font-semibold border">{coordinator.SolutionEngineer}</td>
-              <td className="py-2 px-2 font-semibold border">
+              <td className="py-2 flex justify-center gap-x-8 font-semibold border">
                 <button onClick={() => handleOpenModal(coordinator)}>  
                 <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                 </button>

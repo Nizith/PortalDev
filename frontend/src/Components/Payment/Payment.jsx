@@ -4,6 +4,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
+import { IoIosArrowForward } from "react-icons/io";
 
 const initialInputFields = {
   PRnumber: "",
@@ -194,7 +195,7 @@ export default function PaymentTable() {
         </>
       ) : (
         <div className="float-right w-full min-h-screen">
-          <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Payments Table</h2>
+        <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward/>Manage Payments</h2>
           <div className="mx-8 my-5">
             <div className="flex mb-4 space-x-2">
               <input

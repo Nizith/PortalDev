@@ -3,6 +3,7 @@ import axios from 'axios';
 import SalesCategoryComponent from './SalesCategoryComponent';
 import SolutionCategoryComponent from './SolutionCategoryComponent';
 import LoadingAnimation from '../Login/LoadingAnimation';
+import { IoIosArrowForward } from 'react-icons/io';
 
 export default function CordinatorComponent() {
   const [activeTab, setActiveTab] = useState('sales'); // Manage active tab
@@ -43,10 +44,10 @@ export default function CordinatorComponent() {
           <LoadingAnimation />
         </div>
       ) : (
-        <div className="w-full min-h-screen px-8 py-5">
-        <h2 className="flex justify-center text-black text-2xl font-bold mb-4 ">Cordinators Table</h2>
+        <div className="w-full min-h-screen">
+        <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward/> Manage Cordinators</h2>
           {/* Tab Buttons */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-6 mx-8 mt-5">
             <button
               className={`w-full px-6 py-2 rounded-t-lg ${activeTab === 'sales' ? 'bg-gradient-to-r from-slate-900 to-indigo-600 text-white font-bold' : 'bg-gray-200'
                 }  transition`}
@@ -64,7 +65,7 @@ export default function CordinatorComponent() {
           </div>
 
           {/* Tab Content */}
-          <div>
+          <div className='mx-8 mt-5'>
             {activeTab === 'sales' && (
               <div>
                 <SalesCategoryComponent
