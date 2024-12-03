@@ -4,6 +4,7 @@ import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
+import { IoIosArrowForward } from 'react-icons/io';
 
 const initialInputFields = {
   sectionID: '',
@@ -17,16 +18,23 @@ export default function DataTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedSection, setSelectedSection] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Fetch all sections from the API
   useEffect(() => {
     const fetchSections = async () => {
       try {
         const response = await axios.get('http://localhost:4500/portaldev/readsection');
+        
+        const delay = new Promise((resolve) => setTimeout(resolve, 1000));
+        await Promise.all([delay, response]);
+
         setSections(response.data.data); // The data should be sorted by createdAt in descending order
         setFilteredSections(response.data.data);
       } catch (error) {
         console.error('Error fetching sections:', error);
+      }finally {
+        setLoading(false); // Stop the loading animation after both conditions are met
       }
     };
 
@@ -100,21 +108,21 @@ export default function DataTable() {
   };
 
   const handleDeleteSection = async (sectionID, id) => {
-    if(window.confirm('Are you sure you want to delete this payment?')){
-    try {
-      const response = await axios.delete(`http://localhost:4500/portaldev/deletesection/${id}`);
-      if (response.status === 200) {
-        setSections((prevSections) =>
-          prevSections.filter((section) => section.sectionID !== sectionID)
-        );
-        setFilteredSections((prevSections) =>
-          prevSections.filter((section) => section.sectionID !== sectionID)
-        );
+    if (window.confirm('Are you sure you want to delete this payment?')) {
+      try {
+        const response = await axios.delete(`http://localhost:4500/portaldev/deletesection/${id}`);
+        if (response.status === 200) {
+          setSections((prevSections) =>
+            prevSections.filter((section) => section.sectionID !== sectionID)
+          );
+          setFilteredSections((prevSections) =>
+            prevSections.filter((section) => section.sectionID !== sectionID)
+          );
+        }
+      } catch (error) {
+        console.error('Error deleting section:', error.response ? error.response.data : error.message);
       }
-    } catch (error) {
-      console.error('Error deleting section:', error.response ? error.response.data : error.message);
     }
-  }
   };
 
   const handleFilterChange = (e) => {
@@ -128,10 +136,15 @@ export default function DataTable() {
 
   return (
     <>
-    <Toaster/>
-      <div className="float-right w-full min-h-screen">
-        <h2 className="flex justify-center text-black text-2xl font-bold mt-4">Section Table</h2>
-        <div className="mx-8 mt-5">
+      <Toaster />
+      {loading ? (
+        <div>
+          <LoadingAnimation />
+        </div>
+      ) : (
+        <div className="float-right w-full min-h-screen">
+          <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward />Manage Section</h2>
+          <div className="mx-8 mt-5">
             {/* Filter Inputs */}
             <div className="flex mb-4 space-x-2">
               <input
@@ -170,12 +183,12 @@ export default function DataTable() {
                     <tr key={section.sectionID}>
                       <td className="py-2 px-2 font-semibold border">{section.sectionID}</td>
                       <td className="py-2 px-2 font-semibold border">{section.sectionName}</td>
-                      <td className="py-2 px-2 font-semibold border">
+                      <td className="py-2 flex justify-center gap-x-8 font-semibold border">
                         <button onClick={() => handleOpenModal(section)}>
-                        <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
+                          <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
                         </button>
                         <button onClick={() => handleDeleteSection(section.sectionID, section._id)}>
-                        <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
+                          <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
                         </button>
                       </td>
                     </tr>
@@ -238,8 +251,9 @@ export default function DataTable() {
                 </div>
               </div>
             )}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

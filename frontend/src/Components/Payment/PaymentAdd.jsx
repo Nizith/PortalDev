@@ -10,9 +10,6 @@ export default function PaymentAdd({ handleCloseModal, tenderNumber, AMCCurrency
         POdate: "",
     });
 
-    const [partialPay, setPartialPay] = useState([
-        { InvoiceNumber: "", InvoiceDate: "", Paymentstatus: "", Paiddate: "", Paymentremarks: "" }
-    ]);    
     const [error, setError] = useState("");
 
     const maxEntries = {
@@ -24,11 +21,23 @@ export default function PaymentAdd({ handleCloseModal, tenderNumber, AMCCurrency
 
     const requiredEntries = maxEntries[AMCterm] || 1; // Default to 1 if term not recognized
 
+    const [partialPay, setPartialPay] = useState([
+        { InvoiceNumber: "", InvoiceDate: "", Paymentstatus: "", Paiddate: "", Paymentremarks: "" }
+    ]);
+
     useEffect(() => {
-        // Reset dynamic fields if AMCterm changes
-        setPartialPay(Array(requiredEntries).fill({ InvoiceNumber: "", InvoiceDate: "", Paymentstatus: "", Paiddate: "", Paymentremarks: "" }));
+        // Ensure at least one entry is always present
+        if (partialPay.length < 1) {
+            setPartialPay([
+                { InvoiceNumber: "", InvoiceDate: "", Paymentstatus: "", Paiddate: "", Paymentremarks: "" }
+            ]);
+        } else if (partialPay.length > requiredEntries) {
+            // Trim excess fields if AMC term requires fewer entries
+            setPartialPay(partialPay.slice(0, requiredEntries));
+        }
     }, [AMCterm]);
-    
+
+
 
     const inputChange = (e) => {
         const { name, value } = e.target;
@@ -114,58 +123,67 @@ export default function PaymentAdd({ handleCloseModal, tenderNumber, AMCCurrency
                         </div>
                     </div>
 
+
                     {/* Dynamic PartialPay Fields */}
                     {partialPay.map((entry, index) => (
-                        <div key={index} className="grid grid-cols-5 gap-4 mb-4">
-                            <div>
-                                <label className="block text-gray-700">Invoice Number</label>
-                                <input
-                                    type="text"
-                                    name="InvoiceNumber"
-                                    value={entry.InvoiceNumber}
-                                    onChange={(e) => handlePartialPayChange(index, e)}
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700">Invoice Date</label>
-                                <input
-                                    type="date"
-                                    name="InvoiceDate"
-                                    value={entry.InvoiceDate}
-                                    onChange={(e) => handlePartialPayChange(index, e)}
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700">Payment Status</label>
-                                <input
-                                    type="text"
-                                    name="Paymentstatus"
-                                    value={entry.Paymentstatus}
-                                    onChange={(e) => handlePartialPayChange(index, e)}
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700">Paid Date</label>
-                                <input
-                                    type="date"
-                                    name="Paiddate"
-                                    value={entry.Paiddate}
-                                    onChange={(e) => handlePartialPayChange(index, e)}
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700">Payment Remarks</label>
-                                <input
-                                    type="text"
-                                    name="Paymentremarks"
-                                    value={entry.Paymentremarks}
-                                    onChange={(e) => handlePartialPayChange(index, e)}
-                                    className="w-full p-2 border border-gray-300 rounded"
-                                />
+                        <div className='border-2 border-gray-400 rounded-lg px-4 py-2 my-2'>
+                            {AMCterm === 'Monthly in arrears' && (
+                                <h1 className='text-indigo-600 font-semibold mb-3'>Pay for month {index + 1} </h1>
+                            )}
+                            {AMCterm === 'Quarterly In Arrears' && (
+                                <h1 className='text-indigo-600 font-semibold mb-3'>Pay for quarter {index + 1} </h1>
+                            )}
+                            <div key={index} className="grid grid-cols-4 gap-4 mb-4">
+                                <div>
+                                    <label className="block text-gray-700">Invoice Number</label>
+                                    <input
+                                        type="text"
+                                        name="InvoiceNumber"
+                                        value={entry.InvoiceNumber}
+                                        onChange={(e) => handlePartialPayChange(index, e)}
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700">Invoice Date</label>
+                                    <input
+                                        type="date"
+                                        name="InvoiceDate"
+                                        value={entry.InvoiceDate}
+                                        onChange={(e) => handlePartialPayChange(index, e)}
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700">Payment Status</label>
+                                    <input
+                                        type="text"
+                                        name="Paymentstatus"
+                                        value={entry.Paymentstatus}
+                                        onChange={(e) => handlePartialPayChange(index, e)}
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-gray-700">Paid Date</label>
+                                    <input
+                                        type="date"
+                                        name="Paiddate"
+                                        value={entry.Paiddate}
+                                        onChange={(e) => handlePartialPayChange(index, e)}
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
+                                <div className='col-span-4'>
+                                    <label className="block text-gray-700">Payment Remarks</label>
+                                    <input
+                                        type="text"
+                                        name="Paymentremarks"
+                                        value={entry.Paymentremarks}
+                                        onChange={(e) => handlePartialPayChange(index, e)}
+                                        className="w-full p-2 border border-gray-300 rounded"
+                                    />
+                                </div>
                             </div>
                         </div>
                     ))}

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import { TbExternalLink } from "react-icons/tb";
 import { FaEdit } from "react-icons/fa";
-import { IoMdClose } from "react-icons/io";
+import { IoIosArrowForward, IoMdClose } from "react-icons/io";
 import LoadingAnimation from "../Login/LoadingAnimation";
 import { MdPayment } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -118,12 +118,10 @@ export default function ManageContracts() {
         </>
       ) : (
         <div className="float-right w-full min-h-screen">
-          <h1 className="text-2xl font-bold text-gray-900 my-5 ms-8">
-            Contract Details
-          </h1>
+        <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward/> Manage Contracts</h2>
 
           {!viewDetailsRow ? (
-            <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl mx-8">
+            <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl mx-8 mt-5">
               <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
                 <thead>
                   <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-center text-sm tracking-wide">

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
 import 'tailwindcss/tailwind.css';
 import UserManagement from './UserManagement';
+import { IoIosArrowForward } from 'react-icons/io';
 
 export default function UserRoleTable() {
     const [users, setUsers] = useState([]);
@@ -25,7 +26,7 @@ export default function UserRoleTable() {
                     }
                 });
                 if (!response.ok) {
-                    throw new Error(`Error: ${response.status} ${response.statusText}`) ;
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
                 }
                 const data = await response.json();
                 setUsers(data);
@@ -33,10 +34,15 @@ export default function UserRoleTable() {
                 console.error("Error fetching users:", error);
             }
         };
-        
+
 
         fetchUsers();
     }, []);
+
+    const handleCancelUpdate = () => {
+        setEditingUserId(null); // Exit edit mode
+        setEditedUser({ username: '', role: '' }); // Reset the edited user state
+    };
 
     const handleUpdate = async (userId) => {
         if (editingUserId === userId) {
@@ -100,25 +106,25 @@ export default function UserRoleTable() {
     };
 
     const handleConfirmResetPassword = async () => {
-    try {
-        const response = await fetch(`http://localhost:4500/portaldev/users/${resetUserId}/resetpassword`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ password: newPassword })
-        });
-        if (response.ok) {
-            toast.success('Password updated successfully.');
-            setIsModalOpen(false); // Close modal
-            setNewPassword(''); // Reset password field
-        } else {
-            toast.error('Failed to reset password.');
+        try {
+            const response = await fetch(`http://localhost:4500/portaldev/users/${resetUserId}/resetpassword`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ password: newPassword })
+            });
+            if (response.ok) {
+                toast.success('Password updated successfully.');
+                setIsModalOpen(false); // Close modal
+                setNewPassword(''); // Reset password field
+            } else {
+                toast.error('Failed to reset password.');
+            }
+        } catch (error) {
+            console.error('Error resetting password:', error);
         }
-    } catch (error) {
-        console.error('Error resetting password:', error);
-    }
-};
+    };
 
 
     const handleInputChange = (e) => {
@@ -133,122 +139,121 @@ export default function UserRoleTable() {
 
     return (
         <>
-        <Toaster/>
-        <div className="float-right w-full min-h-screen ">
-            <h2 className="flex justify-center text-black text-2xl font-bold mt-4">User Role Table</h2>
+            <Toaster />
+            <div className="float-right w-full min-h-screen">
+                <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward /> User Management</h2>
+                <div className='mx-8'>
+                    <div className='float-right'><UserManagement /></div>
+                    <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
+                        <thead>
+                            <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
+                                <th className="px-4 py-3 font-bold uppercase border">Username</th>
+                                <th className="px-4 py-3 font-bold uppercase border">Role</th>
+                                <th className="px-4 py-3 font-bold uppercase border w60">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user._id} className="hover:bg-gray-100">
+                                    <td className="px-4 py-2 border">
+                                        {editingUserId === user._id ? (
+                                            <input
+                                                type="text"
+                                                name="username"
+                                                value={editedUser.username}
+                                                onChange={handleInputChange}
+                                                className="p-1 border rounded w-full"
+                                            />
+                                        ) : (
+                                            user.username
+                                        )}
+                                    </td>
+                                    <td className="px-4 py-2 border">
+                                        {editingUserId === user._id ? (
+                                            <input
+                                                type="text"
+                                                name="role"
+                                                value={editedUser.role}
+                                                onChange={handleInputChange}
+                                                className="p-1 border rounded w-full"
+                                            />
+                                        ) : (
+                                            user.role
+                                        )}
+                                    </td>
+                                    <td className="px-4 py-2 border flex justify-around">
+                                        <button
+                                            className={`py-1 px-2 rounded font-bold ${editingUserId === user._id
+                                                    ? 'text-green-200 font-semibold px-5 py-1.5 rounded-lg bg-green-800 hover:ring-2 ring-green-500 duration-200'
+                                                    : 'text-blue-200 font-semibold px-5 py-1.5 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200'
+                                                } text-white`}
+                                            onClick={() => handleUpdate(user._id)}
+                                        >
+                                            {editingUserId === user._id ? 'Save' : 'Update'}
+                                        </button>
+                                        {editingUserId === user._id ? (
+                                            <button
+                                                className="text-gray-200 font-semibold px-5 py-1.5 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
+                                                onClick={handleCancelUpdate}
+                                            >
+                                                Cancel
+                                            </button>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    className="text-red-200 font-semibold px-5 py-1.5 rounded-lg bg-red-800 hover:ring-2 ring-red-500 duration-200"
+                                                    onClick={() => handleDeleteClick(user._id)}
+                                                >
+                                                    Delete
+                                                </button>
+                                                <button
+                                                    className="text-yellow-200 font-semibold px-5 py-1.5 rounded-lg bg-yellow-700 hover:ring-2 ring-yellow-500 duration-200"
+                                                    onClick={() => handleResetPassword(user._id)}
+                                                >
+                                                    Reset Password
+                                                </button>
+                                            </>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-
-
-
-            <div
-                                className="inline-flex space-x-4 border-2 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg "
-                                onClick={navigateUserMng}>
-                                <h1 className="font-semibold text-gray-600 text-lg">User Management</h1>
-                                <FaUser className="text-gray-800 size-6" />
-                            </div>
-                            
-                            <div className='inline-flex space-x-4 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg ml-96 '><UserManagement/></div>
-
-
-
-
-            <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
-                <thead>
-                    <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                        <th className="px-4 py-3 font-bold uppercase border">Username</th>
-                        <th className="px-4 py-3 font-bold uppercase border">Role</th>
-                        <th className="px-4 py-3 font-bold uppercase border">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr key={user._id} className="hover:bg-gray-100">
-                            <td className="px-4 py-2 border">
-                                {editingUserId === user._id ? (
-                                    <input 
-                                        type="text"
-                                        name="username"
-                                        value={editedUser.username}
-                                        onChange={handleInputChange}
-                                        className="p-1 border rounded w-full"
-                                    />
-                                ) : (
-                                    user.username
-                                )}
-                            </td>
-                            <td className="px-4 py-2 border">
-                                {editingUserId === user._id ? (
-                                    <input 
-                                        type="text"
-                                        name="role"
-                                        value={editedUser.role}
-                                        onChange={handleInputChange}
-                                        className="p-1 border rounded w-full"
-                                    />
-                                ) : (
-                                    user.role
-                                )}
-                            </td>
-                            <td className="px-4 py-2 border flex justify-around">
-                                <button 
-                                    className={`py-1 px-2 rounded font-bold ${
-                                        editingUserId === user._id ? 'bg-green-500 hover:bg-green-700' : 'bg-blue-500 hover:bg-blue-700'
-                                    } text-white`} 
-                                    onClick={() => handleUpdate(user._id)}
+                {/* Password Reset Modal */}
+                {isModalOpen && (
+                    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                            <h3 className="text-xl font-semibold mb-2">Reset Your Password</h3>
+                            <p className="mb-4 text-gray-600">Use a strong password.</p>
+                            <input
+                                type="password"
+                                value={newPassword}
+                                onChange={handlePasswordChange}
+                                placeholder="New Password"
+                                className="w-full p-2 border rounded mb-4"
+                            />
+                            <div className="flex justify-end">
+                                <button
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+                                    onClick={handleConfirmResetPassword}
                                 >
-                                    {editingUserId === user._id ? 'Save' : 'Update'}
+                                    Confirm
                                 </button>
                                 <button
-                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                                        onClick={() => handleDeleteClick(user._id)} // Trigger delete confirmation modal
-                                    >
-                                        Delete
-                                    </button>
-                                <button 
-                                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" 
-                                    onClick={() => handleResetPassword(user._id)}
+                                    className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded"
+                                    onClick={() => setIsModalOpen(false)}
                                 >
-                                    Reset Password
+                                    Cancel
                                 </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {/* Password Reset Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h3 className="text-xl font-semibold mb-2">Reset Your Password</h3>
-                        <p className="mb-4 text-gray-600">Use a strong password.</p>
-                        <input 
-                            type="password"
-                            value={newPassword}
-                            onChange={handlePasswordChange}
-                            placeholder="New Password"
-                            className="w-full p-2 border rounded mb-4"
-                        />
-                        <div className="flex justify-end">
-                            <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-                                onClick={handleConfirmResetPassword}
-                            >
-                                Confirm
-                            </button>
-                            <button
-                                className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded"
-                                onClick={() => setIsModalOpen(false)}
-                            >
-                                Cancel
-                            </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* Delete Confirmation Modal */}
-            {isDeleteModalOpen && (
+                {/* Delete Confirmation Modal */}
+                {isDeleteModalOpen && (
                     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
                         <div className="bg-white p-6 rounded-lg shadow-lg w-96">
                             <h3 className="text-xl font-semibold mb-2">Delete User</h3>
@@ -270,7 +275,7 @@ export default function UserRoleTable() {
                         </div>
                     </div>
                 )}
-        </div>
+            </div>
         </>
     );
 }

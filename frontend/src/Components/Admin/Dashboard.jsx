@@ -4,6 +4,7 @@ import { ArcElement, BarController, BarElement, CategoryScale, LinearScale, Tool
 import { Chart } from 'chart.js/auto';
 import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
 import { IoDocument, IoNotifications } from 'react-icons/io5';
+import { IoIosArrowForward } from 'react-icons/io';
 import { MdNavigateNext } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -360,10 +361,10 @@ export default function Dashboard() {
 
     return (
         <>
-            <div className="bg-gray-100 p-6 min-h-screen">
+            <div className="bg-gray-100 px-8 py-4 min-h-screen">
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-3 flex justify-between">
-                        <h1 className="font-semibold text-gray-700 text-lg">Dashboard</h1>
+                    <h2 className="font-semibold text-gray-700 text-lg inline-flex mb-auto items-center"><IoIosArrowForward/> Dashboard</h2>
                         <div>
                             <div
                                 className="inline-flex space-x-4 border-2 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg"
