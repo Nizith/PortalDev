@@ -8,6 +8,7 @@ import LoginBgImg from "../../images/loginimage.jpg";
 export default function Login() {
 
     const [showPassword, setShowPassword] = useState(false);
+    const [bgOpacity, setBgOpacity] = useState(0.2); // Background opacity
     const navigate = useNavigate();
     const [logindata, setlogindata] = useState({
         username: "",
@@ -36,21 +37,16 @@ export default function Login() {
             localStorage.setItem('token', token);
             localStorage.setItem('role', role);
 
-            console.log("Token Stored:", localStorage.getItem('token'));
-            console.log("Role Stored:", localStorage.getItem('role'));
-
             // Redirect based on the role
-            setTimeout(() => {
-                if (role === "Admin") {
-                    navigate('/admindashboard');
-                } else if (role === "MsStaff") {
-                    navigate('/userdashboard');
-                } else if (role === "SalesTeam") {
-                    navigate('/userdashboard');
-                }
-            }, 1500);
-
+            if (role === "Admin") {
+                navigate('/admindashboard');
+            } else {
+                navigate('/userdashboard');
+            }
         } catch (error) {
+            // Temporarily change background opacity on error
+            setBgOpacity(0.2); // Increase opacity
+            setTimeout(() => setBgOpacity(0.3), 1000); // Reset after 1 second
             toast.error("Login Failed. Invalid credentials!");
             console.error(error);
         }
@@ -64,12 +60,23 @@ export default function Login() {
         <>
             <Toaster />
             <div className="relative w-screen h-screen">
+                {/* Background Image */}
                 <div
                     className="absolute inset-0 w-full h-full bg-cover bg-center"
                     style={{
                         backgroundImage: `url(${LoginBgImg})`,
                     }}
-                />
+                ></div>
+                {/* Overlay for Brightness Control */}
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        backgroundColor: "black",
+                        opacity: bgOpacity,
+                        transition: "opacity 0.5s ease-in-out"
+                    }}
+                ></div>
+                {/* Login Form */}
                 <div className="absolute right-10 top-28 w-2/6">
                     <div className="bg-white bg-opacity-30 border-2 my-auto rounded-3xl shadow-2xl p-5">
                         <form className="p-10 mt-3 font-bold" onSubmit={SubmitLogin}>
@@ -83,7 +90,7 @@ export default function Login() {
                                     id="username"
                                     placeholder="Enter Username..."
                                     onChange={handleLoginChange}
-                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 border border-green-600 outline-none focus:ring-1 ring-green-600 rounded-lg  ps-5 text-black font-normal"
+                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 outline-none focus:ring-2 ring-blue-600 rounded-lg  ps-5 text-bl2ck font-normal"
                                 />
                             </div>
                             <div className="mb-5 relative">
@@ -93,7 +100,7 @@ export default function Login() {
                                     id="password"
                                     placeholder="Enter the Password..."
                                     onChange={handleLoginChange}
-                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 border border-green-600 outline-none focus:ring-1 ring-green-600 rounded-lg  ps-5 text-black font-normal"
+                                    className="block w-full mx-auto mt-2 h-12 bg-slate-200 outline-none focus:ring-2 ring-blue-600 rounded-lg  ps-5 text-bl2ck font-normal"
                                 />
                                 <button
                                     type="button"
@@ -104,7 +111,7 @@ export default function Login() {
                                 </button>
                             </div>
                             <div className="flex justify-center">
-                                <button className="w-full h-12 text-xl mt-5 py-2 px-10 rounded-lg text-white duration-300 bg-indigo-900 hover:ring-2 ring-indigo-700 font-bold font-mono">
+                                <button className="w-full h-12 text-xl mt-5 py-2 px-10 rounded-lg text-white duration-300 bg-indigo-900 hover:ring-2 ring-indigo-700 font-bold">
                                     Log In
                                 </button>
                             </div>
