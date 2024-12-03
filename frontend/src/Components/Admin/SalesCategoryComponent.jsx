@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -96,28 +97,36 @@ const SalesCategoryComponent = () => {
       if (isEditMode) {
         await axios.put(`http://localhost:4500/portaldev/updatecordinator/${selectedCoordinator._id}`, formData);
         fetchCoordinators();
-      } else {
+      } 
+      
+      else {
         const response = await axios.post('http://localhost:4500/portaldev/createCordinator', formData);
         const newCoordinator = response.data.data;
         setCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         setFilteredCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
       }
+      toast.success("Updated Successfully!");
       handleCloseModal();
     } catch (error) {
+      toast.error("Updated Failed!");
       console.error('Error saving data:', error);
     }
   };
 
   const handleDelete = async (id) => {
+    if(window.confirm('Are you sure you want to delete this payment?')){
     try {
       await axios.delete(`http://localhost:4500/portaldev/deletecordinator/${id}`);
       fetchCoordinators();
     } catch (error) {
       console.error('Error deleting coordinator:', error);
     }
+  }
   };
 
   return (
+    <>
+    <Toaster/>
     <div className="float-right w-full min-h-screen">
       <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Sales Category </h2>
       <div className="flex mb-4 space-x-2">
@@ -239,18 +248,19 @@ const SalesCategoryComponent = () => {
                 />
               </div>
               <div className="mt-4 flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={handleCloseModal}
-                  className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
-                >
-                  Cancel
-                </button>
+                
                 <button
                   type="submit"
                   className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
                 >
                   {isEditMode ? 'Update' : 'Add'}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
+                >
+                  Cancel
                 </button>
               </div>
               </div>
@@ -259,6 +269,7 @@ const SalesCategoryComponent = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

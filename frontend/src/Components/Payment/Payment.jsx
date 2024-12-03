@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -123,6 +124,7 @@ export default function PaymentTable() {
           `http://localhost:4500/portaldev/updatepayments/${selectedPayment._id}`,
           inputFields
         );
+        
 
         // Immediately update the payment in the state
         setPayments((prevPayments) =>
@@ -135,6 +137,7 @@ export default function PaymentTable() {
             payment._id === selectedPayment._id ? response.data.data : payment
           )
         );
+        toast.success("Updated Successfully!");
       } else {
         const response = await axios.post("http://localhost:4500/portaldev/createpayment", inputFields);
 
@@ -145,13 +148,15 @@ export default function PaymentTable() {
       // Close the modal and reset the form fields
 
       handleCloseModal();
-      window.location.reload()
+      //window.location.reload()
     } catch (error) {
+      toast.error("Updated Failed!");
       console.error("Error submitting form:", error);
     }
   };
 
   const handleDeletePayment = async (id) => {
+    if(window.confirm('Are you sure you want to delete this payment?')){
     try {
       const response = await axios.delete(`http://localhost:4500/portaldev/deletepayment/${id}`);
       if (response.status === 200) {
@@ -165,6 +170,7 @@ export default function PaymentTable() {
     } catch (error) {
       console.error("Error deleting payment:", error.response ? error.response.data : error.message);
     }
+  }
   };
 
   const handleFilterSubmit = (currentFilterData = filterData) => {
@@ -181,6 +187,7 @@ export default function PaymentTable() {
 
   return (
     <>
+    <Toaster/>
       {loading ? (
         <>
           <LoadingAnimation />
@@ -398,7 +405,7 @@ export default function PaymentTable() {
                       </button>
                       <button
                         type="button"
-                        className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-800 hover:ring-2 ring-gray-500 duration-200"
+                        className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
                         onClick={handleCloseModal}
                       >
                         Cancel

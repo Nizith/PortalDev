@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -96,46 +97,52 @@ const ExampleComponent = () => {
         await axios.post('http://localhost:4500/portaldev/createCordinator', formData);
         fetchCoordinators();
       }
+      toast.success("Updated Successfully!");
       handleCloseModal();
     } catch (error) {
+      toast.error("Updated Failed!");
       console.error('Error saving data:', error);
     }
   };
 
   const handleDelete = async (id) => {
+    if(window.confirm('Are you sure you want to delete this payment?')){
     try {
       await axios.delete(`http://localhost:4500/portaldev/deletecordinator/${id}`);
       fetchCoordinators();
     } catch (error) {
       console.error('Error deleting coordinator:', error);
     }
+  }
   };
 
   return (
+    <>
+    <Toaster/>
     <div className="float-right w-full min-h-screen">
       <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Solution Category</h2>
-    <div className="mx-4 my-5">
+    <div className="flex mb-4 space-x-2">
         <input
           type="text"
           placeholder="filter  by  solution category"
-          className="my-5 px-28 mx-8 flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+          className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
           value={SolutionCategory}
           onChange={(e) => setSolutionCategory(e.target.value)}
         />
         <input
           type="text"
           placeholder="Filter by Section Name"
-          className="my-5 px-28 mx-8 flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+          className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
           value={filterSectionName}
           onChange={(e) => setFilterSectionName(e.target.value)}
         />
         <button
         onClick={() => handleOpenModal()}
-        className="my-5 bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
+        className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
       >
         Add New 
       </button>
-       
+      </div>
       
       <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
         <thead>
@@ -167,7 +174,7 @@ const ExampleComponent = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-700 bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+          <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
             <h3 className="text-center text-xl font-bold mb-4">
               {isEditMode ? 'Edit Coordinator' : 'Add New Coordinator'}
             </h3>
@@ -207,18 +214,19 @@ const ExampleComponent = () => {
                 />
               </div>
               <div className="mt-4 flex justify-end space-x-2">
+                
+                <button
+                  type="submit"
+                  className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
+                >
+                  {isEditMode ? 'Update' : 'Add'}
+                </button>
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
+                  className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
                 >
                   Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-800 hover:ring-2 ring-gray-500 duration-200"
-                >
-                  {isEditMode ? 'Update' : 'Add'}
                 </button>
               </div>
               </div>
@@ -228,7 +236,8 @@ const ExampleComponent = () => {
         
       )}
       </div>
-    </div>
+    
+    </>
   );
 };
 

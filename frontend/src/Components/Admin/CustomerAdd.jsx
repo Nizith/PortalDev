@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
@@ -81,6 +82,7 @@ export default function customerTable() {
                     customer.BRnumber === selectedCustomer.BRnumber ? updatedCustomer : customer
                 )
             );
+            toast.success("Updated Successfully!");
         } else {
             // Add new customer logic
             const response = await axios.post(
@@ -95,12 +97,14 @@ export default function customerTable() {
 
         handleCloseModal();
     } catch (error) {
+      toast.error("Updated Failed!");
         console.error("Error submitting form:", error);
     }
 };
 
 
 const handleDeleteCustomer = async (BRnumber, id) => {
+  if(window.confirm('Are you sure you want to delete this cutomer?')){
   try {
       const response = await axios.delete(`http://localhost:4500/portaldev/deletecustomer/${id}`);
       if (response.status === 200) {
@@ -114,6 +118,7 @@ const handleDeleteCustomer = async (BRnumber, id) => {
   } catch (error) {
       console.error("Error deleting customer:", error.response ? error.response.data : error.message);
   }
+}
 };
 
 
@@ -128,6 +133,7 @@ const handleDeleteCustomer = async (BRnumber, id) => {
 
   return (
     <>
+    <Toaster/>
       <div className="float-right w-full min-h-screen">
         <h2 className="flex justify-center text-black font-bold text-2xl mt-4">Customer Table</h2>
         <div className="mx-8 mt-5">
@@ -213,17 +219,6 @@ const handleDeleteCustomer = async (BRnumber, id) => {
                     />
                   </div>
                   <div className="mb-4">
-                    <label className="block text-gray-700">BR number:</label>
-                    <input
-                      type="text"
-                      name="BRnumber"
-                      value={inputFields.BRnumber}
-                      onChange={handleInputChange}
-                      className="w-full p-2 border border-gray-300 rounded"
-                      readOnly={isEditMode}
-                    />
-                  </div>
-                  <div className="mb-4">
                     <label className="block text-gray-700">Customer Name:</label>
                     <input
                       type="text"
@@ -255,17 +250,17 @@ const handleDeleteCustomer = async (BRnumber, id) => {
                   </div>
                   <div className="flex justify-end space-x-4">
                     <button
-                      type="button"
+                      type="submit"
                       className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200"
+                    >
+                      {isEditMode ? "Update" : "Add"}
+                    </button>
+                    <button
+                      type="button"
+                      className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
                       onClick={handleCloseModal}
                     >
                       Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
-                    >
-                      {isEditMode ? "Update" : "Add"}
                     </button>
                   </div>
                 </form>

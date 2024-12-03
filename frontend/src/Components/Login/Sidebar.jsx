@@ -156,13 +156,13 @@ export default function Sidebar() {
                     {confirmlogout && (
                         <>
                             <div className='w-screen h-screen absolute inset-0 bg-yello-300' onClick={closelogout}></div>
-                            <div className='relative -mt-16 mb-4 text-center pt-2 rounded-lg bg-slate-800'>
+                            <div className='relative mb-4 text-center -mt-20 pt-2 w-ful rounded-lg bg-slate-800'>
                                 <button
                                     className='absolute right-4 top-3 text-lg hover:text-red-500 rounded-lg'
                                     onClick={closelogout}><IoClose />
                                 </button>
                                 <p className='font-bold'>Are you sure ?</p>
-                                <div className='inline-flex gap-x-20 my-3 font-semibold'>
+                                <div className='grid grid-rows-1 grid-cols-2 p-4 gap-x-5 font-semibold'>
                                     <button className='bg-red-900 px-6 py-0.5 rounded-lg hover:ring-1 ring-red-600' onClick={confirmLogout}>Yes</button>
                                     <button className='bg-indigo-900 px-6 py-0.5 rounded-lg hover:ring-1 ring-indigo-600' onClick={closelogout}>No</button>
                                 </div>
