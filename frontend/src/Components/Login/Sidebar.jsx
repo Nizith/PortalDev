@@ -58,13 +58,13 @@ export default function Sidebar() {
 
     return (
         <>
-            <div className="fixed flex flex-col w-1/5 min-h-screen p-6 text-white shadow-lg bg-slate-900">
+            <div className="fixed flex flex-col w-1/5 h-screen p-6 text-white shadow-lg bg-slate-900">
                 <div className="mb-4">
                     <button onClick={() => handleHomeNavigation()} className="w-full text-xl font-bold font-serif text-center">
                         Manage Services Contract Portal
                     </button>
                 </div>
-                <div className="flex-grow">
+                <div className="flex-grow overflow-y-auto">
                     <nav>
                         {/* Super Admin tabs */}
                         {role === 'superadmin' && (
