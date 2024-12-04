@@ -13,6 +13,9 @@ export default function CordinatorComponent() {
   const [filteredCoordinators, setFilteredCoordinators] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch user role from localStorage
+  const userRole = localStorage.getItem('role'); // Assuming 'role' is stored in localStorage.
+
   // Fetch coordinators on component mount
   useEffect(() => {
     fetchCoordinators();
@@ -45,7 +48,9 @@ export default function CordinatorComponent() {
         </div>
       ) : (
         <div className="w-full min-h-screen">
-        <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward/> Manage Cordinators</h2>
+          <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
+            <IoIosArrowForward /> {userRole === 'Admin' ? 'Manage Cordinators' : 'View Cordinators'}
+          </h2>
           {/* Tab Buttons */}
           <div className="flex justify-center mb-6 mx-8 mt-5">
             <button

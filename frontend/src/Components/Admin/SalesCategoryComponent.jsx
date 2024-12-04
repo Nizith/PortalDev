@@ -22,6 +22,9 @@ const SalesCategoryComponent = () => {
   // Filter states
   const [salesCategoryFilter, setSalesCategoryFilter] = useState('');
   const [managerFilter, setManagerFilter] = useState('');
+  
+  // Fetch user role from localStorage
+  const userRole = localStorage.getItem('role'); // Assuming 'role' is stored in localStorage.
 
   useEffect(() => {
     fetchCoordinators();
@@ -143,12 +146,14 @@ const SalesCategoryComponent = () => {
           value={managerFilter}
           onChange={(e) => setManagerFilter(e.target.value)}
         />
-        <button
-          onClick={() => handleOpenModal()}
-          className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
-        >
-          Add New
-        </button>
+        {userRole === 'Admin' && (
+                <button
+                  className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
+                  onClick={() => handleOpenModal()}
+                >
+                  New
+                </button>
+              )}
       </div>
       
       <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
@@ -159,7 +164,9 @@ const SalesCategoryComponent = () => {
             <th className="py-3 px-4 font-bold uppercase border">Account Manager</th>
             <th className="py-3 px-4 font-bold uppercase border">Manager</th>
             <th className="py-3 px-4 font-bold uppercase border">Sales Engineer</th>
-            <th className="py-3 px-4 font-bold uppercase border">Actions</th>
+            {userRole === 'Admin' && (
+                <th className="py-3 px-4 font-bold uppercase border">Actions</th>
+              )}
           </tr>
         </thead>
         <tbody>
@@ -170,6 +177,7 @@ const SalesCategoryComponent = () => {
               <td className="py-2 px-2 font-semibold border">{coordinator.AccountManager}</td>
               <td className="py-2 px-2 font-semibold border">{coordinator.Manager}</td>
               <td className="py-2 px-2 font-semibold border">{coordinator.SalesEngineer}</td>
+              {userRole === 'Admin' && (
               <td className="py-2 flex justify-center gap-x-8 font-semibold border">
                 <button onClick={() => handleOpenModal(coordinator)}>
                 <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
@@ -178,6 +186,7 @@ const SalesCategoryComponent = () => {
                 <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
                 </button>
               </td>
+              )}
             </tr>
           ))}
         </tbody>
