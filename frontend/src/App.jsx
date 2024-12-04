@@ -35,7 +35,8 @@ function Layout({ children }) {
   );
 }
 
-
+const userRole = localStorage.getItem('role');
+console.log("Logged User : ", userRole);
 
 function App() {
   return (
@@ -73,9 +74,9 @@ function App() {
           <Route path="/viewcontracts" element={<ViewContract />} />
           <Route path="/payments" element={<Payment />} />
           <Route path="/addpayment" element={<PaymentAdd />} />
-          <Route path="/notifications" element={<Notification/>}/>
-          <Route path="/document" element ={<Document/>}/>
-          <Route path="/users" element = {<UserRoleTable/>}/>
+          <Route path="/notifications" element={<Notification />} />
+          <Route path="/document" element={<Document />} />
+          <Route path="/users" element={<UserRoleTable />} />
 
         </Routes>
       </Layout>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { TbExternalLink } from "react-icons/tb";
 import LoadingAnimation from "../Login/LoadingAnimation";
+import { IoIosArrowForward } from "react-icons/io";
 
 export default function ViewContract() {
   const [contracts, setContracts] = useState([]);
@@ -35,10 +36,12 @@ export default function ViewContract() {
       ) : (
         <div className="float-right w-full min-h-screen">
 
-          <h1 className="text-4xl font-bold text-gray-900 my-5 text-center">Contract Details</h1>
+<h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
+            <IoIosArrowForward />View Payments
+          </h2>
 
           {!viewDetailsRow ? (
-            <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl mx-8">
+            <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl mx-8 mt-5">
               <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
                 <thead>
                   <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-center text-sm tracking-wide">
@@ -50,10 +53,10 @@ export default function ViewContract() {
                 </thead>
                 <tbody>
                   {contracts.map((contract) => (
-                    <tr key={contract._id} className="hover:bg-gradient-to-r hover:from-blue-50 hover:via-gray-50 hover:to-blue-50 transition-all duration-300 ease-in-out">
-                      <td className="py-3 px-2 border text-gray-800 font-semibold">{contract.supplier}</td>
-                      <td className="py-3 px-2 border text-gray-800 font-semibold">{contract.customer}</td>
-                      <td className="py-3 px-2 border text-gray-800 font-semibold">{contract.tenderNo}</td>
+                    <tr key={contract._id}>
+                      <td className="py-3 px-2 border font-semibold">{contract.supplier}</td>
+                      <td className="py-3 px-2 border font-semibold">{contract.customer}</td>
+                      <td className="py-3 px-2 border font-semibold">{contract.tenderNo}</td>
                       <td className="py-3 px-2 text-center border text-indigo-500 hover:text-indigo-600 text-3xl rounded-lg transform hover:scale-105 transition-all">
                         <button onClick={() => handleViewDetailsClick(contract)}>
                           <TbExternalLink />
