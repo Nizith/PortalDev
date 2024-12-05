@@ -28,6 +28,9 @@ const SupplierComponent = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Fetch user role from localStorage
+  const userRole = localStorage.getItem('role'); // Assuming 'role' is stored in localStorage.
+
   // Fetch all suppliers and categories from the API
   useEffect(() => {
     const fetchSuppliers = async () => {
@@ -44,7 +47,7 @@ const SupplierComponent = () => {
         // Fetch categories
         const categoryResponse = await axios.get(
           "http://localhost:4500/portaldev/readcategories"
-        );       
+        );
 
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
@@ -188,7 +191,9 @@ const SupplierComponent = () => {
         </>
       ) : (
         <div className="float-right w-full min-h-screen">
-          <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward />Manage Supplier</h2>
+          <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
+            <IoIosArrowForward />{userRole === 'Admin' ? 'Manage Suppliers' : 'View Suppliers'}
+          </h2>
           <div className="mx-8 mt-5">
             <div>
               <div className="flex mb-4 space-x-2">
@@ -206,7 +211,7 @@ const SupplierComponent = () => {
                   placeholder="Filter by Name"
                   value={filterData.name}
                   onChange={handleFilterChange}
-                  className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500"
+                  className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
                 />
                 <input
                   type="text"
@@ -224,12 +229,14 @@ const SupplierComponent = () => {
                   onChange={handleFilterChange}
                   className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
                 />
-                <button
-                  className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
-                  onClick={() => handleOpenModal()}
-                >
-                  New
-                </button>
+                {userRole === 'Admin' && (
+                  <button
+                    className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
+                    onClick={() => handleOpenModal()}
+                  >
+                    New
+                  </button>
+                )}
               </div>
             </div>
 
@@ -240,7 +247,9 @@ const SupplierComponent = () => {
                   <th className="py-3 px-4 font-bold uppercase border">Supplier Name</th>
                   <th className="py-3 px-4 font-bold uppercase border">Category</th>
                   <th className="py-3 px-4 font-bold uppercase border">Mobile</th>
-                  <th className="py-3 px-4 font-bold uppercase border">Action</th>
+                  {userRole === 'Admin' && (
+                    <th className="py-3 px-4 font-bold uppercase border">Action</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -251,15 +260,17 @@ const SupplierComponent = () => {
                       <td className="py-2 px-2 font-semibold border">{supplier.name}</td>
                       <td className="py-2 px-2 font-semibold border">{supplier.category}</td>
                       <td className="py-2 px-2 font-semibold border">{supplier.mobile}</td>
-                      <td className="py-2 flex justify-center gap-x-8 font-semibold border">
-                        <button onClick={() => handleOpenModal(supplier)}>
-                          <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
-                        </button>
-                        <button onClick={() => handleDeleteSupplier(supplier.SRno, supplier._id)}>
+                      {userRole === 'Admin' && (
+                        <td className="py-2 flex justify-center gap-x-8 font-semibold border">
+                          <button onClick={() => handleOpenModal(supplier)}>
+                            <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
+                          </button>
+                          <button onClick={() => handleDeleteSupplier(supplier.SRno, supplier._id)}>
 
-                          <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
-                        </button>
-                      </td>
+                            <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))
                 ) : (
