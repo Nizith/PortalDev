@@ -4,23 +4,23 @@ const mongoose = require('mongoose');
 const PaymentSchema = new mongoose.Schema({
      PRnumber: {
         type: String,
-        require:true
+      //   require:true
      },
      PRdate: {
         type: Date,
-        require:true
+      //   require:true
      },
      LOIdetails: {
         type:String,
-        require:true
+      //   require:true
      },
      POnumber:{
         type:Number,
-        require:true
+      //   require:true
      },
      POdate : {
         type:Date,
-        require:true
+      //   require:true
      },
      InvoiceNumber :{
       type: Number ,

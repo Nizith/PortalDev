@@ -8,7 +8,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 const initialInputFields = {
   PRnumber: "",
-  PRdate: "",
+  PRdate: null,
   LOIdetails: "",
   POnumber: "",
   POdate: "",
@@ -46,6 +46,8 @@ export default function PaymentTable() {
 
         // Wait for both data fetch and 2 seconds delay
         await Promise.all([delay, response]);
+
+        console.log("Payment Data : ", response.data)
 
         setPayments(response.data.data);
         setFilteredPayments(response.data.data); // Set both payments and filteredPayments

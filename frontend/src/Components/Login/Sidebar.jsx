@@ -51,8 +51,8 @@ export default function Sidebar() {
 
     const linkClass = (path) => {
         return activeRoute === path
-            ? "w-full py-3 bg-indigo-600 bg-opacity-50 text-white pl-4 transition duration-300 "
-            : "w-full py-3 hover:ring-2 ring-indigo-600 text-white text-opacity-60 hover:text-white pl-4 transition duration-300 ";
+            ? "w-[2.62in] mx-auto py-3 bg-indigo-600 bg-opacity-50 text-white pl-4 transition duration-300 "
+            : "w-[2.62in] mx-auto py-3 hover:ring-2 ring-indigo-600 text-white text-opacity-60 hover:text-white pl-4 transition duration-300 ";
     };
 
 
