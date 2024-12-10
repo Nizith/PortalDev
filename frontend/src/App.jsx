@@ -17,6 +17,7 @@ import Dashboard from "./Components/Admin/Dashboard.jsx"
 import UserManagement from "./Components/Admin/UserManagement.jsx"
 import UserDashboard from "./Components/Admin/UserDashboard.jsx"
 import UserRoleTable from "./Components/Admin/UserRoleTable.jsx"
+import Document  from "./Components/Admin/Document.jsx"
 
 
 function Layout({ children }) {
@@ -84,4 +85,4 @@ function App() {
   )
 }
 
-export default App
+export default App
