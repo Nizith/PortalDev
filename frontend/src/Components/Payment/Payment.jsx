@@ -32,6 +32,9 @@ export default function PaymentTable() {
   });
   const [loading, setLoading] = useState(true);
 
+  // Fetch user role from localStorage
+  const userRole = localStorage.getItem('role'); // Assuming 'role' is stored in localStorage.
+
   // Fetch all payments from the API
   useEffect(() => {
     const fetchPayments = async () => {
@@ -125,7 +128,7 @@ export default function PaymentTable() {
           `http://localhost:4500/portaldev/updatepayments/${selectedPayment._id}`,
           inputFields
         );
-        
+
 
         // Immediately update the payment in the state
         setPayments((prevPayments) =>
@@ -157,21 +160,21 @@ export default function PaymentTable() {
   };
 
   const handleDeletePayment = async (id) => {
-    if(window.confirm('Are you sure you want to delete this payment?')){
-    try {
-      const response = await axios.delete(`http://localhost:4500/portaldev/deletepayment/${id}`);
-      if (response.status === 200) {
-        setPayments((prevPayments) =>
-          prevPayments.filter((payment) => payment._id !== id)
-        );
-        setFilteredPayments((prevPayments) =>
-          prevPayments.filter((payment) => payment._id !== id)
-        );
+    if (window.confirm('Are you sure you want to delete this payment?')) {
+      try {
+        const response = await axios.delete(`http://localhost:4500/portaldev/deletepayment/${id}`);
+        if (response.status === 200) {
+          setPayments((prevPayments) =>
+            prevPayments.filter((payment) => payment._id !== id)
+          );
+          setFilteredPayments((prevPayments) =>
+            prevPayments.filter((payment) => payment._id !== id)
+          );
+        }
+      } catch (error) {
+        console.error("Error deleting payment:", error.response ? error.response.data : error.message);
       }
-    } catch (error) {
-      console.error("Error deleting payment:", error.response ? error.response.data : error.message);
     }
-  }
   };
 
   const handleFilterSubmit = (currentFilterData = filterData) => {
@@ -188,14 +191,16 @@ export default function PaymentTable() {
 
   return (
     <>
-    <Toaster/>
+      <Toaster />
       {loading ? (
         <>
           <LoadingAnimation />
         </>
       ) : (
         <div className="float-right w-full min-h-screen">
-        <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward/>Manage Payments</h2>
+          <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
+            <IoIosArrowForward />{userRole === 'Admin' ? 'Manage Payments' : 'View Payments'}
+          </h2>
           <div className="mx-8 my-5">
             <div className="flex mb-4 space-x-2">
               <input
@@ -214,12 +219,14 @@ export default function PaymentTable() {
                 onChange={handleFilterChange}
                 className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
               />
-              <button
-                className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
-                onClick={() => handleOpenModal()}
-              >
-                New
-              </button>
+              {userRole === 'Admin' && (
+                <button
+                  className="bg-green-800 hover:ring-2 ring-green-500 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
+                  onClick={() => handleOpenModal()}
+                >
+                  New
+                </button>
+              )}
             </div>
             <table className="min-w-full table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
               <thead>
@@ -234,7 +241,9 @@ export default function PaymentTable() {
                   <th className="py-3 px-4 font-bold uppercase border">Payment Status</th>
                   <th className="py-3 px-4 font-bold uppercase border">Paid Date</th>
                   <th className="py-3 px-4 font-bold uppercase border">Payment Remarks</th>
-                  <th className="py-3 px-4 font-bold uppercase border">Actions</th>
+                  {userRole === 'Admin' && (
+                    <th className="py-3 px-4 font-bold uppercase border">Actions</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -251,14 +260,16 @@ export default function PaymentTable() {
                       <td className="py-2 px-2 font-semibold border">{payment.Paymentstatus}</td>
                       <td className="py-2 px-2 font-semibold border">{new Date(payment.Paiddate).toLocaleDateString()}</td>
                       <td className="py-2 px-2 font-semibold border">{payment.Paymentremarks}</td>
-                      <td className="py-2 px-2 font-semibold border text-center space-x-6">
-                        <button onClick={() => handleOpenModal(payment)} >
-                          <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
-                        </button>
-                        <button onClick={() => handleDeletePayment(payment._id)} >
-                          <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
-                        </button>
-                      </td>
+                      {userRole === 'Admin' && (
+                        <td className="py-2 px-2 font-semibold border text-center space-x-6">
+                          <button onClick={() => handleOpenModal(payment)} >
+                            <MdEdit size={27} className="text-indigo-600 hover:scale-110" />
+                          </button>
+                          <button onClick={() => handleDeletePayment(payment._id)} >
+                            <FaDeleteLeft size={27} className="text-red-600 hover:scale-110" />
+                          </button>
+                        </td>
+                      )}
                     </tr>
                   ))
                 ) : (

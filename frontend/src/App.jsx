@@ -17,7 +17,7 @@ import Dashboard from "./Components/Admin/Dashboard.jsx"
 import UserManagement from "./Components/Admin/UserManagement.jsx"
 import UserDashboard from "./Components/Admin/UserDashboard.jsx"
 import UserRoleTable from "./Components/Admin/UserRoleTable.jsx"
-import Document  from  "./Components/Admin/Document.jsx"
+import Document  from "./Components/Admin/Document.jsx"
 
 
 function Layout({ children }) {
@@ -36,7 +36,8 @@ function Layout({ children }) {
   );
 }
 
-
+const userRole = localStorage.getItem('role');
+console.log("Logged User : ", userRole);
 
 function App() {
   return (
@@ -74,9 +75,9 @@ function App() {
           <Route path="/viewcontracts" element={<ViewContract />} />
           <Route path="/payments" element={<Payment />} />
           <Route path="/addpayment" element={<PaymentAdd />} />
-          <Route path="/notifications" element={<Notification/>}/>
-          <Route path="/users" element = {<UserRoleTable/>}/>
-          <Route path="/document" element ={<Document/>}/>
+          <Route path="/notifications" element={<Notification />} />
+          <Route path="/document" element={<Document />} />
+          <Route path="/users" element={<UserRoleTable />} />
 
         </Routes>
       </Layout>
@@ -84,4 +85,4 @@ function App() {
   )
 }
 
-export default App
+export default App

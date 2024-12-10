@@ -58,13 +58,13 @@ export default function Sidebar() {
 
     return (
         <>
-            <div className="fixed flex flex-col w-1/5 min-h-screen p-6 text-white shadow-lg bg-slate-900">
+            <div className="fixed flex flex-col w-1/5 h-screen p-6 text-white shadow-lg bg-slate-900">
                 <div className="mb-4">
                     <button onClick={() => handleHomeNavigation()} className="w-full text-xl font-bold font-serif text-center">
                         Manage Services Contract Portal
                     </button>
                 </div>
-                <div className="flex-grow">
+                <div className="flex-grow overflow-y-auto">
                     <nav>
                         {/* Super Admin tabs */}
                         {role === 'superadmin' && (
@@ -146,6 +146,41 @@ export default function Sidebar() {
                                 >
                                     <MdTableView className='size-7' />
                                     View Contract
+                                </button>
+                                <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/payments')}
+                                    className={`${linkClass('/payments')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <MdPayment className='size-6' /> View Payments
+                                </button>
+                                <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/suppliers')}
+                                    className={`${linkClass('/suppliers')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <BsPersonFillUp className='size-7' /> View Suppliers
+                                </button>
+                                <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/customers')}
+                                    className={`${linkClass('/customers')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <BsPersonFillDown className='size-7' /> View Customers
+                                </button>
+                                <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/cordinators')}
+                                    className={`${linkClass('/cordinators')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <MdManageAccounts className='size-7' /> View Cordinators
+                                </button>
+                                <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/sections')}
+                                    className={`${linkClass('/sections')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <TbSectionFilled className='size-7' /> View Sections
                                 </button>
                                 <hr className='text-sky-900 my-2' />
                             </>
