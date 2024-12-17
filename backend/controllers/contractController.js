@@ -120,47 +120,63 @@ const getYearlyData = async (queryField, startDateField, endDateField) => {
     return yearlyData;
 };
 
-// Retrieve active contracts over the years
-const getActiveContractsOverYears = async (req, res) => {
+// Modify your existing contract fetching route to group by year
+const getContractsByYear = async (req, res) => {
     try {
-        const activeContracts = await getYearlyData('contractStatus', 'customerContStartDate', 'customerContEndDate');
-        res.status(200).json({
-            message: 'Active Contracts Count Over Years Fetched Successfully',
-            data: activeContracts
-        });
+        const contracts = await Contract.aggregate([
+            {
+                $group: {
+                    _id: { $year: "$customerContStartDate" }, // Group by year
+                    count: { $sum: 1 }  // Count the number of contracts per year
+                }
+            },
+            { $sort: { "_id": 1 } } // Sort by year ascending
+        ]);
+        res.status(200).json({ data: contracts });
     } catch (error) {
-        console.error('Error fetching active contracts over years:', error);
-        res.status(500).json({ message: 'Fetching Active Contracts Over Years Failed' });
+        res.status(500).json({ message: 'Error fetching contracts by year', error });
     }
 };
 
-// Retrieve active suppliers over the years
-const getActiveSuppliersOverYears = async (req, res) => {
+
+// Modify your existing supplier fetching route to group by year
+const getSuppliersByYear = async (req, res) => {
     try {
-        const activeSuppliers = await getYearlyData('contractStatus', 'customerContStartDate', 'customerContEndDate');
-        res.status(200).json({
-            message: 'Active Suppliers Count Over Years Fetched Successfully',
-            data: activeSuppliers
-        });
+        const suppliers = await Supplier.aggregate([
+            {
+                $group: {
+                    _id: { $year: "$createdAt" }, // Group by year
+                    count: { $sum: 1 }  // Count the number of suppliers per year
+                }
+            },
+            { $sort: { "_id": 1 } } // Sort by year ascending
+        ]);
+        res.status(200).json({ data: suppliers });
     } catch (error) {
-        console.error('Error fetching active suppliers over years:', error);
-        res.status(500).json({ message: 'Fetching Active Suppliers Over Years Failed' });
+        res.status(500).json({ message: 'Error fetching suppliers by year', error });
     }
 };
 
-// Retrieve active customers over the years
-const getActiveCustomersOverYears = async (req, res) => {
+
+// Modify your existing customer fetching route to group by year
+const getCustomersByYear = async (req, res) => {
     try {
-        const activeCustomers = await getYearlyData('contractStatus', 'customerContStartDate', 'customerContEndDate');
-        res.status(200).json({
-            message: 'Active Customers Count Over Years Fetched Successfully',
-            data: activeCustomers
-        });
+        const customers = await Customer.aggregate([
+            {
+                $group: {
+                    _id: { $year: "$createdAt" }, // Group by year
+                    count: { $sum: 1 }  // Count the number of customers per year
+                }
+            },
+            { $sort: { "_id": 1 } } // Sort by year ascending
+        ]);
+        res.status(200).json({ data: customers });
     } catch (error) {
-        console.error('Error fetching active customers over years:', error);
-        res.status(500).json({ message: 'Fetching Active Customers Over Years Failed' });
+        res.status(500).json({ message: 'Error fetching customers by year', error });
     }
 };
+
+
 
 module.exports = {
     createContract,
@@ -168,8 +184,5 @@ module.exports = {
     getContractById,
     updateContractById,
     deleteContractById,
-   
-    getActiveContractsOverYears,   // Added new function
-    getActiveSuppliersOverYears,   // Added new function
-    getActiveCustomersOverYears    // Added new function
+  
 };
