@@ -28,7 +28,6 @@ export default function Dashboard() {
         ],
     });
 
-
     const [totalContractCount, setTotalContractCount] = useState(0);
 
     const [newContractsData, setNewContractsData] = useState({
@@ -47,7 +46,7 @@ export default function Dashboard() {
 
     
 
-    const fetchContracts = async () => {
+    const fetchContractss = async () => {
         try {
             const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
             const contracts = response.data.data;
@@ -89,7 +88,7 @@ export default function Dashboard() {
     
             const labels = Object.keys(dailyCounts);
             const values = Object.values(dailyCounts);
-            setNewContractsData({
+            setNewContractsDatas({
                 labels,
                 datasets: [{
                     label: 'New Contracts',
@@ -120,9 +119,6 @@ export default function Dashboard() {
             console.error("Error fetching contracts:", error);
         }
     };
-    
-    
-    
 
     const [customerData, setCustomerData] = useState({ 
         labels: [],
@@ -134,6 +130,7 @@ export default function Dashboard() {
     });
 
     const [supplierData, setSupplierData] = useState({
+        
         labels: [],
         datasets: [{
             label: 'Suppliers Added per Day',
@@ -143,147 +140,152 @@ export default function Dashboard() {
         }]
     });
 
+    // Ensure supplierCount is properly defined and used
+    const [supplierCount, setSupplierCount] = useState(0);
     const [customerCount, setCustomerCount] = useState(0);
 
-
-    const fetchCustomers = async () => {
+    const fetchContracts = async () => {
         try {
-            const response = await axios.get('http://localhost:4500/portaldev/readcustomer');
-            const customers = response.data.data; // Access the `data` property
-            console.log('Customers data:', customers); // Log the response to check its structure
-            if (Array.isArray(customers)) {
-                processAndSetData(customers, 'createdAt', setCustomerData, 'Customers Added per Day');
-                
-                // Calculate the count of customers added in the last 30 days
-                const today = new Date();
-                const startDate = new Date();
-                startDate.setDate(today.getDate() - 30);
-                const count = customers.filter(customer => {
-                    const date = new Date(customer.createdAt);
-                    return date >= startDate && date <= today;
-                }).length;
-                setCustomerCount(count);
-            } else {
-                console.error('Customers data is not an array:', customers);
-            }
+            const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
+            const contracts = response.data.data;
+    
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const years = Array.from({ length: 5 }, (_, i) => currentYear - 1 + i);
+    
+            const yearCounts = years.reduce((acc, year) => ({ ...acc, [year]: 0 }), {});
+    
+            contracts.forEach(contract => {
+                const startYear = new Date(contract.customerContStartDate).getFullYear();
+                const endYear = new Date(contract.customerContEndDate).getFullYear();
+                for (let year = startYear; year <= endYear && year <= currentYear + 3; year++) {
+                    if (year in yearCounts) {
+                        yearCounts[year]++;
+                    }
+                }
+            });
+    
+            const labels = years;
+            const values = years.map(year => yearCounts[year] || 0);
+    
+            setNewContractsData({
+                labels,
+                datasets: [{
+                    label: 'Active Contracts',
+                    data: values,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1
+                }]
+            });
+            setNewContractsCount(Contracts.length); // Correctly set supplierCount
+    
         } catch (error) {
-            console.error('Error fetching customers:', error);
+            console.error("Error fetching contracts:", error);
         }
     };
     
 
-
-    const [supplierCount, setSupplierCount] = useState(0);
-
-
     const fetchSuppliers = async () => {
-    try {
-        const response = await axios.get('http://localhost:4500/portaldev/readsupplier');
-        const suppliers = response.data.data; // Access the `data` property
-        console.log('Suppliers data:', suppliers); // Log the response to check its structure
-        if (Array.isArray(suppliers)) {
-            processAndSetData(suppliers, 'createdAt', setSupplierData, 'Suppliers Added per Day');
-            
-            // Calculate the count of suppliers added in the last 30 days
-            const today = new Date();
-            const startDate = new Date();
-            startDate.setDate(today.getDate() - 30);
-            const count = suppliers.filter(supplier => {
-                const date = new Date(supplier.createdAt);
-                return date >= startDate && date <= today;
-            }).length;
-            setSupplierCount(count);
-        } else {
-            console.error('Suppliers data is not an array:', suppliers);
-        }
-    } catch (error) {
-        console.error('Error fetching suppliers:', error);
-    }
-};
-
-
-
-
-   const processAndSetData = (data, dateField, setData, label) => {
-    if (!Array.isArray(data)) {
-        console.error("Data is not an array:", data);
-        return;
-    }
-    const today = new Date();
-    const startDate = new Date();
-    startDate.setDate(today.getDate() - 30);
-    const counts = {};
-    for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
-        const dateString = d.toISOString().split('T')[0];
-        counts[dateString] = 0;
-    }
-    data.forEach(item => {
-        const date = new Date(item[dateField]);
-        if (date >= startDate && date <= today) {
-            const dateString = date.toISOString().split('T')[0];
-            counts[dateString]++;
-        }
-    });
-    const labels = Object.keys(counts);
-    const values = Object.values(counts);
-    setData((prevData) => ({
-        ...prevData,
-        labels,
-        datasets: [{
-            label,
-            data: values,
-            borderColor: 'rgba(34, 197, 94, 1)', // Solid green for the line
-            borderWidth: 2,
-            tension: 0.2,
-            fill: true, // Enable area fill
-            backgroundColor: (context) => {
-                const chart = context.chart;
-                const { ctx, chartArea } = chart;
-                if (!chartArea) {
-                    return null;
-                }
-                const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                gradient.addColorStop(0, 'rgba(34, 197, 94, 0.6)'); // Green near the line
-                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)'); // White towards the outside
-                return gradient;
-            },
-            pointBackgroundColor: 'rgba(34, 197, 94, 1)', // Green dots
-            pointBorderColor: 'rgba(34, 197, 94, 1)',
-            pointRadius: 2.5,
-            pointHoverRadius: 5,
-        }],
-    }));
-};
-
-
-    const fetchTrendData = async () => {
         try {
-            const response = await axios.get("http://localhost:4500/portaldev/trenddata"); // Replace with your actual API endpoint
-            const trendData = response.data.data;
-
-            // Process the data to suit your trend graph format
-            const processedTrendData = trendData.map(data => data.value); // Example processing
-
-            setTrendData((prevData) => ({
-                ...prevData,
-                datasets: [
-                    {
-                        ...prevData.datasets[0],
-                        data: processedTrendData,
-                    },
-                ],
-            }));
+            const response = await axios.get('http://localhost:4500/portaldev/readsupplier');
+            const suppliers = response.data.data;
+    
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const years = Array.from({ length: 5 }, (_, i) => currentYear - 1 + i);
+    
+            const supplierSet = new Set();
+            const yearCounts = years.reduce((acc, year) => ({ ...acc, [year]: 0 }), {});
+    
+            suppliers.forEach(supplier => {
+                const startYear = new Date(supplier.createdAt).getFullYear();
+                const endYear = currentYear + 3;
+                if (!supplierSet.has(supplier.name)) {
+                    for (let year = startYear; year <= endYear && year <= currentYear + 3; year++) {
+                        if (year in yearCounts) {
+                            yearCounts[year]++;
+                        }
+                    }
+                    supplierSet.add(supplier.name);
+                }
+            });
+    
+            const labels = years;
+            const values = years.map(year => yearCounts[year] || 0);
+    
+            setSupplierData({
+                labels,
+                datasets: [{
+                    label: 'Active Suppliers',
+                    data: values,
+                    borderColor: 'rgba(192, 75, 75, 1)',
+                    backgroundColor: 'rgba(192, 75, 75, 0.2)'
+                }]
+            });
+    
+            setSupplierCount(suppliers.length); // Correctly set supplierCount
+    
         } catch (error) {
-            console.error("Error fetching trend data:", error);
+            console.error('Error fetching suppliers:', error);
         }
     };
+
+    const fetchCustomers = async () => {
+        try {
+            const response = await axios.get('http://localhost:4500/portaldev/readcustomer');
+            const customers = response.data.data;
+    
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const years = Array.from({ length: 5 }, (_, i) => currentYear - 1 + i);
+    
+            const customerSet = new Set();
+            const yearCounts = years.reduce((acc, year) => ({ ...acc, [year]: 0 }), {});
+    
+            customers.forEach(customer => {
+                const startYear = new Date(customer.createdAt).getFullYear();
+                const endYear = currentYear + 3;
+                if (!customerSet.has(customer.name)) {
+                    for (let year = startYear; year <= endYear && year <= currentYear + 3; year++) {
+                        if (year in yearCounts) {
+                            yearCounts[year]++;
+                        }
+                    }
+                    customerSet.add(customer.name);
+                }
+            });
+    
+            const labels = years;
+            const values = years.map(year => yearCounts[year] || 0);
+    
+            setCustomerData({
+                labels,
+                datasets: [{
+                    label: 'Active Customers',
+                    data: values,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)'
+                }]
+            });
+    
+            setCustomerCount(customers.length); // Correctly set customerCount
+    
+        } catch (error) {
+            console.error('Error fetching customers:', error);
+        }
+    };
+
+   
 
     useEffect(() => {
         fetchContracts();
         fetchCustomers();
         fetchSuppliers();
-        fetchTrendData(); // Fetch trend data
+        fetchContractss();
+        
     }, []);
+
 
     useEffect(() => {
         const chart = chartRef.current;
@@ -302,7 +304,7 @@ export default function Dashboard() {
                 ],
             }));
         }
-    },[chartRef]);
+    }, [chartRef]);
 
     const barOptions = {
         responsive: true,
@@ -323,16 +325,33 @@ export default function Dashboard() {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-            x: { display: false },
-            y: { display: false },
+            x: {
+                title: {
+                    display: true,
+                    text: 'Year'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Active Count'
+                },
+                beginAtZero: true
+            }
         },
         elements: {
-            line: { borderWidth: 2 },
+            line: {
+                borderWidth: 2
+            }
         },
         plugins: {
-            legend: { display: false },
-            tooltip: { enabled: false },
-        },
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: true
+            }
+        }
     };
 
     const pieOptions = {
@@ -364,7 +383,7 @@ export default function Dashboard() {
             <div className="bg-gray-100 px-8 py-4 min-h-screen">
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-3 flex justify-between">
-                    <h2 className="font-semibold text-gray-700 text-lg inline-flex mb-auto items-center"><IoIosArrowForward/> Dashboard</h2>
+                        <h2 className="font-semibold text-gray-700 text-lg inline-flex mb-auto items-center"><IoIosArrowForward/> Dashboard</h2>
                         <div>
                             <div
                                 className="inline-flex space-x-4 border-2 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg"
@@ -389,12 +408,11 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Users Card */}
                         <div className="bg-white px-4 py-2 rounded-lg border">
-                            <h2 className="text-lg font-semibold">New Contracts</h2>
-                            <p className='text-xs mb-2'>Last 30 days </p>
+                            <h2 className="text-lg font-semibold">Active Contracts</h2>
+                            
                             <div className='flex justify-between items-center'>
                                 <p className="text-3xl font-bold">{newContractsCount}</p>
                                 <div className='bg-blue-200 px-2 rounded-full'><p className="text-blue-700 font-semibold"></p></div>
@@ -406,8 +424,8 @@ export default function Dashboard() {
 
                         {/* Conversions Card */}
                         <div className="bg-white px-4 py-2 rounded-lg border">
-                            <h2 className="text-lg font-semibold">Suppliers</h2>
-                            <p className='text-xs mb-2'>Last 30 days</p>
+                            <h2 className="text-lg font-semibold">Active Suppliers</h2>
+                            
                             <div className='flex justify-between items-center'>
                                 <p className="text-3xl font-bold">{supplierCount}</p>
                                 <div className='bg-red-200 px-2 rounded-full'><p className="text-red-700 font-semibold"></p></div>
@@ -419,8 +437,8 @@ export default function Dashboard() {
 
                         {/* Event Count Card */}
                         <div className="bg-white px-4 py-2 rounded-lg border">
-                            <h2 className="text-lg font-semibold">Customers</h2>
-                            <p className='text-xs mb-2'>Last 30 days</p>
+                            <h2 className="text-lg font-semibold">Active Customers</h2>
+                            
                             <div className='flex justify-between items-center'>
                                 <p className="text-3xl font-bold">{customerCount}</p>
                                 <div className='bg-green-200 px-2 rounded-full'><p className="text-green-700 font-semibold"></p></div>
@@ -430,10 +448,6 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-
-
-                   
-
 
                     <div className="grid grid-cols-4 gap-4 mt-6">
                         <div className="bg-white col-span-3 p-6 rounded-lg border">
