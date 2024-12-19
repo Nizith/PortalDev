@@ -1,10 +1,10 @@
 const Document = require('../models/Document');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // Ensure upload directory exists
 const uploadDirectory = path.join(__dirname, '..', 'uploads');
-const fs = require('fs');
 
 if (!fs.existsSync(uploadDirectory)) {
     fs.mkdirSync(uploadDirectory, { recursive: true });
@@ -101,10 +101,46 @@ const deleteDocument = async (req, res) => {
     }
 };
 
+// Delete a single file from a document
+const deleteFile = async (req, res) => {
+    const { id, fileId } = req.params;
+    try {
+        const document = await Document.findById(id);
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        // Find the file to delete
+        const fileIndex = document.documents.findIndex(file => file._id.toString() === fileId);
+        if (fileIndex === -1) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+
+        const filePath = path.join(uploadDirectory, document.documents[fileIndex].filePath);
+
+        // Remove the file from the documents array
+        document.documents.splice(fileIndex, 1);
+        await document.save();
+
+        // Delete the file from the filesystem
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error deleting file:', err);
+                return res.status(500).json({ message: 'Error deleting file from filesystem' });
+            }
+            res.status(200).json({ message: 'File deleted successfully' });
+        });
+    } catch (error) {
+        console.error('Error deleting file:', error);
+        res.status(500).json({ message: 'Error deleting file' });
+    }
+};
+
 module.exports = {
     upload,
     uploadFile,
     getDocuments,
-    updateDocument, // Added the update function
+    updateDocument,
     deleteDocument,
+    deleteFile, // Added the deleteFile function
 };

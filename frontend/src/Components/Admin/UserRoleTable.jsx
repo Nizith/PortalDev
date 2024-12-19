@@ -11,11 +11,8 @@ export default function UserRoleTable() {
     const [users, setUsers] = useState([]);
     const [editingUserId, setEditingUserId] = useState(null);
     const [editedUser, setEditedUser] = useState({ username: '', role: '' });
-    const [resetUserId, setResetUserId] = useState(null);
-    const [newPassword, setNewPassword] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // New state for delete confirmation
-    const [userToDelete, setUserToDelete] = useState(null); // User to delete
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -31,10 +28,7 @@ export default function UserRoleTable() {
                     throw new Error(`Error: ${response.status} ${response.statusText}`);
                 }
 
-                // Simulate minimum 2-second loading time
                 const delay = new Promise((resolve) => setTimeout(resolve, 1000));
-
-                // Wait for both data fetch and 2 seconds delay
                 await Promise.all([delay, response]);
 
                 const data = await response.json();
@@ -42,43 +36,40 @@ export default function UserRoleTable() {
             } catch (error) {
                 console.error("Error fetching users:", error);
             } finally {
-                setLoading(false); // Stop the loading animation after both conditions are met
+                setLoading(false);
             }
         };
-
 
         fetchUsers();
     }, []);
 
     const handleCancelUpdate = () => {
-        setEditingUserId(null); // Exit edit mode
-        setEditedUser({ username: '', role: '' }); // Reset the edited user state
+        setEditingUserId(null);
+        setEditedUser({ username: '', role: '' });
     };
 
     const handleUpdate = async (userId) => {
         if (editingUserId === userId) {
-            // Save the updated user
             try {
                 const response = await fetch(`http://localhost:4500/portaldev/users/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(editedUser)
+                    body: JSON.stringify({ role: editedUser.role }) // Only updating role
                 });
                 if (response.ok) {
                     const updatedUser = await response.json();
                     setUsers(users.map(user => user._id === userId ? updatedUser : user));
-                    toast.success('User updated successfully.');
+                    toast.success('User role updated successfully.');
                 } else {
-                    toast.error('Failed to update user.');
+                    toast.error('Failed to update user role.');
                 }
             } catch (error) {
-                console.error('Error updating user:', error);
+                console.error('Error updating user role:', error);
             }
             setEditingUserId(null);
         } else {
-            // Start editing the user
             const user = users.find(user => user._id === userId);
             setEditedUser({ username: user.username, role: user.role });
             setEditingUserId(userId);
@@ -86,9 +77,9 @@ export default function UserRoleTable() {
     };
 
     const handleDeleteClick = (userId) => {
-        setUserToDelete(userId); // Set the user to be deleted
-        setIsDeleteModalOpen(true); // Open delete confirmation modal
-    }
+        setUserToDelete(userId);
+        setIsDeleteModalOpen(true);
+    };
 
     const handleDeleteConfirm = async () => {
         try {
@@ -104,39 +95,8 @@ export default function UserRoleTable() {
         } catch (error) {
             console.error('Error deleting user:', error);
         }
-        setIsDeleteModalOpen(false); // Close delete confirmation modal
+        setIsDeleteModalOpen(false);
     };
-
-    const handleResetPassword = (userId) => {
-        setResetUserId(userId);
-        setIsModalOpen(true); // Open modal
-    };
-
-    const handlePasswordChange = (e) => {
-        setNewPassword(e.target.value);
-    };
-
-    const handleConfirmResetPassword = async () => {
-        try {
-            const response = await fetch(`http://localhost:4500/portaldev/users/${resetUserId}/resetpassword`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ password: newPassword })
-            });
-            if (response.ok) {
-                toast.success('Password updated successfully.');
-                setIsModalOpen(false); // Close modal
-                setNewPassword(''); // Reset password field
-            } else {
-                toast.error('Failed to reset password.');
-            }
-        } catch (error) {
-            console.error('Error resetting password:', error);
-        }
-    };
-
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -175,17 +135,7 @@ export default function UserRoleTable() {
                                 {users.map((user) => (
                                     <tr key={user._id} className="hover:bg-gray-100">
                                         <td className="px-4 py-2 border">
-                                            {editingUserId === user._id ? (
-                                                <input
-                                                    type="text"
-                                                    name="username"
-                                                    value={editedUser.username}
-                                                    onChange={handleInputChange}
-                                                    className="p-1 border rounded w-full"
-                                                />
-                                            ) : (
-                                                user.username
-                                            )}
+                                            {user.username}
                                         </td>
                                         <td className="px-4 py-2 border">
                                             {editingUserId === user._id ? (
@@ -218,20 +168,12 @@ export default function UserRoleTable() {
                                                     Cancel
                                                 </button>
                                             ) : (
-                                                <>
-                                                    <button
-                                                        className="text-red-200 font-semibold px-5 py-1.5 rounded-lg bg-red-800 hover:ring-2 ring-red-500 duration-200"
-                                                        onClick={() => handleDeleteClick(user._id)}
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                    <button
-                                                        className="text-yellow-200 font-semibold px-5 py-1.5 rounded-lg bg-yellow-700 hover:ring-2 ring-yellow-500 duration-200"
-                                                        onClick={() => handleResetPassword(user._id)}
-                                                    >
-                                                        Reset Password
-                                                    </button>
-                                                </>
+                                                <button
+                                                    className="text-red-200 font-semibold px-5 py-1.5 rounded-lg bg-red-800 hover:ring-2 ring-red-500 duration-200"
+                                                    onClick={() => handleDeleteClick(user._id)}
+                                                >
+                                                    Delete
+                                                </button>
                                             )}
                                         </td>
                                     </tr>
@@ -239,37 +181,6 @@ export default function UserRoleTable() {
                             </tbody>
                         </table>
                     </div>
-
-                    {/* Password Reset Modal */}
-                    {isModalOpen && (
-                        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-                            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                                <h3 className="text-xl font-semibold mb-2">Reset Your Password</h3>
-                                <p className="mb-4 text-gray-600">Use a strong password.</p>
-                                <input
-                                    type="password"
-                                    value={newPassword}
-                                    onChange={handlePasswordChange}
-                                    placeholder="New Password"
-                                    className="w-full p-2 border rounded mb-4"
-                                />
-                                <div className="flex justify-between gap-x-5">
-                                    <button
-                                        className="text-blue-200 font-semibold px-5 py-2 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200 w-full"
-                                        onClick={handleConfirmResetPassword}
-                                    >
-                                        Confirm
-                                    </button>
-                                    <button
-                                        className="text-gray-200 font-semibold px-5 py-2 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200 w-full"
-                                        onClick={() => setIsModalOpen(false)}
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
 
                     {/* Delete Confirmation Modal */}
                     {isDeleteModalOpen && (
