@@ -2,28 +2,31 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const path = require('path');
-const app = express();
+const path = require("path");
 
+const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
 // Serve static files
- app.use('/uploads', express.static(path.join(__dirname,'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = 4500;
-app.listen( PORT, () => { console.log(`App is running on port : ${PORT}`)});
+app.listen(PORT, () => {
+    console.log(`App is running on port: ${PORT}`);
+});
 
-const URL = "mongodb+srv://nisithalakshan94:portaldevSLT@slt.ffxoqv6.mongodb.net/PortalDev"
+const URL = "mongodb+srv://nisithalakshan94:portaldevSLT@slt.ffxoqv6.mongodb.net/PortalDev";
 
-mongoose.connect( URL )
-.then( () => {
-    console.log("MongoDB Connection Successfull!");
-})
-.catch( (err) => {
-    console.log("MongoDB Connection Unsuccessfull!", err);
-})
+mongoose.connect(URL)
+    .then(() => {
+        console.log("MongoDB Connection Successful!");
+    })
+    .catch((err) => {
+        console.log("MongoDB Connection Unsuccessful!", err);
+    });
 
+// Routes
 const customerRoutes = require("./routes/customerRoutes.js");
 app.use(customerRoutes);
 
@@ -39,7 +42,7 @@ app.use(contractRoutes);
 const coordinatorRoutes = require("./routes/CordinatorsRoutes.js");
 app.use(coordinatorRoutes);
 
-const UserreqRoute = require("./routes/UserreqRoutes.js")
+const UserreqRoute = require("./routes/UserreqRoutes.js");
 app.use(UserreqRoute);
 
 const paymentRoutes = require("./routes/paymentRoutes.js");
@@ -48,15 +51,17 @@ app.use(paymentRoutes);
 const userRoutes = require("./routes/userRoutes.js");
 app.use(userRoutes);
 
+const notificationRoutes = require("./routes/notificationRoutes.js");
+app.use("/api/notifications", notificationRoutes);
 
-// Routes 
 const documentRoute = require("./routes/DocumentRoute");
 app.use(documentRoute);
 
-
-
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something broke!');
-  });
-  
+    res.status(500).send("Something broke!");
+});
+
+// Require and initialize the cron job
+require("./jobs/checkExpiringContracts");
