@@ -178,7 +178,7 @@ export default function Dashboard() {
                     tension: 0.1
                 }]
             });
-            setNewContractsCount(Contracts.length); // Correctly set supplierCount
+            setNewContractsCount(contracts.length); // Correctly set supplierCount
     
         } catch (error) {
             console.error("Error fetching contracts:", error);

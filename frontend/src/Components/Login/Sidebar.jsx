@@ -132,6 +132,13 @@ export default function Sidebar() {
                                     <TbSectionFilled className='size-7' /> Manage Sections
                                 </button>
                                 <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/document')}
+                                    className={`${linkClass('/document')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <TbSectionFilled className='size-7' /> Manage Documents
+                                </button>
+                                
                             </>
                         )}
 
@@ -183,6 +190,12 @@ export default function Sidebar() {
                                     <TbSectionFilled className='size-7' /> View Sections
                                 </button>
                                 <hr className='text-sky-900 my-2' />
+                                <button
+                                    onClick={() => handleNavigation('/document')}
+                                    className={`${linkClass('/document')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
+                                >
+                                    <TbSectionFilled className='size-7' /> Manage Documents
+                                </button>
                             </>
                         )}
                     </nav>
