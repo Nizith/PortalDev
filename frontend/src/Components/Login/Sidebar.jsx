@@ -137,7 +137,7 @@ export default function Sidebar() {
                                     className={`${linkClass('/document')} font-semibold text-lg rounded-md flex items-center gap-x-4`}
                                 >
                                     <TbSectionFilled className='size-7' /> Manage Documents
-                                </button>
+                                </button >
                                 
                             </>
                         )}
