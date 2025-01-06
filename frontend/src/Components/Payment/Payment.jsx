@@ -5,6 +5,7 @@ import { TbExternalLink } from "react-icons/tb";
 import { FaEdit } from "react-icons/fa";
 import { IoIosArrowForward, IoMdClose } from "react-icons/io";
 import LoadingAnimation from "../Login/LoadingAnimation";
+import ContractDatesGraph from "../Graphs/ContractDatesGraph";
 
 const initialInputFields = {
   tenderNo: "",
@@ -115,229 +116,234 @@ export default function PaymentManagement() {
   return (
     <>
       <Toaster />
-      {loading ? (
+      {/* {loading ? (
         <LoadingAnimation />
-      ) : (
-        <div className="float-right w-full min-h-screen">
-          <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
-            <IoIosArrowForward /> {userRole === 'Admin' ? 'Manage Payments' : 'View Payments'}
-          </h2>
+      ) : ( */}
+      <div className="float-right w-full min-h-screen">
+        <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
+          <IoIosArrowForward /> {userRole === 'Admin' ? 'Manage Payments' : 'View Payments'}
+        </h2>
 
-          {!viewDetailsRow ? (
-            <div className="mx-8 my-5">
-              <div className="flex mb-4 space-x-2">
-                <input
-                  type="text"
-                  name="PRnumber"
-                  placeholder="Filter by PR Number"
-                  value={filterData.PRnumber}
-                  onChange={handleFilterChange}
-                  className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
-                />
-                <input
-                  type="text"
-                  name="POnumber"
-                  placeholder="Filter by PO Number"
-                  value={filterData.POnumber}
-                  onChange={handleFilterChange}
-                  className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
-                />
-              </div>
+        {!viewDetailsRow ? (
+          <div className="mx-8 my-5">
+            <div className="flex mb-4 space-x-2">
+              <input
+                type="text"
+                name="PRnumber"
+                placeholder="Filter by PR Number"
+                value={filterData.PRnumber}
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+              />
+              <input
+                type="text"
+                name="POnumber"
+                placeholder="Filter by PO Number"
+                value={filterData.POnumber}
+                onChange={handleFilterChange}
+                className="flex-1 p-2 border-2 border-gray-300 rounded focus:outline-none focus:border-2 focus:border-green-600"
+              />
+            </div>
 
-              <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl">
-                <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
-                  <thead>
-                    <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                      <th className="py-3 px-4 font-bold uppercase border">Tender number</th>
-                      <th className="py-3 px-4 font-bold uppercase border">PR number</th>
-                      <th className="py-3 px-4 font-bold uppercase border">PR Date</th>
-                      <th className="py-3 px-4 font-bold uppercase border">Payment Status</th>
-                      <th className="py-3 px-4 font-bold uppercase border">Payment Remarks</th>
-                      <th className="py-3 px-4 font-bold uppercase border">View Details</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredPayments.map((payment, index) => (
-                      <tr key={payment._id}
-                        className={`${index % 2 === 0 ? "bg-white bg-opacity-80" : "bg-gray-50"} 
+            <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl">
+              <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
+                <thead>
+                  <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
+                    <th className="py-3 px-4 font-bold uppercase border">Tender number</th>
+                    <th className="py-3 px-4 font-bold uppercase border">PR number</th>
+                    <th className="py-3 px-4 font-bold uppercase border">PR Date</th>
+                    <th className="py-3 px-4 font-bold uppercase border">Payment Status</th>
+                    <th className="py-3 px-4 font-bold uppercase border">Payment Remarks</th>
+                    <th className="py-3 px-4 font-bold uppercase border">View Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredPayments.map((payment, index) => (
+                    <tr key={payment._id}
+                      className={`${index % 2 === 0 ? "bg-white bg-opacity-80" : "bg-gray-50"} 
                                     hover:bg-gradient-to-r hover:from-blue-50 hover:via-gray-50 hover:to-blue-50 
                                     transition-all duration-300 ease-in-out`}>
-                        <td className="py-2 px-2 font-semibold border">{payment.tenderNo}</td>
-                        <td className="py-2 px-2 font-semibold border">{payment.PRnumber}</td>
-                        <td className="py-2 px-2 font-semibold border">{new Date(payment.PRdate).toLocaleDateString()}</td>
-                        <td className="py-2 px-2 font-semibold border">{payment.Paymentstatus}</td>
-                        <td className="py-2 px-2 font-semibold border">{payment.Paymentremarks}</td>
-                        <td className="py-3 px-2 text-center border">
-                          <button onClick={() => handleViewDetailsClick(payment)}
-                            className="text-indigo-500 hover:text-indigo-600 text-3xl rounded-lg transform hover:scale-105 transition-all">
-                            <TbExternalLink />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                      <td className="py-2 px-2 font-semibold border">{payment.tenderNo}</td>
+                      <td className="py-2 px-2 font-semibold border">{payment.PRnumber}</td>
+                      <td className="py-2 px-2 font-semibold border">{new Date(payment.PRdate).toLocaleDateString()}</td>
+                      <td className="py-2 px-2 font-semibold border">{payment.Paymentstatus}</td>
+                      <td className="py-2 px-2 font-semibold border">{payment.Paymentremarks}</td>
+                      <td className="py-3 px-2 text-center border">
+                        <button onClick={() => handleViewDetailsClick(payment)}
+                          className="text-indigo-500 hover:text-indigo-600 text-3xl rounded-lg transform hover:scale-105 transition-all">
+                          <TbExternalLink />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          ) : (
-            <div className="p-5 bg-gray-100 min-h-screen">
-              <div className="flex justify-between items-center mb-4 bg-yellow-300">
-                <div className="flex gap-4">
-                  {isEditing ? (
-                    <>
-                      <button
-                        onClick={() => handleSaveClick(viewDetailsRow)}
-                        className="bg-green-800 hover:ring-2 ring-green-600 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setIsEditing(false)}
-                        className="bg-red-800 hover:ring-2 ring-red-600 text-red-100 font-semibold px-4 py-2 rounded-lg flex items-center"
-                      >
-                        <IoMdClose className="size-6 mr-2" />
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
+          </div>
+        ) : (
+          <div className="p-5 bg-gray-100 min-h-screen">
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex gap-4">
+                {isEditing ? (
+                  <>
                     <button
-                      onClick={() => setViewDetailsRow(null)}
-                      className="bg-gray-800 hover:ring-2 ring-gray-500 text-gray-200 font-semibold px-5 py-2 rounded-lg duration-200"
+                      onClick={() => handleSaveClick(viewDetailsRow)}
+                      className="bg-green-800 hover:ring-2 ring-green-600 text-green-200 font-semibold px-5 py-2 rounded-lg duration-200"
                     >
-                      Back to List
-                    </button>
-                  )}
-                </div>
-                {userRole === 'Admin' && (
-                  <div className="inline-flex space-x-5">
-                    <button
-                      onClick={handleEditClick}
-                      className="bg-indigo-800 hover:ring-2 ring-indigo-600 text-indigo-100 font-semibold px-4 py-2 rounded-lg flex items-center duration-200"
-                    >
-                      <FaEdit className="mr-2" />Edit
+                      Save
                     </button>
                     <button
-                      onClick={() => handleDeleteClick(viewDetailsRow)}
-                      className="bg-red-800 hover:ring-2 ring-red-600 text-red-200 font-semibold px-5 py-2 rounded-lg duration-200"
+                      onClick={() => setIsEditing(false)}
+                      className="bg-red-800 hover:ring-2 ring-red-600 text-red-100 font-semibold px-4 py-2 rounded-lg flex items-center"
                     >
-                      Delete
+                      <IoMdClose className="size-6 mr-2" />
+                      Cancel
                     </button>
-                  </div>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setViewDetailsRow(null)}
+                    className="bg-gray-800 hover:ring-2 ring-gray-500 text-gray-200 font-semibold px-5 py-2 rounded-lg duration-200"
+                  >
+                    Back to List
+                  </button>
                 )}
               </div>
+              {userRole === 'Admin' && (
+                <div className="inline-flex space-x-5">
+                  <button
+                    onClick={handleEditClick}
+                    className="bg-indigo-800 hover:ring-2 ring-indigo-600 text-indigo-100 font-semibold px-4 py-2 rounded-lg flex items-center duration-200"
+                  >
+                    <FaEdit className="mr-2" />Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteClick(viewDetailsRow)}
+                    className="bg-red-800 hover:ring-2 ring-red-600 text-red-200 font-semibold px-5 py-2 rounded-lg duration-200"
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
 
-              <div>
-                <h2>hiiiiiiii</h2>
-              </div>
+            <div className="flex justify-center items-center">
+              <ContractDatesGraph
+                PRdate={editedPayment.PRdate}
+                POdate={editedPayment.POdate}
+                InvoiceDate={editedPayment.InvoiceDate}
+                Paiddate={editedPayment.Paiddate}
+              />
+            </div>
 
-              <div className="bg-white p-6 rounded-lg">
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">PR Number:</label>
-                    <input
-                      type="text"
-                      value={editedPayment.PRnumber || "-"}
-                      onChange={(e) => handleInputChange(e, "PRnumber")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">PR Date:</label>
-                    <input
-                      type="date"
-                      value={editedPayment.PRdate?.split('T')[0] || "-"}
-                      onChange={(e) => handleInputChange(e, "PRdate")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">LOI Details:</label>
-                    <input
-                      type="text"
-                      value={editedPayment.LOIdetails || "-"}
-                      onChange={(e) => handleInputChange(e, "LOIdetails")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">PO Number:</label>
-                    <input
-                      type="text"
-                      value={editedPayment.POnumber || "-"}
-                      onChange={(e) => handleInputChange(e, "POnumber")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">Payment Status:</label>
-                    <input
-                      type="text"
-                      value={editedPayment.Paymentstatus || "-"}
-                      onChange={(e) => handleInputChange(e, "Paymentstatus")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">Payment Remarks:</label>
-                    <input
-                      type="text"
-                      value={editedPayment.Paymentremarks || "-"}
-                      onChange={(e) => handleInputChange(e, "Paymentremarks")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">PO Date</label>
-                    <input
-                      type="text"
-                      value={editedPayment.POdate || "-"}
-                      onChange={(e) => handleInputChange(e, "POdate")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">Invoice Number</label>
-                    <input
-                      type="text"
-                      value={editedPayment.InvoiceNumber || "-"}
-                      onChange={(e) => handleInputChange(e, "InvoiceNumber")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">Invoice Date</label>
-                    <input
-                      type="text"
-                      value={editedPayment.InvoiceDate || "-"}
-                      onChange={(e) => handleInputChange(e, "InvoiceDate")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-gray-700 font-semibold mb-2">Paid Date</label>
-                    <input
-                      type="text"
-                      value={editedPayment.Paiddate || "-"}
-                      onChange={(e) => handleInputChange(e, "Paiddate")}
-                      disabled={!isEditing}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
+            <div className="bg-white p-6 rounded-lg">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">PR Number:</label>
+                  <input
+                    type="text"
+                    value={editedPayment.PRnumber || "-"}
+                    onChange={(e) => handleInputChange(e, "PRnumber")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">PR Date:</label>
+                  <input
+                    type="date"
+                    value={editedPayment.PRdate?.split('T')[0] || "-"}
+                    onChange={(e) => handleInputChange(e, "PRdate")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">LOI Details:</label>
+                  <input
+                    type="text"
+                    value={editedPayment.LOIdetails || "-"}
+                    onChange={(e) => handleInputChange(e, "LOIdetails")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">PO Number:</label>
+                  <input
+                    type="text"
+                    value={editedPayment.POnumber || "-"}
+                    onChange={(e) => handleInputChange(e, "POnumber")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Payment Status:</label>
+                  <input
+                    type="text"
+                    value={editedPayment.Paymentstatus || "-"}
+                    onChange={(e) => handleInputChange(e, "Paymentstatus")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Payment Remarks:</label>
+                  <input
+                    type="text"
+                    value={editedPayment.Paymentremarks || "-"}
+                    onChange={(e) => handleInputChange(e, "Paymentremarks")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">PO Date</label>
+                  <input
+                    type="text"
+                    value={editedPayment.POdate || "-"}
+                    onChange={(e) => handleInputChange(e, "POdate")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Invoice Number</label>
+                  <input
+                    type="text"
+                    value={editedPayment.InvoiceNumber || "-"}
+                    onChange={(e) => handleInputChange(e, "InvoiceNumber")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Invoice Date</label>
+                  <input
+                    type="text"
+                    value={editedPayment.InvoiceDate || "-"}
+                    onChange={(e) => handleInputChange(e, "InvoiceDate")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-semibold mb-2">Paid Date</label>
+                  <input
+                    type="text"
+                    value={editedPayment.Paiddate || "-"}
+                    onChange={(e) => handleInputChange(e, "Paiddate")}
+                    disabled={!isEditing}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
                 </div>
               </div>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
+      {/* )} */}
     </>
   );
 }
