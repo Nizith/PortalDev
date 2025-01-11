@@ -5,12 +5,14 @@ import { TbExternalLink } from "react-icons/tb";
 import { FaEdit } from "react-icons/fa";
 import { IoIosArrowForward, IoMdClose } from "react-icons/io";
 import LoadingAnimation from "../Login/LoadingAnimation";
-import { MdPayment } from "react-icons/md";
+import { MdOutlineArrowRight, MdPayment, MdPayments } from "react-icons/md";
+import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import PaymentAdd from "../Payment/PaymentAdd";
 
 export default function ManageContracts() {
   const [contracts, setContracts] = useState([]);
+  const [AMCTerm, setAMCTerm] = useState("");
   const [viewDetailsRow, setViewDetailsRow] = useState(null);
   const [editedContract, setEditedContract] = useState({});
   const [isEditing, setIsEditing] = useState(false);
@@ -19,22 +21,22 @@ export default function ManageContracts() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchContracts = async () =>  {
-        try {
-            const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
-            const delay = new Promise((resolve) => setTimeout(resolve, 1000));
-            await Promise.all([delay, response]);
-            setContracts(response.data.data);
-        } catch (error) {
-            console.error("Error fetching contracts:", error);
-        } finally {
-            setLoading(false);
-        }
+    const fetchContracts = async () => {
+      try {
+        const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
+        const delay = new Promise((resolve) => setTimeout(resolve, 1000));
+        await Promise.all([delay, response]);
+        setContracts(response.data.data);
+        setAMCTerm(response.data.data.map(contract => contract.AMCDetails?.map(amc => amc.AMCpaymentterms)).flat());
+        console.log("Contract data : ", response.data)
+      } catch (error) {
+        console.error("Error fetching contracts:", error);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchContracts();
-}, []);
-
-
+  }, []);
 
   const handleViewDetailsClick = (contract) => {
     setViewDetailsRow(contract._id);
@@ -46,9 +48,33 @@ export default function ManageContracts() {
     setIsEditing(true);
   };
 
-  const dopay = () => {
-    setOpenPay(true)
-  }
+  const StoreAMCTerm = (AMCterm) => {
+    setAMCTerm(AMCterm);
+  };
+
+  const [selectedAMC, setSelectedAMC] = useState({ AMCterm: "", AMCCurrency: "", AMCamount: null });
+
+  const dopay = (AMCterm, AMCCurrency, AMCamount, tenderNo, yearIndex, period) => {
+
+    let AMCamountPeriod;
+    switch (AMCterm.toLowerCase()) {
+      case "monthly in arrears":
+        AMCamountPeriod = `${tenderNo}-${yearIndex + 1}-${period}`; 
+        break;
+      case "quarterly in arrears":
+        AMCamountPeriod = `${tenderNo}-${yearIndex + 1}-${period}`;
+        break;
+      case "annually in arrears":
+      case "annually in advance":
+        AMCamountPeriod = `${tenderNo}-${yearIndex + 1}`;
+        break;
+      default:
+        AMCamountPeriod = `${tenderNo}-${yearIndex + 1}`;
+    }
+
+    setSelectedAMC({ AMCterm, AMCCurrency, AMCamount, AMCamountPeriod });
+    setOpenPay(true);
+  };
 
   const handleCloseDoPay = () => {
     setOpenPay(false);
@@ -63,14 +89,13 @@ export default function ManageContracts() {
     updatedAMC[amcIndex][field] = e.target.value;
     setEditedContract({ ...editedContract, AMCDetails: updatedAMC });
   };
-  
 
- const handleAMCAmountChange = (e, amcIndex, amountIndex) => {
-  const updatedAMC = [...editedContract.AMCDetails];
-  updatedAMC[amcIndex].AMCamount[amountIndex] = e.target.value;
-  setEditedContract({ ...editedContract, AMCDetails: updatedAMC });
-};
 
+  const handleAMCAmountChange = (e, amcIndex, amountIndex) => {
+    const updatedAMC = [...editedContract.AMCDetails];
+    updatedAMC[amcIndex].AMCamount[amountIndex] = e.target.value;
+    setEditedContract({ ...editedContract, AMCDetails: updatedAMC });
+  };
 
   const handleSaveClick = (id) => {
     axios
@@ -107,21 +132,48 @@ export default function ManageContracts() {
     }
   };
 
-  
+  const [payments, setPayments] = useState([]);
+  const [filteredPayments, setFilteredPayments] = useState([]);
+
+  const [isPaidState, setIsPaitState] = useState([]);
+
+  // Fetch all payments from the API
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        const response = await axios.get("http://localhost:4500/portaldev/Allpayments");
+
+        const delay = new Promise((resolve) => setTimeout(resolve, 1000));
+        await Promise.all([delay, response]);
+
+        const isPaidArray = response.data.data.map(payment => payment.isPaid);
+        setIsPaitState(isPaidArray);
+
+        setPayments(response.data.data);
+        setFilteredPayments(response.data.data); // Set both payments and filteredPayments
+      } catch (error) {
+        console.error("Error fetching payments:", error);
+      } finally {
+        setLoading(false); // Stop the loading animation after both conditions are met
+      }
+    };
+
+    fetchPayments();
+  }, []);
 
   return (
     <>
-    <Toaster />
+      <Toaster />
       {loading ? (
         <>
           <LoadingAnimation />
         </>
       ) : (
         <div className="float-right w-full min-h-screen">
-        <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward/> Manage Contracts</h2>
+          <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward /> Manage Contracts</h2>
 
           {!viewDetailsRow ? (
-            <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl mx-8 mt-5">
+            <div className="mx-8 mt-5">
               <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
                 <thead>
                   <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-center text-sm tracking-wide">
@@ -174,7 +226,7 @@ export default function ManageContracts() {
                       </button>
                       <button
                         onClick={() => { setIsEditing(false) }}
-                        className="bg-red-800 hover:ring-2 ring-red-600 text-red-100 font-semibold px-4 py-2 rounded-lg flex items-center"
+                        className="bg-red-800 hover:ring-2 ring-red-600 text-red-100 font-semibold px-4 py-2 rounded-lg flex items-center duration-200"
                       >
                         <IoMdClose className="size-6 mr-2" />
                         Cancel
@@ -239,17 +291,61 @@ export default function ManageContracts() {
                         {amcDetail.AMCamount?.map((amount, amountIndex) => (
                           <div key={amountIndex} className="col-span-1">
                             <label>Year {amountIndex + 1}:</label>
-                            <div className="inline-flex">
-                              <input
-                                type="text"
-                                value={amount || ""}
-                                onChange={(e) => handleAMCAmountChange(e, amcIndex, amountIndex)}
-                                disabled
-                                className="border border-gray-300 rounded-lg px-4 py-2 w-3/5"
-                              />
-                              <button onClick={dopay}>
-                                <MdPayment className="text-indigo-600 size-8" />
-                              </button>
+                            <div className={`${amount ? "inline-flex" : "block mt-2.5"}`}>
+                              {amount ? (
+                                <>
+                                  <input
+                                    type="text"
+                                    value={amount || ""}
+                                    onChange={(e) => handleAMCAmountChange(e, amcIndex, amountIndex)}
+                                    disabled
+                                    className={`border border-gray-300 rounded-lg px-4 py-2 ${amount === "FOC" ? "w-w-full" : "w-4/5"} `}
+                                  />
+                                  {(() => {
+                                    const paymentTerms = amcDetail.AMCpaymentterms.toLowerCase();
+                                    if (paymentTerms === "monthly in arrears" || paymentTerms === "quarterly in arrears") {
+                                      return (
+                                        amount !== "FOC" && (
+                                          <DropdownMenu
+                                            amcterm={amcDetail.AMCpaymentterms}
+                                            doThePay={(period) =>
+                                              dopay(
+                                                amcDetail.AMCpaymentterms,
+                                                amcDetail.AMCcurrency,
+                                                amount,
+                                                editedContract.tenderNo,
+                                                amountIndex,
+                                                period
+                                              )
+                                            }
+                                          />
+                                        ));
+                                    } else if (paymentTerms === "annually in advance" || paymentTerms === "annually in arrears") {
+                                      return (
+                                        amount !== "FOC" && (
+                                          <button
+                                            onClick={() =>
+                                              dopay(
+                                                amcDetail.AMCpaymentterms,
+                                                amcDetail.AMCcurrency,
+                                                amount,
+                                                editedContract.tenderNo,
+                                                amountIndex
+                                              )
+                                            }
+                                          >
+                                            <RiMoneyDollarCircleFill className="text-indigo-600 size-10" />
+                                          </button>
+                                        ));
+                                    }
+                                    return null;
+                                  })()}
+                                </>
+                              ) : (
+                                <>
+                                  <p className="font-semibold"> *No AMC Amount</p>
+                                </>
+                              )}
                             </div>
                           </div>
                         ))}
@@ -265,176 +361,116 @@ export default function ManageContracts() {
 
               <div className="grid py-5">
                 <div>
-
                   <div className="grid grid-cols-7 gap-4">
                     <div className="col-span-1">
-                      <label>TenderNo:</label>
-                      <input
-                        type="text"
+                      <InputField
+                        label="TenderNo"
                         value={editedContract.tenderNo}
                         onChange={(e) => handleInputChange(e, "tenderNo")}
                         disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
                       />
                     </div>
                     <div className="col-span-3">
-                      <label>Supplier:</label>
-                      <input
-                        type="text"
+                      <InputField
+                        label="Supplier"
                         value={editedContract.supplier}
                         onChange={(e) => handleInputChange(e, "supplier")}
                         disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
                       />
                     </div>
                     <div className="col-span-3">
-                      <label>Customer:</label>
-                      <input
-                        type="text"
+                      <InputField
+                        label="Customer"
                         value={editedContract.customer}
                         onChange={(e) => handleInputChange(e, "customer")}
                         disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
                       />
                     </div>
                   </div>
-
 
                   <div className="grid grid-cols-2 gap-4 mt-5">
-                    <div>
-                      <label>Customer Start Date:</label>
-                      <input
-                        type="date"
-                        value={new Date(editedContract.customerContStartDate)
-                          .toISOString()
-                          .substr(0, 10)}
-                        onChange={(e) => handleInputChange(e, "customerContStartDate")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
-                    <div>
-                      <label>Customer End Date:</label>
-                      <input
-                        type="date"
-                        value={new Date(editedContract.customerContEndDate)
-                          .toISOString()
-                          .substr(0, 10)}
-                        onChange={(e) => handleInputChange(e, "customerContEndDate")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
-                    <div>
-                      <label>Supplier Start Date:</label>
-                      <input
-                        type="date"
-                        value={new Date(editedContract.supplierContStartDate)
-                          .toISOString()
-                          .substr(0, 10)}
-                        onChange={(e) => handleInputChange(e, "supplierContStartDate")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
-                    <div>
-                      <label>Supplier End Date:</label>
-                      <input
-                        type="date"
-                        value={new Date(editedContract.supplierContEndDate)
-                          .toISOString()
-                          .substr(0, 10)}
-                        onChange={(e) => handleInputChange(e, "supplierContEndDate")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
+                    <InputField
+                      label="Customer Start Date"
+                      type="date"
+                      value={new Date(editedContract.customerContStartDate).toISOString().substr(0, 10)}
+                      onChange={(e) => handleInputChange(e, "customerContStartDate")}
+                      disabled={!isEditing}
+                    />
+                    <InputField
+                      label="Customer End Date"
+                      type="date"
+                      value={new Date(editedContract.customerContEndDate).toISOString().substr(0, 10)}
+                      onChange={(e) => handleInputChange(e, "customerContEndDate")}
+                      disabled={!isEditing}
+                    />
+                    <InputField
+                      label="Supplier Start Date"
+                      type="date"
+                      value={new Date(editedContract.supplierContStartDate).toISOString().substr(0, 10)}
+                      onChange={(e) => handleInputChange(e, "supplierContStartDate")}
+                      disabled={!isEditing}
+                    />
+                    <InputField
+                      label="Supplier End Date"
+                      type="date"
+                      value={new Date(editedContract.supplierContEndDate).toISOString().substr(0, 10)}
+                      onChange={(e) => handleInputChange(e, "supplierContEndDate")}
+                      disabled={!isEditing}
+                    />
                   </div>
-
                 </div>
 
                 <hr className="bg-indigo-600 h-1 my-3" />
 
                 <div className="py-5">
-
-                  <div>
-                    <label>Subject Clerk:</label>
-                    <input
-                      type="text"
-                      value={editedContract.subjectClerk}
-                      onChange={(e) => handleInputChange(e, "subjectClerk")}
-                      disabled={!isEditing}
-                      className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                    />
-                  </div>
+                  <InputField
+                    label="Subject Clerk"
+                    value={editedContract.subjectClerk}
+                    onChange={(e) => handleInputChange(e, "subjectClerk")}
+                    disabled={!isEditing}
+                  />
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-4">
-                      <div>
-                        <label>Sales Team:</label>
-                        <input
-                          type="text"
-                          value={editedContract.salesTeam}
-                          onChange={(e) => handleInputChange(e, "salesTeam")}
-                          disabled={!isEditing}
-                          className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                        />
-                      </div>
-                      <div>
-                        <label>Account Manager:</label>
-                        <input
-                          type="text"
-                          value={editedContract.accountManager}
-                          onChange={(e) => handleInputChange(e, "accountManager")}
-                          disabled={!isEditing}
-                          className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                        />
-                      </div>
-                      <div>
-                        <label> Manager:</label>
-                        <input
-                          type="text"
-                          value={editedContract.manager}
-                          onChange={(e) => handleInputChange(e, "manager")}
-                          disabled={!isEditing}
-                          className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                        />
-                      </div>
-
+                      <InputField
+                        label="Sales Team"
+                        value={editedContract.salesTeam}
+                        onChange={(e) => handleInputChange(e, "salesTeam")}
+                        disabled={!isEditing}
+                      />
+                      <InputField
+                        label="Account Manager"
+                        value={editedContract.accountManager}
+                        onChange={(e) => handleInputChange(e, "accountManager")}
+                        disabled={!isEditing}
+                      />
+                      <InputField
+                        label="Manager"
+                        value={editedContract.manager}
+                        onChange={(e) => handleInputChange(e, "manager")}
+                        disabled={!isEditing}
+                      />
                     </div>
 
                     <div className="grid gap-4">
-                      <div>
-                        <label>Solution Team:</label>
-                        <input
-                          type="text"
-                          value={editedContract.solutionTeam}
-                          onChange={(e) => handleInputChange(e, "solutionTeam")}
-                          disabled={!isEditing}
-                          className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                        />
-                      </div>
-                      <div>
-                        <label>Sales Engineer:</label>
-                        <input
-                          type="text"
-                          value={editedContract.salesEngineer}
-                          onChange={(e) => handleInputChange(e, "salesEngineer")}
-                          disabled={!isEditing}
-                          className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                        />
-                      </div>
-                      <div>
-                        <label>Solution Engineer:</label>
-                        <input
-                          type="text"
-                          value={editedContract.solutionEngineer}
-                          onChange={(e) => handleInputChange(e, "solutionEngineer")}
-                          disabled={!isEditing}
-                          className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                        />
-                      </div>
-
+                      <InputField
+                        label="Solution Team"
+                        value={editedContract.solutionTeam}
+                        onChange={(e) => handleInputChange(e, "solutionTeam")}
+                        disabled={!isEditing}
+                      />
+                      <InputField
+                        label="Sales Engineer"
+                        value={editedContract.salesEngineer}
+                        onChange={(e) => handleInputChange(e, "salesEngineer")}
+                        disabled={!isEditing}
+                      />
+                      <InputField
+                        label="Solution Engineer"
+                        value={editedContract.solutionEngineer}
+                        onChange={(e) => handleInputChange(e, "solutionEngineer")}
+                        disabled={!isEditing}
+                      />
                     </div>
                   </div>
                 </div>
@@ -443,50 +479,131 @@ export default function ManageContracts() {
 
                 <div className="py-5">
                   <div className="grid gap-4">
-                    <div>
-                      <label>Contract Status:</label>
-                      <input
-                        type="text"
-                        value={editedContract.contractStatus}
-                        onChange={(e) => handleInputChange(e, "contractStatus")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
-                    <div>
-                      <label>Solution Description:</label>
-                      <input
-                        type="text"
-                        value={editedContract.solutionDescription}
-                        onChange={(e) => handleInputChange(e, "solutionDescription")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
-                    <div>
-                      <label>Remarks:</label>
-                      <input
-                        type="text"
-                        value={editedContract.remarks}
-                        onChange={(e) => handleInputChange(e, "remarks")}
-                        disabled={!isEditing}
-                        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
-                      />
-                    </div>
+                    <InputField
+                      label="Contract Status"
+                      value={editedContract.contractStatus}
+                      onChange={(e) => handleInputChange(e, "contractStatus")}
+                      disabled={!isEditing}
+                    />
+                    <InputField
+                      label="Solution Description"
+                      value={editedContract.solutionDescription}
+                      onChange={(e) => handleInputChange(e, "solutionDescription")}
+                      disabled={!isEditing}
+                    />
+                    <InputField
+                      label="Remarks"
+                      value={editedContract.remarks}
+                      onChange={(e) => handleInputChange(e, "remarks")}
+                      disabled={!isEditing}
+                    />
                   </div>
                 </div>
               </div>
+
             </div>
           )}
-          {openPay &&
+          {openPay && (
             <PaymentAdd
               handleCloseModal={handleCloseDoPay}
-              tenderNumber={editedContract.tenderNo}
-              AMCterm={editedContract.AMCDetails[0]?.AMCpaymentterms}
-              AMCCurrency={editedContract.AMCDetails[0]?.AMCcurrency}
-            />}
+              tenderNo={editedContract.tenderNo}
+              AMCterm={selectedAMC.AMCterm}
+              AMCCurrency={selectedAMC.AMCCurrency}
+              AMCamount={selectedAMC.AMCamount}
+              AMCamountPeriod={selectedAMC.AMCamountPeriod}
+            />
+          )}
         </div>
       )}
     </>
   );
 }
+
+const months = [
+  "Month 1", "Month 2", "Month 3",
+  "Month 4", "Month 5", "Month 6",
+  "Month 7", "Month 8", "Month 9",
+  "Month 10", "Month 11", "Month 12"
+];
+
+const quaters = [
+  "Quater 1", "Quater 2", "Quater 3", "Quater 4"
+];
+
+const DropdownMenu = ({ amcterm, doThePay }) => {
+  const [isOpen, setIsOpen] = useState(false); // State to control popup visibility
+
+  const togglePopup = () => {
+    setIsOpen(true); // Toggle the state on button click
+  };
+
+  const closepopup = () => {
+    setIsOpen(false)
+  }
+
+  return (
+    <nav>
+      <ul className="flex items-center">
+        <li>
+          <button onClick={togglePopup} className="mt-1.5 text-indigo-600">
+            <TbExternalLink size={30} />
+          </button>
+
+          {/* Popup block */}
+          {isOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="absolute inset-0 bg-transparent" onClick={closepopup}></div>
+              <div className="relative bg-white p-8 rounded-lg shadow-lg w-1/3 text-center">
+                <h3 className="text-xl font-semibold underline text-indigo-600">{amcterm.toLowerCase() === "monthly in arrears" ? "Select a Month" : "Select Quater"}</h3>
+                <div className={`mt-4 grid ${amcterm.toLowerCase() === "monthly in arrears" ? "grid-cols-3 gap-2" : "grid-cols-2"}`}>
+                  {amcterm.toLowerCase() === "monthly in arrears" ? (
+                    months.map((month, index) => (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          doThePay(month);
+                          setIsOpen(false); // Close the popup after a selection is made
+                        }}
+                        className="px-6 py-3 w-full text-left my-1 cursor-pointer hover:bg-gray-200 hover:border-b-2 hover:border-b-indigo-600"
+                      >
+                        {month}
+                      </div>
+                    ))
+                  ) : (
+                    quaters.map((quater, index) => (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          doThePay(quater);
+                          setIsOpen(false); // Close the popup after a selection is made
+                        }}
+                        className="grid-cols-2 px-6 py-3 w-full text-left my-1 cursor-pointer hover:bg-gray-200 hover:border-b-2 hover:border-b-indigo-600"
+                      >
+                        {quater}
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </li>
+      </ul>
+    </nav>
+  );
+};
+
+const InputField = ({ label, type = "text", value, onChange, disabled }) => {
+  return (
+    <div>
+      <label>{label}:</label>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        className="border border-gray-300 rounded-lg px-4 py-2 w-full"
+      />
+    </div>
+  );
+};

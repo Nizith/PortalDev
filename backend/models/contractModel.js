@@ -1,5 +1,5 @@
-
 const mongoose = require("mongoose");
+const payModel = require("./PaymentModel");
 
 const AMCSchema = new mongoose.Schema({// since its an Array of AMC Detailss
     AMCpaymentterms: {
@@ -62,7 +62,7 @@ const ContractSchema = new mongoose.Schema({
         required: true
     },
     manager: {
-        type: String ,
+        type: String,
         required: true
     },
     solutionTeam: {
@@ -89,7 +89,20 @@ const ContractSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    AMCDetails: [AMCSchema] 
+    AMCDetails: [AMCSchema],
+    Payments: [
+        {
+            Paymentstatus: {
+                type: String,
+                required: true,
+                default: "Not"
+            },
+            isPaid: {
+                type: Boolean,
+                required: true,
+                default: false
+            }
+        }]
 }, { timestamps: true });
 
 

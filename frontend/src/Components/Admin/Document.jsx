@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { IoIosArrowForward } from 'react-icons/io';
+import { MdDriveFolderUpload } from 'react-icons/md';
+import { HiFolderDownload } from "react-icons/hi";
+import { RiDeleteBin5Fill, RiFileEditFill } from "react-icons/ri";
+import { IoCheckmarkDoneCircle, IoCloseCircle } from "react-icons/io5";
+import { GrDocumentConfig } from "react-icons/gr";
 
 export default function Document() {
     const [tenderNumber, setTenderNumber] = useState('');
@@ -98,123 +104,182 @@ export default function Document() {
             console.error('Error deleting file:', error);
         }
     };
-    
+
+    const [tenderNums, settenderNums] = useState([]);
+    useEffect(() => {
+        const fetchContracts = async () => {
+            try {
+                const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
+                const delay = new Promise((resolve) => setTimeout(resolve, 1000));
+                await Promise.all([delay, response]);
+
+                const tenderNumbers = response.data.data.map(contract => contract.tenderNo)
+                settenderNums(tenderNumbers)
+
+                console.log("Tender Numbers : ", tenderNumbers)
+
+            } catch (error) {
+                console.error("Error fetching contracts:", error);
+            }
+        }
+        fetchContracts();
+    }, []);
+
 
     return (
         <div className="float-right w-full min-h-screen">
-            <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">Document Upload Page</h2>
-            <form onSubmit={handleUpload}>
-                <input
-                    type="text"
-                    value={tenderNumber}
-                    onChange={(e) => setTenderNumber(e.target.value)}
-                    placeholder="Tender Number"
-                    required
-                />
-                <input
-                    type="file"
-                    onChange={handleFileChange}
-                    accept=".doc,.docx,.xls,.xlsx,.pdf,.jpg,.jpeg,.png"
-                    required
-                />
-                <button className="text-red-200 font-semibold px-5 py-1.5 rounded-lg bg-red-800 hover:ring-2 ring-red-500 duration-200" type="submit">{editId ? 'Update' : 'Upload'}</button>
-            </form>
 
-            <table className="min-w-full font-semibold table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
-                <thead>
-                    <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                        <th className="px-4 py-3 font-bold uppercase border">Tender Number</th>
-                        <th className="px-4 py-3 font-bold uppercase border">Documents</th>
-                        <th className="px-4 py-3 font-bold uppercase border">Actions</th>
-                    </tr>
-                </thead>
-                <tbody className="bg-gradient-to-r from-orange-400 to-indigo-600">
-                    {documents.length > 0 ? (
-                        documents.map((doc) => (
-                            <tr key={doc._id}>
-                                <td className="border px-4 py-2">{doc.tenderNumber}</td>
-                                <td className="border px-4 py-2">
-                                    {doc.documents.map((file, index) => (
-                                        <div key={index}>
-                                            {file.fileType && file.fileType.startsWith('image') ? (
-                                                <img
-                                                    src={`http://localhost:4500/uploads/${file.filePath}`}
-                                                    alt={file.fileType}
-                                                    className="w-32 h-32 object-cover"
-                                                />
-                                            ) : (
-                                                <p>{file.filePath}</p>
-                                            )}
-                                            <a
-                                                href={`http://localhost:4500/uploads/${file.filePath}`}
-                                                download
-                                            >
-                                                <button className="mt-2 bg-blue-500 text-white px-4 py-2 rounded">
-                                                    Download
+            <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
+                <IoIosArrowForward />Documents
+            </h2>
+
+            <div className='flex justify-center items-center'>
+                <form onSubmit={handleUpload} className='mx-8 bg-sy-400 block w-2/5 mt-3 border-4 p-5 rounded-md'>
+
+                    <select
+                        value={tenderNumber}
+                        onChange={(e) => setTenderNumber(e.target.value)}
+                        className="w-full p-2 border border-gray-300 rounded"
+                        required
+                    >
+                        <option value="">Select Tender Number</option>
+                        {tenderNums.map((tenderNum, key) => (
+                            <option key={key} value={tenderNum}>{tenderNum}</option>
+                        ))}
+                    </select>
+                    <div
+                        className="my-2 border-2 border-dashed border-green-600 rounded-lg p-6 flex flex-col items-center justify-center text-gray-500 cursor-pointer"
+                        onClick={() => document.getElementById('fileInput').click()}
+                    >
+                        <p className="font-bold text-lg">Upload The Document Here</p>
+                        <MdDriveFolderUpload className='text-indigo-600' size={50} />
+                        <input
+                            id="fileInput"
+                            type="file"
+                            className="hidden"
+                            onChange={handleFileChange}
+                            accept=".doc,.docx,.xls,.xlsx,.pdf,.jpg,.jpeg,.png"
+                        />
+                        {file && <p className="text-xl">Selected File: {file.name}</p>}
+                    </div>
+
+                    <button className="w-full bg-green-800 hover:ring-2 ring-green-500 text-green-200 duration-200 px-8 py-2 rounded-lg font-semibold" type="submit">
+                        {editId ? 'Update' : 'Upload'}
+                    </button>
+
+                </form>
+            </div>
+
+
+
+            <div className="mx-8 my-5">
+                <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
+                    <thead>
+                        <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
+                            <th className="px-4 py-3 font-bold uppercase border">Tender Number</th>
+                            <th className="px-4 py-3 font-bold uppercase border">Documents</th>
+                            <th className="px-4 py-3 font-bold uppercase border">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-gradient-to-r">
+                        {documents.length > 0 ? (
+                            documents.map((doc) => (
+                                <tr key={doc._id}>
+                                    <td className="border px-4 py-2">{doc.tenderNumber}</td>
+                                    <td className="border px-4 py-2">
+                                        {doc.documents.map((file, index) => (
+                                            <div key={index} className=' flex justify-between items-center'>
+                                                {file.fileType && file.fileType.startsWith('image') ? (
+                                                    <img
+                                                        src={`http://localhost:4500/uploads/${file.filePath}`}
+                                                        alt={file.fileType}
+                                                        className="w-32 h-32 object-cover"
+                                                    />
+                                                ) : (
+                                                    <p>{file.filePath}</p>
+                                                )}
+                                                <a
+                                                    href={`http://localhost:4500/uploads/${file.filePath}`}
+                                                    download
+                                                >
+                                                    <button className="text-indigo-600 mt-1 text-5xl rounded">
+                                                        <HiFolderDownload />
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        ))}
+                                    </td>
+                                    <td className={`border py-2 px-4 ${isModalOpen && "w-[5in]"}`}>
+                                        {isModalOpen && selectedDocument && selectedDocument._id === doc._id ? (
+                                            <div className="modal w-[5in]">
+                                                <form onSubmit={handleFileUpload} className='w-full inline-flex justify-between'>
+                                                    <label
+                                                        className="w-[4in] bg-green-800 hover:ring-2 ring-green-500 duration-200 text-green-200 text-center px-2 py-1.5 rounded-md cursor-pointer"
+                                                        onClick={() => document.getElementById('editfile').click()}
+                                                    >Select File
+                                                    </label>
+                                                    <input
+                                                        id='editfile'
+                                                        type="file"
+                                                        className='hidden'
+                                                        onChange={(e) => setNewFile(e.target.files[0])}
+                                                        accept=".doc,.docx,.xls,.xlsx,.pdf,.jpg,.jpeg,.png"
+                                                    />
+                                                    <button type="submit" className='text-indigo-600'><IoCheckmarkDoneCircle size={35} /></button>
+                                                    <button onClick={closeModal} className='text-yellow-600'><IoCloseCircle size={35} /></button>
+                                                </form>
+
+                                                <div className='flex-1 my-2'>
+                                                    <h4 className='font-bold'>Current Files</h4>
+                                                    <ul>
+                                                        {selectedDocument.documents.map((file, index) => (
+                                                            <>
+                                                                <li key={index} className='inline-flex justify-between w-full'>
+                                                                    {file.fileType.startsWith('image') ? (
+                                                                        <img
+                                                                            src={`http://localhost:4500/uploads/${file.filePath}`}
+                                                                            alt="File"
+                                                                            className="w-32 h-32 object-cover"
+                                                                        />
+                                                                    ) : (
+                                                                        <p>{file.filePath}</p>
+                                                                    )}
+                                                                    <button
+                                                                        className='text-red-600 text-xl'
+                                                                        onClick={() => handleFileDelete(file._id)}>
+                                                                        <RiDeleteBin5Fill />
+                                                                    </button>
+                                                                </li>
+                                                                <hr className='my-2 ' />
+                                                            </>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className='flex justify-center space-x-8'>
+                                                <button
+                                                    onClick={() => handleEdit(doc)}
+                                                    className="text-yellow-500 text-4xl"
+                                                >
+                                                    <GrDocumentConfig />
                                                 </button>
-                                            </a>
-                                        </div>
-                                    ))}
-                                </td>
-                                <td className="border px-4 py-2">
-                                    <button
-                                        onClick={() => handleEdit(doc)}
-                                        className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
-                                    >
-                                        Edit
-                                    </button>
-                                    {isModalOpen && selectedDocument && selectedDocument._id === doc._id && (
-                                        <div className="modal">
-                                            <h3>Edit Document: {selectedDocument.tenderNumber}</h3>
-                                            <form onSubmit={handleFileUpload}>
-                                                <input
-                                                    type="file"
-                                                    onChange={(e) => setNewFile(e.target.files[0])}
-                                                    accept=".doc,.docx,.xls,.xlsx,.pdf,.jpg,.jpeg,.png"
-                                                />
-                                                <button type="submit">Upload New File</button>
-                                            </form>
+                                            </div>
+                                        )}
 
-                                            <h4>Current Files</h4>
-                                            <ul>
-                                                {selectedDocument.documents.map((file, index) => (
-                                                    <li key={index}>
-                                                        {file.fileType.startsWith('image') ? (
-                                                            <img
-                                                                src={`http://localhost:4500/uploads/${file.filePath}`}
-                                                                alt="File"
-                                                                className="w-32 h-32 object-cover"
-                                                            />
-                                                        ) : (
-                                                            <p>{file.filePath}</p>
-                                                        )}
-                                                        <button onClick={() => handleFileDelete(file._id)}>
-                                                            Delete
-                                                        </button>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                            <button onClick={closeModal}>Close</button>
-                                        </div>
-                                    )}
-                                    <button
-                                        onClick={() => handleDelete(doc._id)}
-                                        className="bg-red-500 text-white px-4 py-2 rounded"
-                                    >
-                                        Delete
-                                    </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="text-center">
+                                    No documents available
                                 </td>
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="3" className="text-center">
-                                No documents available
-                            </td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

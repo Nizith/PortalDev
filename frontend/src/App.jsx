@@ -17,7 +17,8 @@ import Dashboard from "./Components/Admin/Dashboard.jsx"
 import UserManagement from "./Components/Admin/UserManagement.jsx"
 import UserDashboard from "./Components/Admin/UserDashboard.jsx"
 import UserRoleTable from "./Components/Admin/UserRoleTable.jsx"
-import Document  from "./Components/Admin/Document.jsx"
+import Document from "./Components/Admin/Document.jsx"
+import Notification from "./Components/Admin/Notification.jsx"
 
 
 function Layout({ children }) {
@@ -76,7 +77,7 @@ function App() {
           <Route path="/payments" element={<Payment />} />
           <Route path="/addpayment" element={<PaymentAdd />} />
           <Route path="/notifications" element={<Notification />} />
-          <Route path="/document" element={<Document />} />
+          <Route path="/documents" element={<Document />} />
           <Route path="/users" element={<UserRoleTable />} />
 
         </Routes>
@@ -85,4 +86,4 @@ function App() {
   )
 }
 
-export default App
+export default App
