@@ -145,7 +145,6 @@ export default function PaymentManagement() {
               />
             </div>
 
-            <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl">
               <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
                 <thead>
                   <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
@@ -178,7 +177,7 @@ export default function PaymentManagement() {
                   ))}
                 </tbody>
               </table>
-            </div>
+              
           </div>
         ) : (
           <div className="p-5 bg-gray-100 min-h-screen">

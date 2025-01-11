@@ -72,11 +72,11 @@ export default function ContractDatesGraph({ PRdate, POdate, InvoiceDate, Paidda
             },
             tooltip: {
                 callbacks: {
-                    title: () => "", // Remove the default title (date) from the tooltip
+                    //title: () => "", // Remove the default title (date) from the tooltip
                     label: (context) => {
-                        const { label } = context.raw; // Get the custom label
-                        const date = context.raw.x.toLocaleDateString(); // Format the date
-                        return ["   " + label, "   " + date]; // Return as array for multi-line display
+                        const { label } = context.raw; // Get the custom label from the data point
+                        const date = context.label; // The date value
+                        return ["   " + label]; // Format the tooltip
                     },
                 },
             },

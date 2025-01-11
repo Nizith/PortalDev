@@ -40,28 +40,28 @@ export default function Dashboard() {
             tension: 0.1
         }]
     });
-    
+
     const [newContractsCount, setNewContractsCount] = useState(0);
 
 
-    
+
 
     const fetchContractss = async () => {
         try {
             const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
             const contracts = response.data.data;
-    
+
             const monthlyCounts = new Array(12).fill(0);
             const today = new Date();
             const startDate = new Date();
             startDate.setDate(today.getDate() - 30);
-    
+
             const dailyCounts = {};
             for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
                 const dateString = d.toISOString().split('T')[0];
                 dailyCounts[dateString] = 0;
             }
-    
+
             let newContractsCount = 0;
             contracts.forEach(contract => {
                 const date = new Date(contract.customerContStartDate);
@@ -73,9 +73,9 @@ export default function Dashboard() {
                     newContractsCount++;
                 }
             });
-    
+
             setTotalContractCount(contracts.length);
-    
+
             setBarData((prevData) => ({
                 ...prevData,
                 datasets: [
@@ -85,7 +85,7 @@ export default function Dashboard() {
                     },
                 ],
             }));
-    
+
             const labels = Object.keys(dailyCounts);
             const values = Object.values(dailyCounts);
             setNewContractsDatas({
@@ -111,31 +111,32 @@ export default function Dashboard() {
                     pointRadius: 3,
                 }]
             });
-            
-    
+
+
             setNewContractsCount(newContractsCount);
-    
+
         } catch (error) {
             console.error("Error fetching contracts:", error);
         }
     };
 
-    const [customerData, setCustomerData] = useState({ 
+    const [customerData, setCustomerData] = useState({
         labels: [],
-        datasets: [{ label: 'Customers Added per Day', 
+        datasets: [{
+            label: 'Customers Added per Day',
             data: [],
-            borderColor: 'rgba(75, 192, 192, 1)', 
-            backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
         }]
     });
 
     const [supplierData, setSupplierData] = useState({
-        
+
         labels: [],
         datasets: [{
             label: 'Suppliers Added per Day',
             data: [],
-            borderColor: 'rgba(192, 75, 75, 1)', 
+            borderColor: 'rgba(192, 75, 75, 1)',
             backgroundColor: 'rgba(192, 75, 75, 0.2)',
         }]
     });
@@ -148,13 +149,13 @@ export default function Dashboard() {
         try {
             const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
             const contracts = response.data.data;
-    
+
             const today = new Date();
             const currentYear = today.getFullYear();
             const years = Array.from({ length: 5 }, (_, i) => currentYear - 1 + i);
-    
+
             const yearCounts = years.reduce((acc, year) => ({ ...acc, [year]: 0 }), {});
-    
+
             contracts.forEach(contract => {
                 const startYear = new Date(contract.customerContStartDate).getFullYear();
                 const endYear = new Date(contract.customerContEndDate).getFullYear();
@@ -164,10 +165,10 @@ export default function Dashboard() {
                     }
                 }
             });
-    
+
             const labels = years;
             const values = years.map(year => yearCounts[year] || 0);
-    
+
             setNewContractsData({
                 labels,
                 datasets: [{
@@ -178,26 +179,26 @@ export default function Dashboard() {
                     tension: 0.1
                 }]
             });
-            setNewContractsCount(Contracts.length); // Correctly set supplierCount
-    
+            setNewContractsCount(contracts.length); // Correctly set supplierCount
+
         } catch (error) {
             console.error("Error fetching contracts:", error);
         }
     };
-    
+
 
     const fetchSuppliers = async () => {
         try {
             const response = await axios.get('http://localhost:4500/portaldev/readsupplier');
             const suppliers = response.data.data;
-    
+
             const today = new Date();
             const currentYear = today.getFullYear();
             const years = Array.from({ length: 5 }, (_, i) => currentYear - 1 + i);
-    
+
             const supplierSet = new Set();
             const yearCounts = years.reduce((acc, year) => ({ ...acc, [year]: 0 }), {});
-    
+
             suppliers.forEach(supplier => {
                 const startYear = new Date(supplier.createdAt).getFullYear();
                 const endYear = currentYear + 3;
@@ -210,10 +211,10 @@ export default function Dashboard() {
                     supplierSet.add(supplier.name);
                 }
             });
-    
+
             const labels = years;
             const values = years.map(year => yearCounts[year] || 0);
-    
+
             setSupplierData({
                 labels,
                 datasets: [{
@@ -223,9 +224,9 @@ export default function Dashboard() {
                     backgroundColor: 'rgba(192, 75, 75, 0.2)'
                 }]
             });
-    
+
             setSupplierCount(suppliers.length); // Correctly set supplierCount
-    
+
         } catch (error) {
             console.error('Error fetching suppliers:', error);
         }
@@ -235,14 +236,14 @@ export default function Dashboard() {
         try {
             const response = await axios.get('http://localhost:4500/portaldev/readcustomer');
             const customers = response.data.data;
-    
+
             const today = new Date();
             const currentYear = today.getFullYear();
             const years = Array.from({ length: 5 }, (_, i) => currentYear - 1 + i);
-    
+
             const customerSet = new Set();
             const yearCounts = years.reduce((acc, year) => ({ ...acc, [year]: 0 }), {});
-    
+
             customers.forEach(customer => {
                 const startYear = new Date(customer.createdAt).getFullYear();
                 const endYear = currentYear + 3;
@@ -255,10 +256,10 @@ export default function Dashboard() {
                     customerSet.add(customer.name);
                 }
             });
-    
+
             const labels = years;
             const values = years.map(year => yearCounts[year] || 0);
-    
+
             setCustomerData({
                 labels,
                 datasets: [{
@@ -268,22 +269,22 @@ export default function Dashboard() {
                     backgroundColor: 'rgba(75, 192, 192, 0.2)'
                 }]
             });
-    
+
             setCustomerCount(customers.length); // Correctly set customerCount
-    
+
         } catch (error) {
             console.error('Error fetching customers:', error);
         }
     };
 
-   
+
 
     useEffect(() => {
         fetchContracts();
         fetchCustomers();
         fetchSuppliers();
         fetchContractss();
-        
+
     }, []);
 
 
@@ -325,18 +326,12 @@ export default function Dashboard() {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-            x: {
-                title: {
-                    display: true,
-                    text: 'Year'
-                }
-            },
             y: {
                 title: {
                     display: true,
-                    text: 'Active Count'
+                    text: 'Active Count',
                 },
-                beginAtZero: true
+                beginAtZero: true,
             }
         },
         elements: {
@@ -383,7 +378,7 @@ export default function Dashboard() {
             <div className="bg-gray-100 px-8 py-4 min-h-screen">
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-3 flex justify-between">
-                        <h2 className="font-semibold text-gray-700 text-lg inline-flex mb-auto items-center"><IoIosArrowForward/> Dashboard</h2>
+                        <h2 className="font-semibold text-gray-700 text-lg inline-flex mb-auto items-center"><IoIosArrowForward /> Dashboard</h2>
                         <div>
                             <div
                                 className="inline-flex space-x-4 border-2 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg"
@@ -411,39 +406,48 @@ export default function Dashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Users Card */}
                         <div className="bg-white px-4 py-2 rounded-lg border">
-                            <h2 className="text-lg font-semibold">Active Contracts</h2>
-                            
+
                             <div className='flex justify-between items-center'>
+                                <h2 className="text-lg font-semibold">Active Contracts</h2>
                                 <p className="text-3xl font-bold">{newContractsCount}</p>
+                            </div>
+
+                            <div>
                                 <div className='bg-blue-200 px-2 rounded-full'><p className="text-blue-700 font-semibold"></p></div>
                             </div>
-                            <div className="h-20">
+                            <div className="h-24 mt-2">
                                 <Line data={newContractsData} options={trendOptions} />
                             </div>
                         </div>
 
                         {/* Conversions Card */}
                         <div className="bg-white px-4 py-2 rounded-lg border">
-                            <h2 className="text-lg font-semibold">Active Suppliers</h2>
-                            
+
                             <div className='flex justify-between items-center'>
+                                <h2 className="text-lg font-semibold">Active Suppliers</h2>
                                 <p className="text-3xl font-bold">{supplierCount}</p>
+                            </div>
+
+                            <div className=''>
                                 <div className='bg-red-200 px-2 rounded-full'><p className="text-red-700 font-semibold"></p></div>
                             </div>
-                            <div className="h-20">
+                            <div className="h-24 mt-2">
                                 <Line data={supplierData} options={trendOptions} />
                             </div>
                         </div>
 
                         {/* Event Count Card */}
                         <div className="bg-white px-4 py-2 rounded-lg border">
-                            <h2 className="text-lg font-semibold">Active Customers</h2>
-                            
+
                             <div className='flex justify-between items-center'>
+                                <h2 className="text-lg font-semibold">Active Customers</h2>
                                 <p className="text-3xl font-bold">{customerCount}</p>
+                            </div>
+
+                            <div>
                                 <div className='bg-green-200 px-2 rounded-full'><p className="text-green-700 font-semibold"></p></div>
                             </div>
-                            <div className="h-20">
+                            <div className="h-24 mt-2">
                                 <Line data={customerData} options={trendOptions} />
                             </div>
                         </div>
@@ -487,7 +491,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 }

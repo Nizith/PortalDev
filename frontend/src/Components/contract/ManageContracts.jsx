@@ -173,7 +173,7 @@ export default function ManageContracts() {
           <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center"><IoIosArrowForward /> Manage Contracts</h2>
 
           {!viewDetailsRow ? (
-            <div className="overflow-x-auto rounded-xl bg-opacity-20 backdrop-filter backdrop-blur-lg shadow-xl mx-8 mt-5">
+            <div className="mx-8 mt-5">
               <table className="min-w-full border border-collapse table-auto bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
                 <thead>
                   <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-center text-sm tracking-wide">
@@ -226,7 +226,7 @@ export default function ManageContracts() {
                       </button>
                       <button
                         onClick={() => { setIsEditing(false) }}
-                        className="bg-red-800 hover:ring-2 ring-red-600 text-red-100 font-semibold px-4 py-2 rounded-lg flex items-center"
+                        className="bg-red-800 hover:ring-2 ring-red-600 text-red-100 font-semibold px-4 py-2 rounded-lg flex items-center duration-200"
                       >
                         <IoMdClose className="size-6 mr-2" />
                         Cancel
