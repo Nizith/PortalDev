@@ -453,7 +453,7 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-4 mt-6">
+                    <div className="mt-6">
                         <div className="bg-white col-span-3 p-6 rounded-lg border">
                             <h2 className="text-lg font-bold">Contracts made in each month</h2>
                             <p className='text-xs mb-2'>This year</p>
@@ -463,30 +463,6 @@ export default function Dashboard() {
                             </div>
                             <div className="mb-4 flex justify-center">
                                 {barData && <Bar data={barData} options={barOptions} height={300} ref={chartRef} />}
-                            </div>
-                        </div>
-                        <div className="col-span-1 space-y-5">
-                            <div className="bg-white inline-flex items-center w-full rounded-lg border bg-gradient-to-r from-white from-75% to-green-400 cursor-pointer">
-                                <div className='w-3/4 p-3 rounded-l-md bg-white cursor-default'>
-                                    <h2 className="text-lg font-bold">Documents</h2>
-                                    <p className='text-xs'>View all the documents uploaded</p>
-                                    <div className="my-2 ml-10 p-2">
-                                        <IoDocument className='size-20 text-indigo-600' />
-                                    </div>
-                                    <p className="text-2xl inline-flex font-bold mb-2">11 <span className='text-xs my-auto ml-2'>of total documents</span></p>
-                                </div>
-                                <MdNavigateNext className='size-20' />
-                            </div>
-                            <div className="bg-white inline-flex items-center w-full rounded-lg border bg-gradient-to-r from-white from-75% to-green-400 cursor-pointer">
-                                <div className='w-3/4 p-3 rounded-l-md bg-white cursor-default'>
-                                    <h2 className="text-lg font-bold mb-">Notifications</h2>
-                                    <p className='text-xs'>View all the notifications</p>
-                                    <div className="my-2 ml-10 p-2">
-                                        <IoNotifications className='size-20 text-indigo-600' />
-                                    </div>
-                                    <p className="text-2xl inline-flex font-bold mb-2">5 <span className='text-xs my-auto ml-2'>New Notifications</span></p>
-                                </div>
-                                <MdNavigateNext className='size-20' />
                             </div>
                         </div>
                     </div>

@@ -116,9 +116,9 @@ export default function PaymentManagement() {
   return (
     <>
       <Toaster />
-      {/* {loading ? (
+      {loading ? (
         <LoadingAnimation />
-      ) : ( */}
+      ) : (
       <div className="float-right w-full min-h-screen">
         <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
           <IoIosArrowForward /> {userRole === 'Admin' ? 'Manage Payments' : 'View Payments'}
@@ -342,7 +342,7 @@ export default function PaymentManagement() {
           </div>
         )}
       </div>
-      {/* )} */}
+       )}
     </>
   );
 }
