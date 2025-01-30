@@ -136,6 +136,36 @@ const deleteFile = async (req, res) => {
     }
 };
 
+
+
+const updateFile = async (req, res) => {
+    const { id, fileId } = req.params;
+    const relativeFilePath = path.relative(uploadDirectory, req.file.path);
+
+    try {
+        const document = await Document.findById(id);
+        if (!document) {
+            return res.status(404).json({ message: 'Document not found' });
+        }
+
+        // Find the file to update
+        const fileIndex = document.documents.findIndex(file => file._id.toString() === fileId);
+        if (fileIndex === -1) {
+            return res.status(404).json({ message: 'File not found' });
+        }
+
+        // Update the file details
+        document.documents[fileIndex].filePath = relativeFilePath;
+        document.documents[fileIndex].fileType = req.file.mimetype;
+
+        await document.save();
+        res.status(200).json({ message: 'File updated successfully' });
+    } catch (error) {
+        console.error('Error updating file:', error);
+        res.status(500).json({ message: 'Error updating file' });
+    }
+};
+
 module.exports = {
     upload,
     uploadFile,
@@ -143,4 +173,5 @@ module.exports = {
     updateDocument,
     deleteDocument,
     deleteFile, // Added the deleteFile function
+    updateFile, // Added the updateFile function
 };
