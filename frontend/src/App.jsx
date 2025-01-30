@@ -13,7 +13,7 @@ import Sidebar from "./Components/Login/Sidebar.jsx"
 import ContractAdd from "./Components/contract/ContractAdd.jsx"
 import ViewContract from "./Components/contract/ViewContract.jsx"
 import ManageContracts from "./Components/contract/ManageContracts.jsx"
-import Dashboard from "./Components/Admin/Dashboard.jsx"
+import Dashboard from "./Components/Dashboard/Dashboard.jsx"
 import UserManagement from "./Components/Admin/UserManagement.jsx"
 import UserDashboard from "./Components/Admin/UserDashboard.jsx"
 import UserRoleTable from "./Components/Admin/UserRoleTable.jsx"
@@ -52,7 +52,8 @@ function App() {
 
           {/* Admin Pages */}
           <Route path="/admindashboard" element={< Dashboard />} />
-          <Route path="/userdashboard" element={< UserDashboard />} />
+          <Route path="/mssdashboard" element={< Dashboard />} />
+          <Route path="/sstdashboard" element={< UserDashboard />} />
 
           <Route path="/addcontract" element={<ContractAdd />} />
           <Route path="/contracts" element={<ManageContracts />} />
