@@ -38,10 +38,18 @@ export default function Login() {
             localStorage.setItem('role', role);
 
             // Redirect based on the role
-            if (role === "Admin") {
+            switch (role) {
+                case "Admin":
                 navigate('/admindashboard');
-            } else {
-                navigate('/userdashboard');
+                    break;
+                case "MsStaff":
+                    navigate('/mssdashboard')
+                    break;
+                case "SalesTeam":
+                    navigate('/sstdashboard')
+                    break;
+                default:
+                    break;
             }
         } catch (error) {
             // Temporarily change background opacity on error

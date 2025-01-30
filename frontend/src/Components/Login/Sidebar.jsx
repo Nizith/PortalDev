@@ -98,7 +98,22 @@ export default function Sidebar() {
     return (
         <div className="fixed flex flex-col w-1/5 h-screen p-6 text-white shadow-lg bg-slate-900">
             <div className="mb-4">
-                <button onClick={() => handleNavigation(`/${role === 'Admin' ? 'admindashboard' : 'userdashboard'}`)}
+                <button onClick={() => handleNavigation(
+                    `/${
+                        (() => {
+                        switch (role) {
+                            case "Admin":
+                                return "admindashboard"
+                            case "MsStaff":
+                                return "mssdashboard"
+                            case "SalesTeam":
+                                return "sstdashboard"
+                            default:
+                                break;
+                        }
+                    })()
+                    }`
+                )}
                     className="w-full text-xl font-bold font-serif text-center">
                     Manage Services Contract Portal
                 </button>
@@ -154,7 +169,7 @@ export default function Sidebar() {
             <div>
                 {confirmlogout && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={() => setConfirmlogout(false)}>
-                        <div className="p-4 w-full mx-6 bg-slate-800 rounded-lg text-center relative">
+                        <div className="p-4 w-full mx-6 bg-slate-800 rounded-lg text-center relative" onClick={(e) => e.stopPropagation()}>
                             <button className="absolute top-5 right-4" onClick={() => setConfirmlogout(false)}>
                                 <IoClose className="text-lg hover:text-red-500" size={24} />
                             </button>
