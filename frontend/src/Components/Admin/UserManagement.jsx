@@ -1,8 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function UserManagement() {
     const [isuserMngOpen, setuserMngOpen] = useState(false);
+    const [userRoles, setUserRoles] = useState([]);
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch('http://localhost:4500/portaldev/users', {
+                    headers: {
+                        'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Replace with your actual token
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+
+                const delay = new Promise((resolve) => setTimeout(resolve, 1000));
+                await Promise.all([delay, response]);
+
+                const data = await response.json();
+
+                // Extract all roles
+                const roles = data.map(user => user.role).filter(role => role); // Remove null/undefined roles
+
+                // Get unique roles
+                const uniqueRoles = [...new Set(roles)];
+
+                setUserRoles(uniqueRoles);
+
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, []);
 
     // Single state for all form fields
     const [formData, setFormData] = useState({
@@ -52,6 +89,7 @@ export default function UserManagement() {
             if (response.ok) {
                 toast.success(data.message || "User created successfully!");
                 setFormData({ username: "", password: "", role: "" });
+                setuserMngOpen(false)
             } else {
                 setMessage(data.message || "An error occurred.");
             }
@@ -112,14 +150,19 @@ export default function UserManagement() {
                                     <label htmlFor="role" className="block text-sm font-medium text-gray-700">
                                         Role
                                     </label>
-                                    <input
-                                        type="text"
-                                        id="role"
+                                    <select
                                         name="role"
                                         value={formData.role}
                                         onChange={handleInputChange}
-                                        className="mt-1 p-2 w-full border rounded-md"
-                                    />
+                                        className="p-1 border rounded w-full"
+                                    >
+                                        <option value=""></option>
+                                        {userRoles.map((role) => (
+                                            <option key={role} value={role}>
+                                                {role}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <button
                                     type="submit"

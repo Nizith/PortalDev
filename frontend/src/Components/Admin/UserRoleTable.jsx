@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
-import { FaCaretDown, FaCaretUp, FaUser } from 'react-icons/fa';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import 'tailwindcss/tailwind.css';
 import UserManagement from './UserManagement';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import LoadingAnimation from "../Login/LoadingAnimation";
+import { RiDeleteBin5Fill, RiFileEditFill } from 'react-icons/ri';
 
 export default function UserRoleTable() {
     const [users, setUsers] = useState([]);
@@ -14,6 +14,9 @@ export default function UserRoleTable() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    // Define available roles statically
+    const [userRoles, setUserRoles] = useState([]);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -33,6 +36,15 @@ export default function UserRoleTable() {
 
                 const data = await response.json();
                 setUsers(data);
+                
+                // Extract all roles
+                const roles = data.map(user => user.role).filter(role => role); // Remove null/undefined roles
+
+                // Get unique roles
+                const uniqueRoles = [...new Set(roles)];
+
+                setUserRoles(uniqueRoles);
+
             } catch (error) {
                 console.error("Error fetching users:", error);
             } finally {
@@ -126,7 +138,7 @@ export default function UserRoleTable() {
                         <table className="min-w-full font-semibold table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
                             <thead>
                                 <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">
-                                    <th className="px-4 py-3 font-bold uppercase border">Username</th>
+                                    <th className="px-4 py-3 font-bold uppercase border">Service number</th>
                                     <th className="px-4 py-3 font-bold uppercase border">Role</th>
                                     <th className="px-4 py-3 font-bold uppercase border w60">Actions</th>
                                 </tr>
@@ -139,42 +151,49 @@ export default function UserRoleTable() {
                                         </td>
                                         <td className="px-4 py-2 border">
                                             {editingUserId === user._id ? (
-                                                <input
-                                                    type="text"
+                                                <select
                                                     name="role"
                                                     value={editedUser.role}
                                                     onChange={handleInputChange}
                                                     className="p-1 border rounded w-full"
-                                                />
+                                                >
+                                                    {userRoles.map((role) => (
+                                                        <option key={role} value={role}>
+                                                            {role}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             ) : (
                                                 user.role
                                             )}
                                         </td>
-                                        <td className="px-4 py-2 border flex justify-around">
-                                            <button
-                                                className={`py-1 px-2 rounded font-bold ${editingUserId === user._id
-                                                    ? 'text-green-200 font-semibold px-5 py-1.5 rounded-lg bg-green-800 hover:ring-2 ring-green-500 duration-200'
-                                                    : 'text-blue-200 font-semibold px-5 py-1.5 rounded-lg bg-blue-800 hover:ring-2 ring-blue-500 duration-200'
-                                                    } text-white`}
-                                                onClick={() => handleUpdate(user._id)}
-                                            >
-                                                {editingUserId === user._id ? 'Save' : 'Update'}
-                                            </button>
-                                            {editingUserId === user._id ? (
+                                        <td className="px-4 py-2 border w-96">
+                                            <div className='flex justify-center gap-x-8'>
                                                 <button
-                                                    className="text-gray-200 font-semibold px-5 py-1.5 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
-                                                    onClick={handleCancelUpdate}
+                                                    className={`py-1 px-2 rounded font-bold ${editingUserId === user._id
+                                                        ? 'text-green-200 font-semibold px-5 py-1.5 rounded-lg bg-green-800 hover:ring-2 ring-green-500 duration-200'
+                                                        : 'text-blue-800 font-semibold px-5 py-1.5 rounded-lg  duration-200'
+                                                        } text-white`}
+                                                    onClick={() => handleUpdate(user._id)}
                                                 >
-                                                    Cancel
+                                                    {editingUserId === user._id ? 'Save' : <RiFileEditFill size={25} />}
                                                 </button>
-                                            ) : (
-                                                <button
-                                                    className="text-red-200 font-semibold px-5 py-1.5 rounded-lg bg-red-800 hover:ring-2 ring-red-500 duration-200"
-                                                    onClick={() => handleDeleteClick(user._id)}
-                                                >
-                                                    Delete
-                                                </button>
-                                            )}
+                                                {editingUserId === user._id ? (
+                                                    <button
+                                                        className="text-gray-200 font-semibold px-5 py-1.5 rounded-lg bg-gray-500 hover:ring-2 ring-gray-500 duration-200"
+                                                        onClick={handleCancelUpdate}
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        className="text-red-600 font-semibold px-5 py-1.5 rounded-lg duration-200"
+                                                        onClick={() => handleDeleteClick(user._id)}
+                                                    >
+                                                        <RiDeleteBin5Fill size={25} />
+                                                    </button>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
