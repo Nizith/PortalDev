@@ -7,7 +7,7 @@ import LineChart from './LineChart';
 import BarChart from './BarChart';
 
 const Dashboard = () => {
-    
+
     const loggeduser = localStorage.getItem("role")
 
     const navigate = useNavigate();
@@ -26,12 +26,14 @@ const Dashboard = () => {
                         <IoIosArrowForward /> Dashboard
                     </h2>
                     <div>
-                        <div
-                            className="inline-flex space-x-4 border-2 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg"
-                            onClick={navigateUserMng}>
-                            <h1 className="font-semibold text-gray-600 text-lg">User Management</h1>
-                            <FaUser className="text-indigo-700 size-6" />
-                        </div>
+                        {loggeduser === 'Admin' && (
+                            <div
+                                className="inline-flex space-x-4 border-2 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg"
+                                onClick={navigateUserMng}>
+                                <h1 className="font-semibold text-gray-600 text-lg">User Management</h1>
+                                <FaUser className="text-indigo-700 size-6" />
+                            </div>
+                        )}
                         <div
                             className="inline-flex relative space-x-5 border-2 border-indigo-600 hover:bg-gray-100 px-4 py-1 rounded-lg"
                         >
