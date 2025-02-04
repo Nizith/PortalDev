@@ -173,7 +173,7 @@ export default function UserRoleTable() {
                                                     className={`py-1 px-2 rounded font-bold ${editingUserId === user._id
                                                         ? 'text-green-200 font-semibold px-5 py-1.5 rounded-lg bg-green-800 hover:ring-2 ring-green-500 duration-200'
                                                         : 'text-blue-800 font-semibold px-5 py-1.5 rounded-lg  duration-200'
-                                                        } text-white`}
+                                                        }`}
                                                     onClick={() => handleUpdate(user._id)}
                                                 >
                                                     {editingUserId === user._id ? 'Save' : <RiFileEditFill size={25} />}
