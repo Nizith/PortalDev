@@ -24,6 +24,12 @@ ChartJS.register(
 );
 
 export default function LineChart() {
+
+    
+    const userName = localStorage.getItem('username');
+    const userRole = localStorage.getItem('role');
+
+    
     const [metricsData, setMetricsData] = useState({
         contracts: { count: 0, data: null },
         suppliers: { count: 0, data: null },
@@ -129,6 +135,11 @@ export default function LineChart() {
                 axios.get('http://localhost:4500/portaldev/readcustomer')
             ]);
 
+            let filteredContracts = contractsRes.data.data;
+            if (userRole === 'SalesTeam') {
+                filteredContracts = filteredContracts.filter(contract => contract.manager === userName);
+            }
+
             const processYearlyData = (data, dateField = 'createdAt', chartConfig) => {
                 const today = new Date();
                 const currentYear = today.getFullYear();
@@ -156,8 +167,8 @@ export default function LineChart() {
 
             setMetricsData({
                 contracts: {
-                    count: contractsRes.data.data.length,
-                    data: processYearlyData(contractsRes.data.data, 'customerContStartDate', chartConfigs.contracts)
+                    count: filteredContracts.length,
+                    data: processYearlyData(filteredContracts, 'customerContStartDate', chartConfigs.contracts)
                 },
                 suppliers: {
                     count: suppliersRes.data.data.length,

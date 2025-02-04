@@ -90,6 +90,7 @@ export default function Sidebar() {
 
     const confirmLogout = () => {
         localStorage.removeItem('role');
+        localStorage.removeItem('username');
         navigate('/login');
     };
 

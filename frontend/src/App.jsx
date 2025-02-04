@@ -40,6 +40,10 @@ function Layout({ children }) {
 const userRole = localStorage.getItem('role');
 console.log("Logged User : ", userRole);
 
+
+const userName = localStorage.getItem('username');
+console.log("Logged User's name : ", userName);
+
 function App() {
   return (
     <Router>
@@ -53,7 +57,7 @@ function App() {
           {/* Admin Pages */}
           <Route path="/admindashboard" element={< Dashboard />} />
           <Route path="/mssdashboard" element={< Dashboard />} />
-          <Route path="/sstdashboard" element={< UserDashboard />} />
+          <Route path="/sstdashboard" element={< Dashboard />} />
 
           <Route path="/addcontract" element={<ContractAdd />} />
           <Route path="/contracts" element={<ManageContracts />} />
