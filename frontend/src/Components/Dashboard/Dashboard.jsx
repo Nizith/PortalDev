@@ -8,7 +8,8 @@ import BarChart from './BarChart';
 
 const Dashboard = () => {
 
-    const loggeduser = localStorage.getItem("role")
+    const loggeduserRole = localStorage.getItem("role")
+    const loggeduserName = localStorage.getItem("username")
 
     const navigate = useNavigate();
     const navigateUserMng = () => {
@@ -26,7 +27,7 @@ const Dashboard = () => {
                         <IoIosArrowForward /> Dashboard
                     </h2>
                     <div>
-                        {loggeduser === 'Admin' && (
+                        {loggeduserRole === 'Admin' && (
                             <div
                                 className="inline-flex space-x-4 border-2 mr-5 border-indigo-600 hover:bg-gray-100 cursor-pointer px-4 py-1 rounded-lg"
                                 onClick={navigateUserMng}>
@@ -38,7 +39,9 @@ const Dashboard = () => {
                             className="inline-flex relative space-x-5 border-2 border-indigo-600 hover:bg-gray-100 px-4 py-1 rounded-lg"
                         >
                             <div className="inline-flex space-x-3">
-                                <h1 className="font-semibold text-gray-600 text-lg">{loggeduser}</h1>
+                                <h1 className="font-semibold text-gray-600 text-lg">{loggeduserName}</h1>
+                                <div className="h-7 border-l-2 my-auto border-gray-400"></div>
+                                <h1 className="font-semibold text-gray-600 text-lg">{loggeduserRole}</h1>
                                 <a className='pt-0.5 cursor-pointer' onClick={navigateNotifications}><IoNotifications size={25} /></a>
                             </div>
                         </div>
