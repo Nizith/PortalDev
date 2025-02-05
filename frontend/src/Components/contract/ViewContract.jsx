@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { TbExternalLink } from "react-icons/tb";
-import LoadingAnimation from "../Login/LoadingAnimation";
 import { IoIosArrowForward } from "react-icons/io";
+import LoadingAnimation from "../Login/LoadingAnimation";
+
+// Styled Field Component
+const StyledField = ({ label, value }) => (
+  <div>
+    <label className="text-gray-700 font-medium mb-1 block">{label}:</label>
+    <p className="border-l-2 border-slate-600 roundd-lg ps-3 py-2 bg-white">{value}</p>
+  </div>
+);
 
 export default function ViewContract() {
   const [contracts, setContracts] = useState([]);
@@ -29,14 +37,15 @@ export default function ViewContract() {
     setViewDetailsRow(contract._id);
   };
 
+  const selectedContract = contracts.find((c) => c._id === viewDetailsRow);
+
   return (
     <>
       {loading ? (
         <LoadingAnimation />
       ) : (
         <div className="float-right w-full min-h-screen">
-
-<h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
+          <h2 className="ms-8 font-semibold text-gray-700 text-lg mt-4 inline-flex items-center">
             <IoIosArrowForward />View Contracts
           </h2>
 
@@ -57,8 +66,11 @@ export default function ViewContract() {
                       <td className="py-3 px-2 border font-semibold">{contract.supplier}</td>
                       <td className="py-3 px-2 border font-semibold">{contract.customer}</td>
                       <td className="py-3 px-2 border font-semibold">{contract.tenderNo}</td>
-                      <td className="py-3 px-2 text-center border text-indigo-500 hover:text-indigo-600 text-3xl rounded-lg transform hover:scale-105 transition-all">
-                        <button onClick={() => handleViewDetailsClick(contract)}>
+                      <td className="py-3 px-2 text-center border">
+                        <button
+                          onClick={() => handleViewDetailsClick(contract)}
+                          className="text-indigo-500 hover:text-indigo-600 text-3xl transform hover:scale-105 transition-all"
+                        >
                           <TbExternalLink />
                         </button>
                       </td>
@@ -69,129 +81,98 @@ export default function ViewContract() {
             </div>
           ) : (
             <div className="p-5 bg-gray-100 relative">
-
-              <div className="absolute top-6 left-5 -mt-20">
-                <button onClick={() => setViewDetailsRow(null)} className="bg-gray-800 hover:ring-2 ring-gray-500 text-gray-200 font-semibold px-5 py-2 rounded-lg duration-200">
+              <div>
+                <button
+                  onClick={() => setViewDetailsRow(null)}
+                  className="bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold px-5 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
+                >
                   Back to List
                 </button>
               </div>
-              <div className="grid py-5">
-                <div className="grid grid-cols-3 gap-4 z-10">
-                  <div>
-                    <label>TenderNo:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.tenderNo}</p>
-                  </div>
-                  <div>
-                    <label>Supplier:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.supplier}</p>
-                  </div>
-                  <div>
-                    <label>Customer:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.customer}</p>
-                  </div>
+
+              <div className="grid gap-5 mt-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <StyledField label="TenderNo" value={selectedContract?.tenderNo} />
+                  <StyledField label="Supplier" value={selectedContract?.supplier} />
+                  <StyledField label="Customer" value={selectedContract?.customer} />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mt-5">
-                  <div>
-                    <label>Customer Start Date:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{new Date(contracts.find((c) => c._id === viewDetailsRow)?.customerContStartDate).toISOString().substr(0, 10)}</p>
-                  </div>
-                  <div>
-                    <label>Customer End Date:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{new Date(contracts.find((c) => c._id === viewDetailsRow)?.customerContEndDate).toISOString().substr(0, 10)}</p>
-                  </div>
-                  <div>
-                    <label>Supplier Start Date:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{new Date(contracts.find((c) => c._id === viewDetailsRow)?.supplierContStartDate).toISOString().substr(0, 10)}</p>
-                  </div>
-                  <div>
-                    <label>Supplier End Date:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{new Date(contracts.find((c) => c._id === viewDetailsRow)?.supplierContEndDate).toISOString().substr(0, 10)}</p>
-                  </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <StyledField
+                    label="Customer Start Date"
+                    value={new Date(selectedContract?.customerContStartDate).toISOString().substr(0, 10)}
+                  />
+                  <StyledField
+                    label="Customer End Date"
+                    value={new Date(selectedContract?.customerContEndDate).toISOString().substr(0, 10)}
+                  />
+                  <StyledField
+                    label="Supplier Start Date"
+                    value={new Date(selectedContract?.supplierContStartDate).toISOString().substr(0, 10)}
+                  />
+                  <StyledField
+                    label="Supplier End Date"
+                    value={new Date(selectedContract?.supplierContEndDate).toISOString().substr(0, 10)}
+                  />
                 </div>
 
-                <hr className="bg-indigo-600 h-1 my-3" />
+                <hr className="bg-indigo-600 h-1" />
 
-                <div>
-                  <label>Subject Clerk:</label>
-                  <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.subjectClerk}</p>
-                </div>
+                <StyledField label="Subject Clerk" value={selectedContract?.subjectClerk} />
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-4">
-                    <div>
-                      <label>Sales Team:</label>
-                      <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.salesTeam}</p>
-                    </div>
-                    <div>
-                      <label>Account Manager:</label>
-                      <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.accountManager}</p>
-                    </div>
-                    <div>
-                      <label>Manager:</label>
-                      <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.manager}</p>
-                    </div>
+                    <StyledField label="Sales Team" value={selectedContract?.salesTeam} />
+                    <StyledField label="Account Manager" value={selectedContract?.accountManager} />
+                    <StyledField label="Manager" value={selectedContract?.manager} />
                   </div>
                   <div className="grid gap-4">
-                    <div>
-                      <label>Solution Team</label>
-                      <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.solutionTeam}</p>
-                    </div>
-                    <div>
-                      <label>Sales Engineer:</label>
-                      <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.salesEngineer}</p>
-                    </div>
-                    <div>
-                      <label>Solution Engineer:</label>
-                      <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.solutionEngineer}</p>
-                    </div>
+                    <StyledField label="Solution Team" value={selectedContract?.solutionTeam} />
+                    <StyledField label="Sales Engineer" value={selectedContract?.salesEngineer} />
+                    <StyledField label="Solution Engineer" value={selectedContract?.solutionEngineer} />
                   </div>
                 </div>
 
-                <hr className="bg-indigo-600 h-1 my-3" />
+                <hr className="bg-indigo-600 h-1" />
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label>Contract Status:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.contractStatus}</p>
-                  </div>
-                  <div>
-                    <label>Solution Description:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.solutionDescription}</p>
-                  </div>
-                  <div>
-                    <label>Remarks:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.remarks}</p>
-                  </div>
+                  <StyledField label="Contract Status" value={selectedContract?.contractStatus} />
+                  <StyledField label="Solution Description" value={selectedContract?.solutionDescription} />
+                  <StyledField label="Remarks" value={selectedContract?.remarks} />
                 </div>
 
-                <hr className="bg-indigo-600 h-1 my-3" />
+                <hr className="bg-indigo-600 h-1" />
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label>AMC Payment Terms:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.AMCDetails[0]?.AMCpaymentterms}</p>
-                  </div>
-                  <div>
-                    <label>AMC Currency:</label>
-                    <p className="border-l-2 border-slate-600 rounded-lg ps-3">{contracts.find((c) => c._id === viewDetailsRow)?.AMCDetails[0]?.AMCcurrency}</p>
-                  </div>
+                  <StyledField
+                    label="AMC Payment Terms"
+                    value={selectedContract?.AMCDetails[0]?.AMCpaymentterms}
+                  />
+                  <StyledField
+                    label="AMC Currency"
+                    value={selectedContract?.AMCDetails[0]?.AMCcurrency}
+                  />
                 </div>
-                <>
-                  <div className="grid grid-cols-5 gap-4 mt-4">
-                    {contracts.find((c) => c._id === viewDetailsRow)?.AMCDetails[0]?.AMCamount.map((amount, index) => (
-                      <div key={index} className="col-span-1">
-                        <label>AMC Amount {index + 1}:</label>
-                        <p className="border-l-2 border-slate-600 rounded-lg ps-3">{amount}</p>
-                      </div>
-                    ))}
-                  </div>
-                </>
+
+                <div className="grid grid-cols-5 gap-4">
+                  {selectedContract?.AMCDetails[0]?.AMCamount.map((amount, index) => (
+                    amount ?
+                      <StyledField
+                        key={index}
+                        label={`AMC Amount ${index + 1}`}
+                        value={amount}
+                      />
+                      :
+                      <p className="font-semibold pt-9"> *No AMC Amount</p>
+                  ))}
+                </div>
+
+                <hr className="bg-indigo-600 h-1" />
               </div>
             </div>
           )}
-        </div >
-      )
-      }
+        </div>
+      )}
     </>
   );
 }
