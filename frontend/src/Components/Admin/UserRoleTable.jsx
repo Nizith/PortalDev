@@ -6,6 +6,7 @@ import 'tailwindcss/tailwind.css';
 import UserManagement from './UserManagement';
 import LoadingAnimation from "../Login/LoadingAnimation";
 import { RiDeleteBin5Fill, RiFileEditFill } from 'react-icons/ri';
+import { api } from '../../api';
 
 export default function UserRoleTable() {
     const [users, setUsers] = useState([]);
@@ -21,7 +22,7 @@ export default function UserRoleTable() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch('http://localhost:4500/portaldev/users', {
+                const response = await fetch(`${api}/users`, {
                     headers: {
                         'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Replace with your actual token
                         'Content-Type': 'application/json'
@@ -63,7 +64,7 @@ export default function UserRoleTable() {
     const handleUpdate = async (userId) => {
         if (editingUserId === userId) {
             try {
-                const response = await fetch(`http://localhost:4500/portaldev/users/${userId}`, {
+                const response = await fetch(`${api}/users/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -95,7 +96,7 @@ export default function UserRoleTable() {
 
     const handleDeleteConfirm = async () => {
         try {
-            const response = await fetch(`http://localhost:4500/portaldev/users/${userToDelete}`, {
+            const response = await fetch(`${api}/users/${userToDelete}`, {
                 method: 'DELETE',
             });
             if (response.ok) {

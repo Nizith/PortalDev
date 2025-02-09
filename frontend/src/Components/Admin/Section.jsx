@@ -5,6 +5,7 @@ import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
 import { IoIosArrowForward } from 'react-icons/io';
+import { api } from '../../api';
 
 export default function DataTable() {
   const [inputFields, setInputFields] = useState({ sectionID: '', sectionName: '' });
@@ -22,7 +23,7 @@ export default function DataTable() {
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const response = await axios.get('http://localhost:4500/portaldev/readsection');
+        const response = await axios.get(`${api}/readsection`);
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
         setSections(response.data.data);

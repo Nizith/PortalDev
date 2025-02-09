@@ -4,6 +4,7 @@ import SalesCategoryComponent from './SalesCategoryComponent';
 import SolutionCategoryComponent from './SolutionCategoryComponent';
 import LoadingAnimation from '../Login/LoadingAnimation';
 import { IoIosArrowForward } from 'react-icons/io';
+import { api } from '../../api';
 
 export default function CordinatorComponent() {
   const [activeTab, setActiveTab] = useState('sales'); // Manage active tab
@@ -24,7 +25,7 @@ export default function CordinatorComponent() {
   // Fetch all coordinators
   const fetchCoordinators = async () => {
     try {
-      const response = await axios.get('http://localhost:4500/portaldev/allcordinator');
+      const response = await axios.get(`${api}/allcordinator`);
       setCoordinators(response.data.data);
       setFilteredCoordinators(response.data.data); // Initialize filtered list with full data
 

@@ -11,6 +11,7 @@ import {
   Legend
 } from 'chart.js';
 import axios from 'axios';
+import { api } from '../../api';
 
 // Register ChartJS components
 ChartJS.register(
@@ -130,14 +131,20 @@ export default function LineChart() {
     const fetchMetricsData = async () => {
         try {
             const [contractsRes, suppliersRes, customersRes] = await Promise.all([
-                axios.get("http://localhost:4500/portaldev/allcontracts"),
-                axios.get('http://localhost:4500/portaldev/readsupplier'),
-                axios.get('http://localhost:4500/portaldev/readcustomer')
+                axios.get(`${api}/allcontracts`),
+                axios.get(`${api}/readsupplier`),
+                axios.get(`${api}/readcustomer`)
             ]);
 
             let filteredContracts = contractsRes.data.data;
+            let filteredSuppliers = suppliersRes.data.data;
+            let filteredCustomers = customersRes.data.data;
             if (userRole === 'SalesTeam') {
                 filteredContracts = filteredContracts.filter(contract => contract.manager === userName);
+                
+                filteredSuppliers = filteredContracts.filter(contract => contract.supplier);
+                
+                filteredCustomers = filteredContracts.filter(contract => contract.customer);
             }
 
             const processYearlyData = (data, dateField = 'createdAt', chartConfig) => {
@@ -171,12 +178,12 @@ export default function LineChart() {
                     data: processYearlyData(filteredContracts, 'customerContStartDate', chartConfigs.contracts)
                 },
                 suppliers: {
-                    count: suppliersRes.data.data.length,
-                    data: processYearlyData(suppliersRes.data.data, 'createdAt', chartConfigs.suppliers)
+                    count: filteredSuppliers.length,
+                    data: processYearlyData(filteredSuppliers, 'createdAt', chartConfigs.suppliers)
                 },
                 customers: {
-                    count: customersRes.data.data.length,
-                    data: processYearlyData(customersRes.data.data, 'createdAt', chartConfigs.customers)
+                    count: filteredCustomers.length,
+                    data: processYearlyData(filteredCustomers, 'createdAt', chartConfigs.customers)
                 }
             });
         } catch (error) {
@@ -191,7 +198,7 @@ export default function LineChart() {
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <MetricCard
-                title="Active Contracts"
+                title={userRole === 'SalesTeam' ? 'My Active Contracts' : 'Active Contracts'}
                 count={metricsData.contracts.count}
                 data={metricsData.contracts.data}
                 options={trendOptions}

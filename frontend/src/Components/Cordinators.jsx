@@ -27,7 +27,7 @@ export default function Coordinator() {
   useEffect(() => {
     const fetchCoordinators = async () => {
       try {
-        const response = await axios.get('http://localhost:4500/portaldev/allcordinator');
+        const response = await axios.get(`${api}/allcordinator`);
         setCoordinators(response.data.data);
         setFilteredSalesCoordinators(response.data.data.filter(c => c.SalesCategory));
         setFilteredSolutionCoordinators(response.data.data.filter(c => c.SolutionCategory));
@@ -71,7 +71,7 @@ export default function Coordinator() {
     try {
       if (isEditMode) {
         const response = await axios.put(
-          `http://localhost:4500/portaldev/updatecoordinator/${selectedCoordinator._id}`,
+          `${api}/updatecoordinator/${selectedCoordinator._id}`,
           inputFields
         );
         setCoordinators((prevCoordinators) =>
@@ -81,7 +81,7 @@ export default function Coordinator() {
         );
       } else {
         const response = await axios.post(
-          'http://localhost:4500/portaldev/createCoordinator',
+          `${api}/createCoordinator`,
           inputFields
         );
         setCoordinators((prevCoordinators) => [...prevCoordinators, response.data.data]);
@@ -99,7 +99,7 @@ export default function Coordinator() {
 
   const handleDeleteCoordinator = async (coordinatorID) => {
     try {
-      const response = await axios.delete(`http://localhost:4500/portaldev/deletecoordinator/${coordinatorID}`);
+      const response = await axios.delete(`${api}/deletecoordinator/${coordinatorID}`);
       if (response.status === 200) {
         setCoordinators((prevCoordinators) =>
           prevCoordinators.filter((coordinator) => coordinator._id !== coordinatorID)

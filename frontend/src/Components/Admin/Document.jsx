@@ -5,6 +5,7 @@ import { MdDriveFolderUpload } from 'react-icons/md';
 import { HiFolderDownload } from "react-icons/hi";
 import { RiDeleteBin5Fill, RiFileEditFill } from "react-icons/ri";
 import LoadingAnimation from "../Login/LoadingAnimation";
+import { api } from '../../api';
 
 export default function Document() {
     const [tenderNumber, setTenderNumber] = useState('');
@@ -19,7 +20,7 @@ export default function Document() {
 
     const fetchDocuments = async () => {
         try {
-            const response = await axios.get('http://localhost:4500/documents');
+            const response = await axios.get(`${api}/documents`);
 
             const delay = new Promise((resolve) => setTimeout(resolve, 1000));
             await Promise.all([delay, response]);
@@ -49,9 +50,9 @@ export default function Document() {
 
         try {
             if (editId) {
-                await axios.put(`http://localhost:4500/documents/${editId}`, formData);
+                await axios.put(`${api}/documents/${editId}`, formData);
             } else {
-                await axios.post('http://localhost:4500/upload', formData);
+                await axios.post(`${api}/upload`, formData);
             }
             setEditId(null);
             fetchDocuments();
@@ -62,7 +63,7 @@ export default function Document() {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:4500/documents/${id}`);
+            await axios.delete(`${api}/documents/${id}`);
             fetchDocuments();
         } catch (error) {
             console.error('Error deleting document:', error);
@@ -80,7 +81,7 @@ export default function Document() {
             if (documents.find(doc => doc._id === docId).documents.length === 1) {
                 await handleDelete(docId);
             } else {
-                await axios.delete(`http://localhost:4500/documents/${docId}/file/${fileId}`);
+                await axios.delete(`${api}/documents/${docId}/file/${fileId}`);
                 fetchDocuments();
             }
         } catch (error) {
@@ -94,7 +95,7 @@ export default function Document() {
         formData.append('file', newFile);
 
         try {
-            const url = `http://localhost:4500/documents/${editId}/file/${selectedFileId}`;
+            const url = `${api}/documents/${editId}/file/${selectedFileId}`;
             await axios.put(url, formData);
             fetchDocuments();
             setIsEditModalOpen(false);
@@ -108,7 +109,7 @@ export default function Document() {
     useEffect(() => {
         const fetchContracts = async () => {
             try {
-                const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
+                const response = await axios.get(`${api}/allcontracts`);
                 const delay = new Promise((resolve) => setTimeout(resolve, 1000));
                 await Promise.all([delay, response]);
                 const tenderNumbers = response.data.data.map(contract => contract.tenderNo);
@@ -188,7 +189,7 @@ export default function Document() {
                                                                 <div className="flex-1">
                                                                     {file.fileType.startsWith('image') ? (
                                                                         <img
-                                                                            src={`http://localhost:4500/uploads/${file.filePath}`}
+                                                                            src={`${api}/uploads/${file.filePath}`}
                                                                             alt="File"
                                                                             className="w-32 h-32 object-cover"
                                                                         />
@@ -198,7 +199,7 @@ export default function Document() {
                                                                 </div>
                                                                 <div className="flex space-x-4">
                                                                     <a
-                                                                        href={`http://localhost:4500/uploads/${file.filePath}`}
+                                                                        href={`${api}/uploads/${file.filePath}`}
                                                                         download
                                                                         className="text-green-600 hover:text-green-800"
                                                                     >

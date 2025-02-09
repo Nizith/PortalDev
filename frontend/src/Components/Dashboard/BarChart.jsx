@@ -10,6 +10,7 @@ import {
     Legend
 } from 'chart.js';
 import axios from 'axios';
+import { api } from '../../api';
 
 // Register ChartJS components
 ChartJS.register(
@@ -41,7 +42,7 @@ export default function BarChart() {
 
     const fetchContracts = async () => {
         try {
-            const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
+            const response = await axios.get(`${api}/allcontracts`);
             const contracts = response.data.data;
     
             const monthlyCounts = new Array(12).fill(0);

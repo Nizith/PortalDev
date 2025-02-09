@@ -34,34 +34,34 @@ const ROLE_NAVIGATION = {
     SalesTeam: [
         { path: '/viewcontracts', label: 'View Contracts', icon: <MdTableView size={28} /> },
         { path: '/payments', label: 'View Payments', icon: <MdPayment size={28} /> },
-        {
-            label: 'View Users',
-            icon: <MdManageAccounts size={28} />,
-            icon2: <MdNavigateNext size={32} />,
-            subMenu: [
-                { path: '/suppliers', label: 'View Suppliers', icon: <BsPersonFillUp size={28} /> },
-                { path: '/customers', label: 'View Customers', icon: <BsPersonFillDown size={28} /> },
-                { path: '/cordinators', label: 'View Cordinators', icon: <MdManageAccounts size={28} /> },
-                { path: '/sections', label: 'View Sections', icon: <TbSectionFilled size={28} /> },
-            ]
-        },
+        // {
+        //     label: 'View Users',
+        //     icon: <MdManageAccounts size={28} />,
+        //     icon2: <MdNavigateNext size={32} />,
+        //     subMenu: [
+        //         { path: '/suppliers', label: 'View Suppliers', icon: <BsPersonFillUp size={28} /> },
+        //         { path: '/customers', label: 'View Customers', icon: <BsPersonFillDown size={28} /> },
+        //         { path: '/cordinators', label: 'View Cordinators', icon: <MdManageAccounts size={28} /> },
+        //         { path: '/sections', label: 'View Sections', icon: <TbSectionFilled size={28} /> },
+        //     ]
+        // },
         { path: '/notifications', label: 'Notifications', icon: <IoNotifications size={28} /> },
         { path: '/documents', label: 'Documents', icon: <IoDocuments size={28} /> },
     ],
     MsStaff: [
         { path: '/viewcontracts', label: 'View Contracts', icon: <MdTableView size={28} /> },
         { path: '/payments', label: 'View Payments', icon: <MdPayment size={28} /> },
-        {
-            label: 'View Users',
-            icon: <MdManageAccounts size={28} />,
-            icon2: <MdNavigateNext size={32} />,
-            subMenu: [
-                { path: '/suppliers', label: 'View Suppliers', icon: <BsPersonFillUp size={28} /> },
-                { path: '/customers', label: 'View Customers', icon: <BsPersonFillDown size={28} /> },
-                { path: '/cordinators', label: 'View Cordinators', icon: <MdManageAccounts size={28} /> },
-                { path: '/sections', label: 'View Sections', icon: <TbSectionFilled size={28} /> },
-            ]
-        },
+        // {
+        //     label: 'View Users',
+        //     icon: <MdManageAccounts size={28} />,
+        //     icon2: <MdNavigateNext size={32} />,
+        //     subMenu: [
+        //         { path: '/suppliers', label: 'View Suppliers', icon: <BsPersonFillUp size={28} /> },
+        //         { path: '/customers', label: 'View Customers', icon: <BsPersonFillDown size={28} /> },
+        //         { path: '/cordinators', label: 'View Cordinators', icon: <MdManageAccounts size={28} /> },
+        //         { path: '/sections', label: 'View Sections', icon: <TbSectionFilled size={28} /> },
+        //     ]
+        // },
         { path: '/notifications', label: 'Notifications', icon: <IoNotifications size={28} /> },
         { path: '/documents', label: 'Documents', icon: <IoDocuments size={28} /> },
     ],

@@ -23,7 +23,7 @@ export default function ManageContracts() {
   useEffect(() => {
     const fetchContracts = async () => {
       try {
-        const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
+        const response = await axios.get(`${api}/allcontracts`);
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
         setContracts(response.data.data);
@@ -99,7 +99,7 @@ export default function ManageContracts() {
 
   const handleSaveClick = (id) => {
     axios
-      .put(`http://localhost:4500/portaldev/updatecontract/${id}`, editedContract)
+      .put(`${api}/updatecontract/${id}`, editedContract)
       .then((response) => {
         setContracts(
           contracts.map((contract) =>
@@ -120,7 +120,7 @@ export default function ManageContracts() {
 
     if (window.confirm('Are you sure you want to delete this Contract?')) {
       axios
-        .delete(`http://localhost:4500/portaldev/deletecontract/${id}`)
+        .delete(`${api}/deletecontract/${id}`)
         .then(() => {
           setContracts(contracts.filter((contract) => contract._id !== id));
           setViewDetailsRow(null);
@@ -141,7 +141,7 @@ export default function ManageContracts() {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get("http://localhost:4500/portaldev/Allpayments");
+        const response = await axios.get(`${api}/Allpayments`);
 
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);

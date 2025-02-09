@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { api } from '../../api';
 
 export default function UserManagement() {
     const [isuserMngOpen, setuserMngOpen] = useState(false);
@@ -8,7 +9,7 @@ export default function UserManagement() {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch('http://localhost:4500/portaldev/users', {
+                const response = await fetch(`${api}/users`, {
                     headers: {
                         'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Replace with your actual token
                         'Content-Type': 'application/json'
@@ -76,7 +77,7 @@ export default function UserManagement() {
         }
 
         try {
-            const response = await fetch("http://localhost:4500/portaldev/registration", {
+            const response = await fetch(`${api}/registration`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
