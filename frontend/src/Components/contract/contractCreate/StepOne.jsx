@@ -3,7 +3,7 @@ import React from "react";
 const StepOne = ({ formData, handleChange, suppliers, customers, handleSubmit }) => (
     <div>
       <div className='flex items-center justify-center'>
-              <div className='bg-zinc-200 bg border border-neutral-500 rounded-2xl p-8 w-full max-w-4xl'>
+              <div className='bg-zinc-200 brder border-neutral-500 rounded-2xl p-8 w-full'>
                   <form className='m-0' onSubmit={handleSubmit}>
                       <div className='mb-5'>
                           <label>Tender No :</label>

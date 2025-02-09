@@ -234,17 +234,17 @@ export default function ContractAdd() {
                     {activeStep === steps.length - 1 ? (
                         <div className="space-x-5">
                             <button
+                                className="bg-red-800 hover:ring-2 ring-red-600 text-red-200 duration-300 px-5 py-2 rounded-lg font-semibold"
+                                onClick={handleReset}
+                            >
+                                Reset
+                            </button>
+                            <button
                                 type="submit"
                                 className='bg-green-800 hover:ring-2 ring-green-500 text-green-200 px-8 py-2 rounded-lg font-semibold'
                                 onClick={handleSubmit}
                             >
                                 Submit
-                            </button>
-                            <button
-                                className="bg-red-800 hover:ring-2 ring-red-600 text-red-200 duration-300 px-5 py-2 rounded-lg font-semibold"
-                                onClick={handleReset}
-                            >
-                                Reset
                             </button>
                         </div>
                     ) : (

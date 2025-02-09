@@ -4,10 +4,10 @@ import { IoMdAdd, IoMdRemove, IoIosWarning } from 'react-icons/io';
 const StepFour = ({ formData, handleAMCDetailsChange, handleAddAMCDetail, handleDeleteAMCDetail, handleSubmit }) => {
     return (
         <div className="flex justify-center items-center">
-            <div className="py-2.5 mx-4 border border-neutral-500 bg-zinc-200 rounded-2xl w-full max-w-4xl">
+            <div className="py-2.5 bg-zinc-200 rounded-2xl w-full">
                 <form className="m-6 space-y-8" onSubmit={handleSubmit}>
                     {formData.AMCDetails.map((detail, index) => (
-                        <div key={index} className="p-4 border border-gray-300 rounded-lg bg-white shadow-sm">
+                        <div key={index} className="p-4 border-2 border-gray-300 bg-zinc-100 rounded-lg">
                             {/* Payment Term and Currency */}
                             <div className="grid grid-cols-2 gap-6">
                                 <div>

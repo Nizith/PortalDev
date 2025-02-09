@@ -4,7 +4,7 @@ const StepThree = ({ formData, handleChange, handleSubmit }) => {
     return (
         <>
             <div className='flex items-center justify-center'>
-                <div className='bg-zinc-200 border border-neutral-500 rounded-2xl p-8 w-full max-w-4xl'>
+                <div className='bg-zinc-200 rounded-2xl p-8 w-full'>
                     <form className='mx-5 my-2.5' onSubmit={handleSubmit}>
                         <div className='grid grid-cols-2 gap-x-5'>
                             <div>

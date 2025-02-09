@@ -1,115 +1,130 @@
 import React from "react";
 
-const StepFive = ({ formData, handleSubmit }) => {
-    return (
-        <div>
-            <div className="flex justify-center items-center">
-                <div className="py-2.5 mx-4 border border-neutral-500 bg-zinc-200 rounded-2xl w-full max-w-4xl">
-                    <div className="m-6">
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* Render general fields except Solution Description */}
-                            {Object.entries(formData).map(([key, value]) => {
-                                // Skip Solution Description to render it separately
-                                if (key === "solutionDescription") return null;
+// Field labels mapping
+const fieldLabels = {
 
-                                // Handle AMCDetails array separately
-                                if (key === "AMCDetails" && Array.isArray(value)) {
-                                    return (
-                                        <div key={key} className="col-span-2">
-                                            <label className="block mb-1 font-medium">
-                                                AMC Details:
-                                            </label>
-                                            {value.map((detail, index) => (
-                                                <div key={index} className="mb-2">
-                                                    <div className="grid grid-cols-2 gap-2">
-                                                        <div>
-                                                            <label className="block text-sm">AMC Amount:</label>
-                                                            <input
-                                                                type="text"
-                                                                value={detail.AMCamount || ""}
-                                                                className="block w-full mt-1 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-indigo-600"
-                                                                readOnly
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <label className="block text-sm">AMC Currency:</label>
-                                                            <input
-                                                                type="text"
-                                                                value={detail.AMCcurrency || ""}
-                                                                className="block w-full mt-1 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-indigo-600"
-                                                                readOnly
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    );
-                                }
+  supplier: "Supplier",
+  customer: "Customer",
+  customerContStartDate: "Customer Contract Start Date",
+  customerContEndDate: "Customer Contract Start Date",
+  supplierContStartDate: "Supplier Contract Start Date",
+  supplierContEndDate: "Supplier Contract End Date",
+  subjectClerk: "Subject Clerk",
+  salesTeam: "Sales Team",
+  accountManager: "Account Manager",
+  manager: "Manager",
+  solutionTeam: "Solution Team",
+  salesEngineer: "Sales Engineer",
+  solutionEngineer: "Solution Engineer",
+  tenderNo: "Tender Number",
+  contractStatus: "Contract Status",
+  solutionDescription: "Solution Description",
+  remarks: "Remarks"
+};
 
-                                // Render all other fields
-                                return (
-                                    <div key={key}>
-                                        <label htmlFor={key} className="block">
-                                            {key.replace(/([A-Z])/g, " $1")}: {/* Format key */}
-                                        </label>
-                                        <input
-                                            id={key}
-                                            className="block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-indigo-600"
-                                            type="text"
-                                            value={value || ""}
-                                            readOnly
-                                        />
-                                    </div>
-                                );
-                            })}
+// Display Field Component for regular text
+const DisplayField = ({ label, value }) => (
+  <div className="inline-flex items-center ">
+    <label className="block text-sm font-semibold text-gray-700">
+      {label}:
+    </label>
+    <p className="ms-4 text-indigo-600">
+      {value || "N/A"}
+    </p>
+  </div>
+);
 
-                            {/* Render Payment Description explicitly */}
-                            <div>
-                                <label htmlFor="paymentDescription" className="block">
-                                    Payment Description:
-                                </label>
-                                <input
-                                    id="paymentDescription"
-                                    className="block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-indigo-600"
-                                    type="text"
-                                    value={formData.paymentDescription}
-                                    readOnly
-                                />
-                            </div>
-
-                            {/* Render AMC Payment Terms explicitly */}
-                            <div>
-                                <label htmlFor="AMCpaymentterms" className="block">
-                                    AMC Payment Terms:
-                                </label>
-                                <input
-                                    id="AMCpaymentterms"
-                                    className="block w-full mt-1.5 h-8 rounded ps-2 border border-gray-400 focus:outline-none focus:border-indigo-600"
-                                    type="text"
-                                    value={formData.AMCpaymentterms}
-                                    readOnly
-                                />
-                            </div>
-                        </div>
-
-                        {/* Solution Description - Rendered Separately */}
-                        <div className="mt-6">
-                            <label htmlFor="solutionDescription" className="block font-medium">
-                                Solution Description:
-                            </label>
-                            <textarea
-                                id="solutionDescription"
-                                className="block w-full mt-2 h-32 rounded ps-2 border border-gray-400 focus:outline-none focus:border-indigo-600"
-                                value={formData.solutionDescription || ""}
-                                readOnly
-                            />
-                        </div>
-                    </div>
-                </div>
+// AMC Details Display Component
+const AMCDetailsDisplay = ({ details }) => (
+  <div className="col-span-2 mt-2">
+    <label className="block text-lg font-semibold underline">
+      AMC Details:
+    </label>
+    {details.map((detail, index) => (
+      <>
+        <div key={index} className="grid grid-cols-2 gap-x-4 mt-2 text-sm text-gray-700">
+          {/* Left Column - AMC Amount */}
+          <div className="col-span-1">
+            <span className="mt-4 text-sm font-medium">AMC Amount:</span>
+            <div className="ps-3">
+              {/* Check if AMCamount is an array, otherwise split it */}
+              {(Array.isArray(detail.AMCamount)
+                ? detail.AMCamount
+                : detail.AMCamount?.split(",")
+              ).map((amount, i) => (
+                <p key={i} className="mb-1 text-indigo-600">{amount.trim() || "N/A"}</p>
+              ))}
             </div>
+          </div>
+
+          {/* Right Column - Other Details */}
+          <div className="grid grid-cols-1 gap-y-4 items-center">
+            <div className="mb-2">
+              <span className="text-sm font-medium ">AMC Currency:</span>
+              <p className="ms-4 text-indigo-600 inline-flex">{detail.AMCcurrency || "N/A"}</p>
+            </div>
+            <div className="mb-2">
+              <span className="text-sm font-medium ">AMC Term:</span>
+              <p className="ms-4 text-indigo-600 inline-flex">{detail.AMCpaymentterms || "N/A"}</p>
+            </div>
+            <div>
+              <span className="text-sm font-medium ">Payment Description:</span>
+              <p className="ms-4 text-indigo-600 inline-flex">{detail.paymentDescription || "N/A"}</p>
+            </div>
+          </div>
         </div>
-    );
+        { index < details.length - 1 && <hr className="bg-indigo-600 h-[1px] border-none" />}
+      </>
+    ))}
+  </div>
+);
+
+const StepFive = ({ formData }) => {
+  // Define fields that require special handling
+  const specialFields = ["solutionDescription", "AMCDetails"];
+
+  return (
+    <div>
+      <div className="flex justify-center items-center">
+        <div className="py-2.5 px-10 bg-gray-200 rounded-2xl w-full">
+          <div className="m-2.5">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+              {/* Regular fields */}
+              {Object.entries(formData).map(([key, value]) => {
+                if (specialFields.includes(key)) return null;
+
+                return (
+                  <DisplayField
+                    key={key}
+                    label={fieldLabels[key] || key} // Use label from the object, fallback to key
+                    value={value}
+                  />
+                );
+              })}
+
+              {/* Solution Description - Full width */}
+              <div className="inline-flex ">
+                <label className="block text-sm font-semibold text-gray-700">
+                  {fieldLabels.solutionDescription}:
+                </label>
+                <p className="ms-4 text-indigo-600">
+                  {formData.solutionDescription || "N/A"}
+                </p>
+              </div>
+
+              {/* AMC Details */}
+              {formData.AMCDetails && Array.isArray(formData.AMCDetails) && (
+                <>
+                  <AMCDetailsDisplay details={formData.AMCDetails} />
+                </>
+              )}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default StepFive;
