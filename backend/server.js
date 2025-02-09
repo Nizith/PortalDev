@@ -4,6 +4,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
 
+require('dotenv').config();
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -11,12 +13,13 @@ app.use(bodyParser.json());
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const PORT = 4500;
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
     console.log(`App is running on port: ${PORT}`);
 });
 
-const URL = "mongodb+srv://nisithalakshan94:portaldevSLT@slt.ffxoqv6.mongodb.net/PortalDev";
+const URL = process.env.URL
 
 mongoose.connect(URL)
     .then(() => {
@@ -52,7 +55,7 @@ const userRoutes = require("./routes/userRoutes.js");
 app.use(userRoutes);
 
 const notificationRoutes = require("./routes/notificationRoutes.js");
-app.use("/api/notifications", notificationRoutes);
+app.use(notificationRoutes);
 
 const documentRoute = require("./routes/DocumentRoute");
 app.use(documentRoute);
