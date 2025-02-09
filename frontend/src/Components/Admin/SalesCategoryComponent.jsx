@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Toaster, toast } from "react-hot-toast";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
-import LoadingAnimation from "../Login/LoadingAnimation";
+import { api } from '../../api';
 
 const SalesCategoryComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,7 +37,7 @@ const SalesCategoryComponent = () => {
   // Fetch all coordinators
   const fetchCoordinators = async () => {
     try {
-      const response = await axios.get('http://localhost:4500/portaldev/allcordinator');
+      const response = await axios.get(`${api}/allcordinator`);
       const sortedData = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sorting by createdAt
       setCoordinators(sortedData);
       setFilteredCoordinators(sortedData); // Initialize filtered list with sorted data
@@ -98,12 +98,12 @@ const SalesCategoryComponent = () => {
     e.preventDefault();
     try {
       if (isEditMode) {
-        await axios.put(`http://localhost:4500/portaldev/updatecordinator/${selectedCoordinator._id}`, formData);
+        await axios.put(`${api}/updatecordinator/${selectedCoordinator._id}`, formData);
         fetchCoordinators();
       } 
       
       else {
-        const response = await axios.post('http://localhost:4500/portaldev/createCordinator', formData);
+        const response = await axios.post(`${api}/createCordinator`, formData);
         const newCoordinator = response.data.data;
         setCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         setFilteredCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
@@ -119,7 +119,7 @@ const SalesCategoryComponent = () => {
   const handleDelete = async (id) => {
     if(window.confirm('Are you sure you want to delete this payment?')){
     try {
-      await axios.delete(`http://localhost:4500/portaldev/deletecordinator/${id}`);
+      await axios.delete(`${api}/deletecordinator/${id}`);
       fetchCoordinators();
     } catch (error) {
       console.error('Error deleting coordinator:', error);

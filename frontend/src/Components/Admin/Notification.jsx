@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { api } from '../../api';
 
 const Notification = () => {
     const [notifications, setNotifications] = useState([]);
@@ -8,7 +9,7 @@ const Notification = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
-                const response = await axios.get("/api/notifications");
+                const response = await axios.get(`${api}/notifications`);
                 setNotifications(response.data);
                 setLoading(false);
             } catch (error) {

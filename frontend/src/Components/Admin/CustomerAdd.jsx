@@ -5,6 +5,7 @@ import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
 import { IoIosArrowForward } from "react-icons/io";
+import { api } from '../../api';
 
 const initialInputFields = {
   BRnumber: "",
@@ -29,7 +30,7 @@ export default function customerTable() {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get("http://localhost:4500/portaldev/readcustomer");
+        const response = await axios.get(`${api}/readcustomer`);
 
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);

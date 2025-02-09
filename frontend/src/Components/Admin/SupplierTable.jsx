@@ -5,6 +5,7 @@ import { FaDeleteLeft } from "react-icons/fa6";
 import { MdEdit } from "react-icons/md";
 import LoadingAnimation from "../Login/LoadingAnimation";
 import { IoIosArrowForward } from "react-icons/io";
+import { api } from '../../api';
 
 const SupplierComponent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,7 +37,7 @@ const SupplierComponent = () => {
     const fetchSuppliers = async () => {
       try {
         const supplierResponse = await axios.get(
-          "http://localhost:4500/portaldev/readsupplier"
+          `${api}/readsupplier`
         );
 
         // Sorting the suppliers by createdAt in descending order
@@ -46,7 +47,7 @@ const SupplierComponent = () => {
 
         // Fetch categories
         const categoryResponse = await axios.get(
-          "http://localhost:4500/portaldev/readcategories"
+          `${api}/readcategories`
         );
 
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
@@ -115,7 +116,7 @@ const SupplierComponent = () => {
     try {
       if (isEditMode) {
         const response = await axios.put(
-          `http://localhost:4500/portaldev/updatesupplier/${selectedSupplier._id}`,
+          `${api}/updatesupplier/${selectedSupplier._id}`,
           formData
         );
         setSuppliers((prevSuppliers) =>
@@ -131,7 +132,7 @@ const SupplierComponent = () => {
         toast.success("Updated Successfully!");
       } else {
         const response = await axios.post(
-          "http://localhost:4500/portaldev/createsupplier",
+          `${api}/createsupplier`,
           formData
         );
         const newSupplier = response.data.data;
@@ -150,7 +151,7 @@ const SupplierComponent = () => {
     if (window.confirm('Are you sure you want to delete this supplier?')) {
       try {
         const response = await axios.delete(
-          `http://localhost:4500/portaldev/deleteSupplier/${id}`
+          `${api}/portaldev/deleteSupplier/${id}`
         );
         if (response.status === 200) {
           setSuppliers((prevSuppliers) =>

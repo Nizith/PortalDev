@@ -6,6 +6,7 @@ import StepTwo from "./contractCreate/StepTwo";
 import StepThree from "./contractCreate/StepThree";
 import StepFour from "./contractCreate/StepFour";
 import StepFive from "./contractCreate/StepFive.jsx";
+import { api } from '../../api';
 
 // Steps for the form
 const steps = [
@@ -102,7 +103,7 @@ export default function ContractAdd() {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "http://localhost:4500/portaldev/createcontract",
+                `${api}/createcontract`,
                 formData
             );
             toast.success("Contract Created successfully!");
@@ -119,9 +120,9 @@ export default function ContractAdd() {
             try {
                 const [SupplierResponse, CustomerResponse, CoordinatorResponse] =
                     await Promise.all([
-                        axios.get("http://localhost:4500/portaldev/readsupplier"),
-                        axios.get("http://localhost:4500/portaldev/readcustomer"),
-                        axios.get("http://localhost:4500/portaldev/allcordinator"),
+                        axios.get(`${api}/readsupplier`),
+                        axios.get(`${api}/readcustomer`),
+                        axios.get(`${api}/allcordinator`),
                     ]);
 
                 setSuppliers(SupplierResponse.data);

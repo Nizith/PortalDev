@@ -11,6 +11,7 @@ import {
   Legend
 } from 'chart.js';
 import axios from 'axios';
+import { api } from '../../api';
 
 // Register ChartJS components
 ChartJS.register(
@@ -130,9 +131,9 @@ export default function LineChart() {
     const fetchMetricsData = async () => {
         try {
             const [contractsRes, suppliersRes, customersRes] = await Promise.all([
-                axios.get("http://localhost:4500/portaldev/allcontracts"),
-                axios.get('http://localhost:4500/portaldev/readsupplier'),
-                axios.get('http://localhost:4500/portaldev/readcustomer')
+                axios.get(`${api}/allcontracts`),
+                axios.get(`${api}/readsupplier`),
+                axios.get(`${api}/readcustomer`)
             ]);
 
             let filteredContracts = contractsRes.data.data;

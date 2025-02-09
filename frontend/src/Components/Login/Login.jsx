@@ -27,7 +27,7 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            const response = await axios.post("http://localhost:4500/portaldev/login", logindata);
+            const response = await axios.post(`${api}/login`, logindata);
 
             toast.success("Login Successful!");
 

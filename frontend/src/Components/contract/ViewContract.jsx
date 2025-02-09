@@ -20,7 +20,7 @@ export default function ViewContract() {
   useEffect(() => {
     const fetchContracts = async () => {
       try {
-        const response = await axios.get("http://localhost:4500/portaldev/allcontracts");
+        const response = await axios.get(`${api}/allcontracts`);
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
         setContracts(response.data.data);
