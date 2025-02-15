@@ -6,6 +6,7 @@ import { FaEdit } from "react-icons/fa";
 import { IoIosArrowForward, IoMdClose } from "react-icons/io";
 import LoadingAnimation from "../Login/LoadingAnimation";
 import ContractDatesGraph from "../Graphs/ContractDatesGraph";
+import { api } from '../../api';
 
 const initialInputFields = {
   tenderNo: "",
@@ -38,7 +39,7 @@ export default function PaymentManagement() {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get("http://localhost:4500/portaldev/Allpayments");
+        const response = await axios.get(`${api}/Allpayments`);
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
         setPayments(response.data.data);
@@ -69,7 +70,7 @@ export default function PaymentManagement() {
   const handleSaveClick = async (id) => {
     try {
       const response = await axios.put(
-        `http://localhost:4500/portaldev/updatepayments/${id}`,
+        `${api}/updatepayments/${id}`,
         editedPayment
       );
       setPayments(payments.map((payment) =>
@@ -90,7 +91,7 @@ export default function PaymentManagement() {
   const handleDeleteClick = async (id) => {
     if (window.confirm('Are you sure you want to delete this payment?')) {
       try {
-        await axios.delete(`http://localhost:4500/portaldev/deletepayment/${id}`);
+        await axios.delete(`${api}/deletepayment/${id}`);
         setPayments(payments.filter((payment) => payment._id !== id));
         setFilteredPayments(filteredPayments.filter((payment) => payment._id !== id));
         setViewDetailsRow(null);

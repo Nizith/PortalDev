@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { VscEyeClosed, VscEye } from "react-icons/vsc";
 import toast, { Toaster } from "react-hot-toast";
 import LoginBgImg from "../../images/loginimage.jpg";
+import { api } from '../../api';
 
 export default function Login() {
 
