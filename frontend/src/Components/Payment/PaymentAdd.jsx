@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import { api } from '../../api';
 
 export default function PaymentAdd({ handleCloseModal, tenderNo, AMCCurrency, AMCterm, AMCamount, AMCamountPeriod }) {
   const [payData, setPayData] = useState({
@@ -18,7 +19,7 @@ export default function PaymentAdd({ handleCloseModal, tenderNo, AMCCurrency, AM
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get("http://localhost:4500/portaldev/Allpayments");
+        const response = await axios.get(`${api}/Allpayments`);
 
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
@@ -72,7 +73,7 @@ export default function PaymentAdd({ handleCloseModal, tenderNo, AMCCurrency, AM
     console.log("Payload Sent:", requestData);
 
     try {
-      const response = await axios.post("http://localhost:4500/portaldev/createpayment", requestData);
+      const response = await axios.post(`${api}/createpayment`, requestData);
       console.log("Response:", response.data);
       toast.success("Payment Initiated");
       handleCloseModal();
