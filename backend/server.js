@@ -1,33 +1,46 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
-
-require('dotenv').config();
+const config = require('./config/config');
+const connectDB = require('./config/db');
 
 const app = express();
+/**
+ * Use cors to allow cross-origin requests
+ * This is important for allowing the frontend and backend to communicate
+ * */
 app.use(cors());
-app.use(bodyParser.json());
+
+/**
+ * This middleware is crucial for parsing JSON request bodies
+ * It convert the incoming data into the JSON format
+ * and makes it accessible in the req.body object.
+ */
+app.use(bodyParser.json()); 
+
+// Optional: to support URL-encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); 
+
+/**
+ * Importing the PORT from the config file
+ */
+const PORT = config.PORT;
+
+/**
+ * Run the express app on the imported port using the listen function in express
+ */
+app.listen(PORT, () => {    
+    console.log(`Server running on ${PORT}`);
+});
+
+//Connecting to the database 
+connectDB();
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`App is running on port: ${PORT}`);
-});
-
-const URL = process.env.URL
-
-mongoose.connect(URL)
-    .then(() => {
-        console.log("MongoDB Connection Successful!");
-    })
-    .catch((err) => {
-        console.log("MongoDB Connection Unsuccessful!", err);
-    });
 
 // Routes
 const customerRoutes = require("./routes/customerRoutes.js");
