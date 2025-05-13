@@ -4,7 +4,8 @@ const {
     getAllContracts,
     getContractById,
     updateContractById,
-    deleteContractById
+    deleteContractById,
+    getContractsOfuser
 } = require('../controllers/contractController.js');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
@@ -22,5 +23,8 @@ router.put('/updatecontract/:id', protect, authorize('Admin', 'MsStaff'), update
 
 // Route to delete a contract by ID - accessible by Admin and MsStaff
 router.delete('/deletecontract/:id', protect, authorize('Admin', 'MsStaff'), deleteContractById);
+
+// Route to delete a contract by ID - accessible by Admin and MsStaff
+router.get('/getusercontracts/:id', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), getContractsOfuser);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const Contract = require('../models/contractModel');
+const User = require('../models/userModel')
 const moment = require('moment');
 
 // Create the contract form
@@ -176,6 +177,38 @@ const getCustomersByYear = async (req, res) => {
     }
 };
 
+const getContractsOfuser = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await User.findById(id);
+
+        if (!user) {
+            return res.status(404).json({ message: "Couldn't Find the User" });
+        }
+
+        const contracts = await Contract.find({
+            $or: [
+                { accountManager: user.username },
+                { manager: user.username },
+                { solutionEngineer: user.username },
+                { salesEngineer: user.username }
+            ]
+        });
+
+        if (!contracts.length) {
+            return res.status(404).json({ message: 'No contracts found for this user' });
+        }
+
+        res.status(200).json({
+            message: 'Contracts Fetched Successfully',
+            data: contracts
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Contracts Data Fetching Failed!' });
+    }
+}
 
 
 module.exports = {
@@ -184,5 +217,5 @@ module.exports = {
     getContractById,
     updateContractById,
     deleteContractById,
-  
+    getContractsOfuser
 };

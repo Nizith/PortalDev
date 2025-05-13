@@ -3,6 +3,8 @@ import axios from "axios";
 import { TbExternalLink } from "react-icons/tb";
 import { IoIosArrowForward } from "react-icons/io";
 import LoadingAnimation from "../Login/LoadingAnimation";
+import { api } from '../../api';
+import { jwtDecode } from "jwt-decode";
 
 // Styled Field Component
 const StyledField = ({ label, value }) => (
@@ -17,10 +19,24 @@ export default function ViewContract() {
   const [viewDetailsRow, setViewDetailsRow] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  
+// Function to get the token from local storage
+const getToken = () => localStorage.getItem('token');
+
+const decodedToken = jwtDecode(getToken());
+const userId = decodedToken.id;
+
+
   useEffect(() => {
     const fetchContracts = async () => {
       try {
-        const response = await axios.get(`${api}/allcontracts`);
+        const response = await axios.get(`${api}/getusercontracts/${userId}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+        });
+        
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
         setContracts(response.data.data);
