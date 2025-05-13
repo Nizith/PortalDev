@@ -34,7 +34,6 @@ export default function ManageContracts() {
         await Promise.all([delay, response]);
         setContracts(response.data.data);
         setAMCTerm(response.data.data.map(contract => contract.AMCDetails?.map(amc => amc.AMCpaymentterms)).flat());
-        console.log("Contract data : ", response.data)
       } catch (error) {
         console.error("Error fetching contracts:", error);
       } finally {

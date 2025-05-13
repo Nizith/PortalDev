@@ -124,7 +124,11 @@ export default function Document() {
     useEffect(() => {
         const fetchContracts = async () => {
             try {
-                const response = await axios.get(`${api}/allcontracts`);
+                const response = await axios.get(`${api}/allcontracts`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
                 const delay = new Promise((resolve) => setTimeout(resolve, 1000));
                 await Promise.all([delay, response]);
                 const tenderNumbers = response.data.data.map(contract => contract.tenderNo);

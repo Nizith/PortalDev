@@ -3,45 +3,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { api } from '../../api';
 import axios from "axios";
 
-export default function UserManagement() {
+export default function UserManagement({ rolesList }) {
     const [isuserMngOpen, setuserMngOpen] = useState(false);
-    const [userRoles, setUserRoles] = useState([]);
 
-    // Function to get the token from local storage
+    // Function to get the token from local storage or any other storage
     const getToken = () => localStorage.getItem('token');
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(`${api}/users`, {
-                    headers: { Authorization: `Bearer ${getToken()}` }
-                });
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status} ${response.statusText}`);
-                }
-
-                const delay = new Promise((resolve) => setTimeout(resolve, 1000));
-                await Promise.all([delay, response]);
-
-                const data = await response.json();
-
-                // Extract all roles
-                const roles = data.map(user => user.role).filter(role => role); // Remove null/undefined roles
-
-                // Get unique roles
-                const uniqueRoles = [...new Set(roles)];
-
-                setUserRoles(uniqueRoles);
-
-            } catch (error) {
-                console.error("Error fetching users:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUsers();
-    }, []);
 
     // Single state for all form fields
     const [formData, setFormData] = useState({
@@ -78,10 +44,11 @@ export default function UserManagement() {
         }
 
         try {
-            const response = await fetch(`${api}/registration`, {
+            const response = await fetch(`${api}/register`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
                 },
                 body: JSON.stringify(formData),
             });
@@ -159,7 +126,7 @@ export default function UserManagement() {
                                         className="p-1 border rounded w-full"
                                     >
                                         <option value=""></option>
-                                        {userRoles.map((role) => (
+                                        {rolesList.map((role) => (
                                             <option key={role} value={role}>
                                                 {role}
                                             </option>

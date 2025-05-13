@@ -20,6 +20,9 @@ export default function UserRoleTable() {
     // Define available roles statically
     const [userRoles, setUserRoles] = useState([]);
 
+    // Function to get the token from local storage or any other storage
+    const getToken = () => localStorage.getItem('token');
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -38,7 +41,7 @@ export default function UserRoleTable() {
 
                 const data = await response.json();
                 setUsers(data);
-                
+
                 // Extract all roles
                 const roles = data.map(user => user.role).filter(role => role); // Remove null/undefined roles
 
@@ -100,7 +103,10 @@ export default function UserRoleTable() {
         try {
             const response = await fetch(`${api}/users/${userToDelete}`, {
                 method: 'DELETE',
-                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getToken()}`
+                }
             });
             if (response.ok) {
                 toast.success('User deleted successfully.');
@@ -123,9 +129,6 @@ export default function UserRoleTable() {
         navigate('/usemanagement');
     };
 
-    // Function to get the token from local storage
-    const getToken = () => localStorage.getItem('token');
-
     return (
         <>
             <Toaster />
@@ -140,7 +143,11 @@ export default function UserRoleTable() {
                         <IoIosArrowForward /> User Management
                     </h2>
                     <div className='mx-8'>
-                        <div className='float-right'><UserManagement /></div>
+                        <div className='float-right'>
+                            <UserManagement
+                                rolesList={userRoles}
+                            />
+                        </div>
                         <table className="min-w-full font-semibold table-auto border border-collapse bg-gradient-to-r from-white via-gray-100 to-white rounded-xl overflow-hidden shadow-lg">
                             <thead>
                                 <tr className="bg-gradient-to-r from-slate-900 to-indigo-600 text-white text-sm tracking-wide">

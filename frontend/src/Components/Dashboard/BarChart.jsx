@@ -140,18 +140,18 @@ export default function BarChart() {
     };
 
     return (
-        <div className="bg-white col-span-3 p-6 rounded-lg border">
+        <div className="bg-white col-span-3 px-6 py-4 rounded-lg border">
             <h2 className="text-lg font-bold">
                 {userRole === 'SalesTeam' ? 'My Contracts in each month' : 'Contracts made in each month'}
             </h2>
             <p className="text-xs mb-2">This year</p>
             <div className="inline-flex space-x-5 items-center">
-                <p className="text-3xl font-bold mb-2">{totalContractCount}</p>
-                <div className="bg-blue-200 px-2 rounded-full">
-                    <p className="text-blue-700 font-semibold">
+                <div className="rounded-full">
+                    <p className="font-semibold text-xl">
                         {userRole === 'SalesTeam' ? 'My Contracts' : 'Total Contracts'}
                     </p>
                 </div>
+                <p className="text-lg font-bold mb-2 bg-blue-200 text-blue-800 px-4 rounded-full">{totalContractCount}</p>
             </div>
             <div className="mb-4 flex justify-center h-[300px]">
                 {barData && <Bar data={barData} options={barOptions} ref={chartRef} />}

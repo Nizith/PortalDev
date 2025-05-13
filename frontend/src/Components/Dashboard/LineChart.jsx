@@ -235,7 +235,7 @@ const MetricCard = ({ title, count, data, options, color }) => (
     <div className="bg-white px-4 py-2 rounded-lg border">
         <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold">{title}</h2>
-            <p className="text-3xl font-bold">{count}</p>
+            <p className={`text-lg font-bold rounded-full bg-${color}-200 text-${color}-800 px-4 border`}>{count}</p>
         </div>
         <div className={`bg-${color}-200 px-2 rounded-full`}>
             <p className={`text-${color}-700 font-semibold`}></p>

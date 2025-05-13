@@ -35,13 +35,6 @@ function Layout({ children }) {
   );
 }
 
-const userRole = localStorage.getItem('role');
-console.log("Logged User : ", userRole);
-
-
-const userName = localStorage.getItem('username');
-console.log("Logged User's name : ", userName);
-
 function App() {
   return (
     <Router>

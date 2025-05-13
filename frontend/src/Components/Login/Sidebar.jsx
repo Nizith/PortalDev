@@ -122,8 +122,8 @@ export default function Sidebar() {
             <div className="flex-grow overflow-y-auto">
                 <nav>
                     <hr className='text-sky-900 my-2' />
-                    {navLinks.map(({ path, label, icon, subMenu, icon2 }) => (
-                        <div key={label} className="">
+                    {navLinks.map(({ path, label, icon, subMenu, icon2 }, index) => (
+                        <div key={path || label} className="">
                             {!subMenu ? (
                                 <button
                                     onClick={() => handleNavigation(path)}
@@ -146,18 +146,14 @@ export default function Sidebar() {
                                         onMouseEnter={() => setHovered(true)}
                                         onMouseLeave={() => setHovered(false)}
                                     >
-                                        {subMenu.map(({ path: subPath, label: subLabel, icon: subIcon, }, index) => (
-                                            <>
-                                                <button
-                                                    key={subPath}
-                                                    onClick={() => handleNavigation(subPath)}
-                                                    className="w-[2.62in] mx-auto py-3 font-semibold text-lg rounded-md flex items-center gap-x-4 pl-4 text-white hover:ring-2 ring-indigo-600 transition duration-300"
-                                                >
-                                                    {subIcon} {subLabel}
-                                                </button>
-                                                {/* Render <hr> for all items except the last one */}
-                                                {index < subMenu.length - 1 && <hr className="text-sky-900 my-2" />}
-                                            </>
+                                        {subMenu.map(({ path: subPath, label: subLabel, icon: subIcon }, subIndex) => (
+                                            <button
+                                                key={subPath || subLabel}
+                                                onClick={() => handleNavigation(subPath)}
+                                                className="w-[2.62in] mx-auto py-3 font-semibold text-lg rounded-md flex items-center gap-x-4 pl-4 text-white hover:ring-2 ring-indigo-600 transition duration-300"
+                                            >
+                                                {subIcon} {subLabel}
+                                            </button>
                                         ))}
                                     </div>
                                 </>
