@@ -34,10 +34,15 @@ const SalesCategoryComponent = () => {
     handleFilter();
   }, [salesCategoryFilter, managerFilter, coordinators]);
 
+  // Function to get the token from local storage
+  const getToken = () => localStorage.getItem('token');
+
   // Fetch all coordinators
   const fetchCoordinators = async () => {
     try {
-      const response = await axios.get(`${api}/allcordinator`);
+      const response = await axios.get(`${api}/allcordinator`, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      });
       const sortedData = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sorting by createdAt
       setCoordinators(sortedData);
       setFilteredCoordinators(sortedData); // Initialize filtered list with sorted data
@@ -98,12 +103,16 @@ const SalesCategoryComponent = () => {
     e.preventDefault();
     try {
       if (isEditMode) {
-        await axios.put(`${api}/updatecordinator/${selectedCoordinator._id}`, formData);
+        await axios.put(`${api}/updatecordinator/${selectedCoordinator._id}`, formData, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
         fetchCoordinators();
       } 
       
       else {
-        const response = await axios.post(`${api}/createCordinator`, formData);
+        const response = await axios.post(`${api}/createCordinator`, formData, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
         const newCoordinator = response.data.data;
         setCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         setFilteredCoordinators((prevCoordinators) => [newCoordinator, ...prevCoordinators].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
@@ -119,14 +128,16 @@ const SalesCategoryComponent = () => {
   const handleDelete = async (id) => {
     if(window.confirm('Are you sure you want to delete this payment?')){
     try {
-      await axios.delete(`${api}/deletecordinator/${id}`);
+      await axios.delete(`${api}/deletecordinator/${id}`, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      });
       fetchCoordinators();
     } catch (error) {
       console.error('Error deleting coordinator:', error);
     }
   }
   };
-
+  
   return (
     <>
     <Toaster/>

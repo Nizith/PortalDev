@@ -35,10 +35,15 @@ const ExampleComponent = () => {
     handleFilter();
   }, [SolutionCategory, filterSectionName, coordinators]);
 
+  // Function to get the token from local storage
+  const getToken = () => localStorage.getItem('token');
+
   // Fetch all coordinators
   const fetchCoordinators = async () => {
     try {
-      const response = await axios.get(`${api}/allcordinator`);
+      const response = await axios.get(`${api}/allcordinator`, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      });
       const sortedData = response.data.data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
       setCoordinators(sortedData);
       setFilteredCoordinators(sortedData); // Initialize filtered list with sorted data
@@ -95,10 +100,14 @@ const ExampleComponent = () => {
     e.preventDefault();
     try {
       if (isEditMode) {
-        await axios.put(`${api}/updatecordinator/${selectedCoordinator._id}`, formData);
+        await axios.put(`${api}/updatecordinator/${selectedCoordinator._id}`, formData, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
         fetchCoordinators();
       } else {
-        await axios.post(`${api}/createCordinator`, formData);
+        await axios.post(`${api}/createCordinator`, formData, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
         fetchCoordinators();
       }
       toast.success("Updated Successfully!");
@@ -112,7 +121,9 @@ const ExampleComponent = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this payment?')) {
       try {
-        await axios.delete(`${api}v/deletecordinator/${id}`);
+        await axios.delete(`${api}/deletecordinator/${id}`, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
         fetchCoordinators();
       } catch (error) {
         console.error('Error deleting coordinator:', error);

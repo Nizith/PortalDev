@@ -99,12 +99,16 @@ export default function ContractAdd() {
         }));
     };
 
+    // Function to get the token from local storage or any other storage
+    const getToken = () => localStorage.getItem('token');
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const response = await axios.post(
                 `${api}/createcontract`,
-                formData
+                formData,
+                { headers: { Authorization: `Bearer ${getToken()}` } }
             );
             toast.success("Contract Created successfully!");
             console.log("Contract Details: ", response.data);
@@ -120,9 +124,15 @@ export default function ContractAdd() {
             try {
                 const [SupplierResponse, CustomerResponse, CoordinatorResponse] =
                     await Promise.all([
-                        axios.get(`${api}/readsupplier`),
-                        axios.get(`${api}/readcustomer`),
-                        axios.get(`${api}/allcordinator`),
+                        axios.get(`${api}/readsupplier`, {
+                            headers: { Authorization: `Bearer ${getToken()}` },
+                        }),
+                        axios.get(`${api}/readcustomer`, {
+                            headers: { Authorization: `Bearer ${getToken()}` },
+                        }),
+                        axios.get(`${api}/allcordinator`, {
+                            headers: { Authorization: `Bearer ${getToken()}` },
+                        }),
                     ]);
 
                 setSuppliers(SupplierResponse.data);

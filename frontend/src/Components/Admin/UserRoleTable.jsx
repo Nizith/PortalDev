@@ -7,6 +7,7 @@ import UserManagement from './UserManagement';
 import LoadingAnimation from "../Login/LoadingAnimation";
 import { RiDeleteBin5Fill, RiFileEditFill } from 'react-icons/ri';
 import { api } from '../../api';
+import axios from 'axios';
 
 export default function UserRoleTable() {
     const [users, setUsers] = useState([]);
@@ -24,7 +25,7 @@ export default function UserRoleTable() {
             try {
                 const response = await fetch(`${api}/users`, {
                     headers: {
-                        'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Replace with your actual token
+                        'Authorization': `Bearer ${getToken()}`, // Replace with your actual token
                         'Content-Type': 'application/json'
                     }
                 });
@@ -67,7 +68,8 @@ export default function UserRoleTable() {
                 const response = await fetch(`${api}/users/${userId}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
                     },
                     body: JSON.stringify({ role: editedUser.role }) // Only updating role
                 });
@@ -98,9 +100,9 @@ export default function UserRoleTable() {
         try {
             const response = await fetch(`${api}/users/${userToDelete}`, {
                 method: 'DELETE',
+                method: 'DELETE',
             });
             if (response.ok) {
-                setUsers(users.filter(user => user._id !== userToDelete));
                 toast.success('User deleted successfully.');
             } else {
                 toast.error('Failed to delete user.');
@@ -120,6 +122,9 @@ export default function UserRoleTable() {
     const navigateUserMng = () => {
         navigate('/usemanagement');
     };
+
+    // Function to get the token from local storage
+    const getToken = () => localStorage.getItem('token');
 
     return (
         <>

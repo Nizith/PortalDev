@@ -17,6 +17,9 @@ export default function CordinatorComponent() {
   // Fetch user role from localStorage
   const userRole = localStorage.getItem('role'); // Assuming 'role' is stored in localStorage.
 
+  // Function to get the token from local storage
+  const getToken = () => localStorage.getItem('token');
+
   // Fetch coordinators on component mount
   useEffect(() => {
     fetchCoordinators();
@@ -25,7 +28,9 @@ export default function CordinatorComponent() {
   // Fetch all coordinators
   const fetchCoordinators = async () => {
     try {
-      const response = await axios.get(`${api}/allcordinator`);
+      const response = await axios.get(`${api}/allcordinator`, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      });
       setCoordinators(response.data.data);
       setFilteredCoordinators(response.data.data); // Initialize filtered list with full data
 

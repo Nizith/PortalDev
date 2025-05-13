@@ -40,14 +40,21 @@ export default function BarChart() {
         }]
     });
 
+    // Function to get the token from local storage or any other storage
+    const getToken = () => localStorage.getItem('token');
+
     const fetchContracts = async () => {
         try {
-            const response = await axios.get(`${api}/allcontracts`);
+            const response = await axios.get(`${api}/allcontracts`,
+                {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                }
+            );
             const contracts = response.data.data;
-    
+
             const monthlyCounts = new Array(12).fill(0);
             const filteredCounts = new Array(12).fill(0);
-    
+
             contracts.forEach(contract => {
                 const date = new Date(contract.customerContStartDate);
                 const month = date.getMonth();

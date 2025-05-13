@@ -36,10 +36,15 @@ export default function PaymentManagement() {
 
   const userRole = localStorage.getItem('role');
 
+  // Function to get the token from local storage or any other storage
+  const getToken = () => localStorage.getItem('token');
+
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get(`${api}/Allpayments`);
+        const response = await axios.get(`${api}/Allpayments`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
         setPayments(response.data.data);
@@ -71,7 +76,8 @@ export default function PaymentManagement() {
     try {
       const response = await axios.put(
         `${api}/updatepayments/${id}`,
-        editedPayment
+        editedPayment,
+        { headers: { Authorization: `Bearer ${getToken()}` } }
       );
       setPayments(payments.map((payment) =>
         payment._id === id ? response.data.data : payment
@@ -91,7 +97,9 @@ export default function PaymentManagement() {
   const handleDeleteClick = async (id) => {
     if (window.confirm('Are you sure you want to delete this payment?')) {
       try {
-        await axios.delete(`${api}/deletepayment/${id}`);
+        await axios.delete(`${api}/deletepayment/${id}`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
         setPayments(payments.filter((payment) => payment._id !== id));
         setFilteredPayments(filteredPayments.filter((payment) => payment._id !== id));
         setViewDetailsRow(null);

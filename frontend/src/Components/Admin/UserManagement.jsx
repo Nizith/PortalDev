@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { api } from '../../api';
+import axios from "axios";
 
 export default function UserManagement() {
     const [isuserMngOpen, setuserMngOpen] = useState(false);
     const [userRoles, setUserRoles] = useState([]);
 
+    // Function to get the token from local storage
+    const getToken = () => localStorage.getItem('token');
+
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const response = await fetch(`${api}/users`, {
-                    headers: {
-                        'Authorization': 'Bearer YOUR_ACCESS_TOKEN', // Replace with your actual token
-                        'Content-Type': 'application/json'
-                    }
+                const response = await axios.get(`${api}/users`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
                 });
                 if (!response.ok) {
                     throw new Error(`Error: ${response.status} ${response.statusText}`);

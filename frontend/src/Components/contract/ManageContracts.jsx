@@ -9,6 +9,7 @@ import { MdOutlineArrowRight, MdPayment, MdPayments } from "react-icons/md";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import PaymentAdd from "../Payment/PaymentAdd";
+import { api } from '../../api';
 
 export default function ManageContracts() {
   const [contracts, setContracts] = useState([]);
@@ -20,10 +21,15 @@ export default function ManageContracts() {
   const [openPay, setOpenPay] = useState(false);
   const navigate = useNavigate();
 
+  // Function to get the token from local storage or any other storage
+  const getToken = () => localStorage.getItem('token');
+
   useEffect(() => {
     const fetchContracts = async () => {
       try {
-        const response = await axios.get(`${api}/allcontracts`);
+        const response = await axios.get(`${api}/allcontracts`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
         setContracts(response.data.data);
@@ -99,7 +105,9 @@ export default function ManageContracts() {
 
   const handleSaveClick = (id) => {
     axios
-      .put(`${api}/updatecontract/${id}`, editedContract)
+      .put(`${api}/updatecontract/${id}`, editedContract, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      })
       .then((response) => {
         setContracts(
           contracts.map((contract) =>
@@ -117,10 +125,11 @@ export default function ManageContracts() {
   };
 
   const handleDeleteClick = (id) => {
-
     if (window.confirm('Are you sure you want to delete this Contract?')) {
       axios
-        .delete(`${api}/deletecontract/${id}`)
+        .delete(`${api}/deletecontract/${id}`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        })
         .then(() => {
           setContracts(contracts.filter((contract) => contract._id !== id));
           setViewDetailsRow(null);
@@ -141,7 +150,9 @@ export default function ManageContracts() {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get(`${api}/Allpayments`);
+        const response = await axios.get(`${api}/Allpayments`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
 
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
