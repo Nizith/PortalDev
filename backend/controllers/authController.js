@@ -14,10 +14,10 @@ const generateToken = (tokenPayload) => {
 // @access  Public
 exports.register = async (req, res) => {
     try {
-        const { name, email, password, adminKey } = req.body;
+        const { username, password, adminKey } = req.body;
 
         // Check if user exists
-        const userExists = await User.findOne({ email });
+        const userExists = await User.findOne({ username });
 
         if (userExists) {
             return res.status(400).json({
@@ -29,19 +29,18 @@ exports.register = async (req, res) => {
         // Check for admin registration
         let role = 'user';
         if (adminKey && adminKey === ADMIN_REGISTRATION_KEY) {
-            role = 'admin';
+            role = 'Admin';
         }
 
         // Create user
         const user = await User.create({
-            name,
-            email,
+            username,
             password,
             role
         });
 
         // Generate token
-        const tokenPayload = { id: user._id, name, email, role };
+        const tokenPayload = { id: user._id, username, role };
         const token = generateToken(tokenPayload);
 
         // Decode the token (optional, without verifying)
@@ -51,12 +50,9 @@ exports.register = async (req, res) => {
             success: true,
             token,
             decoded,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role
-            }
+            id: user._id,
+            username: user.username,
+            role: user.role
         });
 
     } catch (error) {
@@ -72,10 +68,10 @@ exports.register = async (req, res) => {
 // @access  Public
 exports.login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
 
         // Check for user
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ username });
 
         if (!user) {
             return res.status(401).json({
@@ -85,7 +81,7 @@ exports.login = async (req, res) => {
         }
 
         // Check if password matches
-        const isMatch = await user.matchPassword(password);
+        const isMatch = await user.comparePassword(password);
 
         if (!isMatch) {
             return res.status(401).json({
@@ -95,21 +91,18 @@ exports.login = async (req, res) => {
         }
 
         // Generate token
-        const tokenPayload = { id: user._id, name: user.name, email: user.email, role: user.role };
+        const tokenPayload = { id: user._id, username: user.username, role: user.role };
         const token = generateToken(tokenPayload);
 
         const decoded = jwt.decode(token);
 
         res.status(200).json({
             success: true,
-            token,            
+            token,
             expiresAt: new Date(decoded.exp * 1000).toLocaleString(),
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role
-            }
+            id: user._id,
+            username: user.username,
+            role: user.role
         });
     } catch (error) {
         res.status(500).json({

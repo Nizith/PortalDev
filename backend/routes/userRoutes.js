@@ -1,13 +1,22 @@
-const UserCtrl = require('../controllers/userController');
 const router = require('express').Router();
+const {
+    getAllUsers,
+    deleteUser,
+    updateUser,
+    resetPassword
+} = require('../controllers/userController');
+const { protect, authorize } = require('../middleware/authMiddleware');
 
+// Route to get all users - accessible by all roles
+router.get('/users', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), getAllUsers); // All roles can view users
 
-router.post('/portaldev/registration',UserCtrl.insertUser);
-router.post('/portaldev/login',UserCtrl.loginUser);
+// Route to delete a user - accessible only by Admin
+router.delete('/users/:id', protect, authorize('Admin'), deleteUser); // Only admin can delete
 
-router.get('/portaldev/users', UserCtrl.getAllUsers); // New route for fetching users
-router.delete('/portaldev/users/:id',  UserCtrl.deleteUser);//Only admin  can delete
-router.put('/portaldev/users/:id', UserCtrl.updateUser); // Both  admin and  user can  yodate
-router.put('/portaldev/users/:id/resetpassword', UserCtrl.resetPassword); // Only  admin can reset password
+// Route to update a user - accessible by Admin and MsStaff
+router.put('/users/:id', protect, authorize('Admin', 'MsStaff'), updateUser); // Admin and MsStaff can update
+
+// Route to reset a user's password - accessible only by Admin
+router.put('/users/:id/resetpassword', protect, authorize('Admin'), resetPassword); // Only admin can reset password
 
 module.exports = router;

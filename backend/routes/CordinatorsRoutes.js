@@ -1,15 +1,26 @@
-const express = require('express');
-const router = express.Router();
+const router = require("express").Router();
+const {
+    createCordinator,
+    getAllCordinators,
+    getOneCordinator,
+    updateCordinator,
+    deleteCordinator
+} = require('../controllers/CordinatorsControllers');
+const { protect, authorize } = require('../middleware/authMiddleware');
 
-const CordinatorControll = require("../controllers/CordinatorsControllers")
+// Route to create a coordinator - accessible by Admin and MsStaff
+router.post('/createCordinator', protect, authorize('Admin', 'MsStaff'), createCordinator);
 
-router.post('/portaldev/createCordinator', CordinatorControll.createCordinator);
-router.get('/portaldev/allcordinator', CordinatorControll.getAllCordinators);
-router.get('/portaldev/cordinator/:id',CordinatorControll.getOneCordinator);
-router.put('/portaldev/updatecordinator/:id',CordinatorControll.updateCordinator);
-router.delete('/portaldev/deletecordinator/:id',CordinatorControll.deleteCordinator);
+// Route to get all coordinators - accessible by all roles
+router.get('/allcordinator', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), getAllCordinators);
 
+// Route to get a specific coordinator by ID - accessible by all roles
+router.get('/cordinator/:id', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), getOneCordinator);
 
+// Route to update a coordinator by ID - accessible by Admin and MsStaff
+router.put('/updatecordinator/:id', protect, authorize('Admin', 'MsStaff'), updateCordinator);
 
+// Route to delete a coordinator by ID - accessible by Admin and MsStaff
+router.delete('/deletecordinator/:id', protect, authorize('Admin', 'MsStaff'), deleteCordinator);
 
-module.exports= router;
+module.exports = router;
