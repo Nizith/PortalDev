@@ -7,6 +7,9 @@ import { RiDeleteBin5Fill, RiFileEditFill } from "react-icons/ri";
 import LoadingAnimation from "../Login/LoadingAnimation";
 import { api } from '../../api';
 
+// Function to get the token from local storage
+const getToken = () => localStorage.getItem('token');
+
 export default function Document() {
     const [tenderNumber, setTenderNumber] = useState('');
     const [file, setFile] = useState(null);
@@ -20,7 +23,9 @@ export default function Document() {
 
     const fetchDocuments = async () => {
         try {
-            const response = await axios.get(`${api}/documents`);
+            const response = await axios.get(`${api}/documents`, {
+                headers: { Authorization: `Bearer ${getToken()}` }
+            });
 
             const delay = new Promise((resolve) => setTimeout(resolve, 1000));
             await Promise.all([delay, response]);
@@ -50,9 +55,13 @@ export default function Document() {
 
         try {
             if (editId) {
-                await axios.put(`${api}/documents/${editId}`, formData);
+                await axios.put(`${api}/documents/${editId}`, formData, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
             } else {
-                await axios.post(`${api}/upload`, formData);
+                await axios.post(`${api}/upload`, formData, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
             }
             setEditId(null);
             fetchDocuments();
@@ -63,7 +72,9 @@ export default function Document() {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`${api}/documents/${id}`);
+            await axios.delete(`${api}/documents/${id}`, {
+                headers: { Authorization: `Bearer ${getToken()}` }
+            });
             fetchDocuments();
         } catch (error) {
             console.error('Error deleting document:', error);
@@ -81,7 +92,9 @@ export default function Document() {
             if (documents.find(doc => doc._id === docId).documents.length === 1) {
                 await handleDelete(docId);
             } else {
-                await axios.delete(`${api}/documents/${docId}/file/${fileId}`);
+                await axios.delete(`${api}/documents/${docId}/file/${fileId}`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                });
                 fetchDocuments();
             }
         } catch (error) {
@@ -96,7 +109,9 @@ export default function Document() {
 
         try {
             const url = `${api}/documents/${editId}/file/${selectedFileId}`;
-            await axios.put(url, formData);
+            await axios.put(url, formData, {
+                headers: { Authorization: `Bearer ${getToken()}` }
+            });
             fetchDocuments();
             setIsEditModalOpen(false);
             setEditId(null);
@@ -109,7 +124,11 @@ export default function Document() {
     useEffect(() => {
         const fetchContracts = async () => {
             try {
-                const response = await axios.get(`${api}/allcontracts`);
+                const response = await axios.get(`${api}/allcontracts`, {
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    }
+                });
                 const delay = new Promise((resolve) => setTimeout(resolve, 1000));
                 await Promise.all([delay, response]);
                 const tenderNumbers = response.data.data.map(contract => contract.tenderNo);

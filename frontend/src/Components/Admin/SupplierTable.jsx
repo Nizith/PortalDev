@@ -26,33 +26,30 @@ const SupplierComponent = () => {
     category: "",
     mobile: "",
   });
-  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch user role from localStorage
   const userRole = localStorage.getItem('role'); // Assuming 'role' is stored in localStorage.
+
+  // Function to get the token from local storage or any other storage
+  const getToken = () => localStorage.getItem('token');
 
   // Fetch all suppliers and categories from the API
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
         const supplierResponse = await axios.get(
-          `${api}/readsupplier`
-        );
+          `${api}/readsupplier`, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
 
         // Sorting the suppliers by createdAt in descending order
         const sortedData = supplierResponse.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setSuppliers(sortedData);
         setFilteredSuppliers(sortedData);
 
-        // Fetch categories
-        const categoryResponse = await axios.get(
-          `${api}/readcategories`
-        );
-
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
-        await Promise.all([delay, response]);
-        setCategories(categoryResponse.data.data);
+        await Promise.all([delay, supplierResponse]);
       } catch (error) {
         console.error("Error fetching suppliers or categories:", error);
       } finally {
@@ -117,8 +114,10 @@ const SupplierComponent = () => {
       if (isEditMode) {
         const response = await axios.put(
           `${api}/updatesupplier/${selectedSupplier._id}`,
-          formData
-        );
+          formData,
+          {
+            headers: { Authorization: `Bearer ${getToken()}` }
+          });
         setSuppliers((prevSuppliers) =>
           prevSuppliers.map((supplier) =>
             supplier._id === selectedSupplier._id ? response.data.data : supplier
@@ -133,8 +132,10 @@ const SupplierComponent = () => {
       } else {
         const response = await axios.post(
           `${api}/createsupplier`,
-          formData
-        );
+          formData,
+          {
+            headers: { Authorization: `Bearer ${getToken()}` }
+          });
         const newSupplier = response.data.data;
         setSuppliers((prevSuppliers) => [newSupplier, ...prevSuppliers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
         setFilteredSuppliers((prevSuppliers) => [newSupplier, ...prevSuppliers].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
@@ -151,8 +152,10 @@ const SupplierComponent = () => {
     if (window.confirm('Are you sure you want to delete this supplier?')) {
       try {
         const response = await axios.delete(
-          `${api}/portaldev/deleteSupplier/${id}`
-        );
+          `${api}/deleteSupplier/${id}`,
+          {
+            headers: { Authorization: `Bearer ${getToken()}` }
+          });
         if (response.status === 200) {
           setSuppliers((prevSuppliers) =>
             prevSuppliers.filter((supplier) => supplier.SRno !== SRno).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))

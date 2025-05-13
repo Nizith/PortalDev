@@ -1,16 +1,22 @@
-const express = require("express");
-
+const router = require("express").Router();
 const {
-    getNotification,
-    markNotificationAsRead,
-} = require("../controllers/NotificationController");
+  createNotification,
+  getNotifications,
+  markAsRead,
+  countUnreadNotifications,
+} = require('../controllers/NotificationController');
+const { protect, authorize } = require('../middleware/authMiddleware');
 
-const router = express.Router();
+// Route to create a notification - accessible by all roles
+router.post('/notifications/create', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), createNotification);
 
-//Fetch all notifications
-router.get("/", getNotification);
+// Route to get all notifications for a user - accessible by all roles
+router.get('/notifications/:userId', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), getNotifications);
 
-//Mark a specific notification as read 
-router.patch("/:id/read",markNotificationAsRead);
+// Route to mark a notification as read - accessible by all roles
+router.patch('/notifications/:id/mark-read', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), markAsRead);
+
+// Route to count unread notifications for a user - accessible by all roles
+router.get('/notifications/:userId/unread-count', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), countUnreadNotifications);
 
 module.exports = router;

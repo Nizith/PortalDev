@@ -1,14 +1,26 @@
-const express = require('express');
 const router = require("express").Router();
+const {
+    createUser,
+    readUser,
+    getOneUserreq,
+    updateUserreq,
+    deleteUserreq
+} = require('../controllers/UserreqController');
+const { protect, authorize } = require('../middleware/authMiddleware');
 
-const UserCtrl = require("../controllers/UserreqController");
+// Route to create a user request - accessible only by Admin
+router.post('/createuser', protect, authorize('Admin'), createUser);
 
-router.post('/portaldev/createuser', UserCtrl.createUser);
-router.get('/portaldev/readUser', UserCtrl.readUser);
-router.get('/portaldev/getOneUserreq', UserCtrl.getOneUserreq);
-router.put('/portaldev/updateUserreq', UserCtrl.updateUserreq);
-router.delete('/portaldev/deleteUserreq', UserCtrl.deleteUserreq);
+// Route to read all user requests - accessible by all roles
+router.get('/readUser', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), readUser);
 
+// Route to get a specific user request - accessible by all roles
+router.get('/getOneUserreq', protect, authorize('Admin', 'MsStaff', 'SalesTeam'), getOneUserreq);
 
+// Route to update a user request - accessible only by Admin
+router.put('/updateUserreq', protect, authorize('Admin'), updateUserreq);
+
+// Route to delete a user request - accessible only by Admin
+router.delete('/deleteUserreq', protect, authorize('Admin'), deleteUserreq);
 
 module.exports = router;

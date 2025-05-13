@@ -19,11 +19,16 @@ export default function DataTable() {
   // Fetch user role from localStorage
   const userRole = localStorage.getItem('role'); // Assuming 'role' is stored in localStorage.
 
+  // Function to get the token from local storage
+  const getToken = () => localStorage.getItem('token');
+
   // Fetch all sections from the API
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const response = await axios.get(`${api}/readsection`);
+        const response = await axios.get(`${api}/sections`, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
         setSections(response.data.data);

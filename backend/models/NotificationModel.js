@@ -1,21 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const NotificationSchema = new mongoose.Schema({
-    message:{
-        type:String,
-        required:true
-    },
-    tenderNo: { // Tender number as the contract identifier
-        type: String,
-        required: true
-    },
-    isRead: {
-        type: Boolean,
-        default: false // Default is unread
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now // Automatically sets the current date and time
-    }
+const notificationSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  message: { type: String, required: true },
+  tenderNo: { type: String, required: true },
+  isRead: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
 });
-module.exports = mongoose.model("Notification", NotificationSchema);
+
+module.exports = mongoose.model('Notification', notificationSchema);

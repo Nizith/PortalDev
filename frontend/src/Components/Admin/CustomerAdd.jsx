@@ -14,6 +14,9 @@ const initialInputFields = {
   contact: "",
 };
 
+// Function to get the token from local storage
+const getToken = () => localStorage.getItem('token');
+
 export default function customerTable() {
   const [customer, setCustomer] = useState([]);
   const [filteredCustomer, setFilteredCustomer] = useState([]);
@@ -30,7 +33,9 @@ export default function customerTable() {
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
-        const response = await axios.get(`${api}/readcustomer`);
+        const response = await axios.get(`${api}/readcustomer`, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
 
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
@@ -79,8 +84,11 @@ export default function customerTable() {
       if (isEditMode) {
         // Edit customer logic
         const response = await axios.put(
-          `http://localhost:4500/portaldev/updateCustomer/${selectedCustomer._id}`,
-          inputFields
+          `${api}/updateCustomer/${selectedCustomer._id}`,
+          inputFields,
+          {
+            headers: { Authorization: `Bearer ${getToken()}` }
+          }
         );
 
         const updatedCustomer = response.data.data;
@@ -98,8 +106,11 @@ export default function customerTable() {
       } else {
         // Add new customer logic
         const response = await axios.post(
-          "http://localhost:4500/portaldev/createcustomer",
-          inputFields
+          `${api}/createcustomer`,
+          inputFields,
+          {
+            headers: { Authorization: `Bearer ${getToken()}` }
+          }
         );
 
         const newCustomer = response.data.data;
@@ -114,25 +125,23 @@ export default function customerTable() {
     }
   };
 
-
   const handleDeleteCustomer = async (BRnumber, id) => {
     if (window.confirm('Are you sure you want to delete this cutomer?')) {
       try {
-        const response = await axios.delete(`http://localhost:4500/portaldev/deletecustomer/${id}`);
-        if (response.status === 200) {
-          setCustomer((prevCustomers) =>
-            prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          );
-          setFilteredCustomer((prevCustomers) =>
-            prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          );
-        }
+        await axios.delete(`${api}/deletecustomer/${id}`, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
+        setCustomer((prevCustomers) =>
+          prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        );
+        setFilteredCustomer((prevCustomers) =>
+          prevCustomers.filter((customer) => customer.BRnumber !== BRnumber).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        );
       } catch (error) {
         console.error("Error deleting customer:", error.response ? error.response.data : error.message);
       }
     }
   };
-
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

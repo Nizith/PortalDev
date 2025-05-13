@@ -15,6 +15,9 @@ const initialSolutionFields = {
   isSolutionCoordinator: true,
 };
 
+// Function to get the token from local storage or any other storage
+const getToken = () => localStorage.getItem('token');
+
 export default function Coordinator() {
   const [inputFields, setInputFields] = useState(initialSalesFields);
   const [coordinators, setCoordinators] = useState([]);
@@ -27,7 +30,9 @@ export default function Coordinator() {
   useEffect(() => {
     const fetchCoordinators = async () => {
       try {
-        const response = await axios.get(`${api}/allcordinator`);
+        const response = await axios.get(`${api}/allcordinator`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
         setCoordinators(response.data.data);
         setFilteredSalesCoordinators(response.data.data.filter(c => c.SalesCategory));
         setFilteredSolutionCoordinators(response.data.data.filter(c => c.SolutionCategory));
@@ -72,7 +77,8 @@ export default function Coordinator() {
       if (isEditMode) {
         const response = await axios.put(
           `${api}/updatecoordinator/${selectedCoordinator._id}`,
-          inputFields
+          inputFields,
+          { headers: { Authorization: `Bearer ${getToken()}` } }
         );
         setCoordinators((prevCoordinators) =>
           prevCoordinators.map((coordinator) =>
@@ -82,7 +88,8 @@ export default function Coordinator() {
       } else {
         const response = await axios.post(
           `${api}/createCoordinator`,
-          inputFields
+          inputFields,
+          { headers: { Authorization: `Bearer ${getToken()}` } }
         );
         setCoordinators((prevCoordinators) => [...prevCoordinators, response.data.data]);
       }
@@ -99,7 +106,9 @@ export default function Coordinator() {
 
   const handleDeleteCoordinator = async (coordinatorID) => {
     try {
-      const response = await axios.delete(`${api}/deletecoordinator/${coordinatorID}`);
+      const response = await axios.delete(`${api}/deletecoordinator/${coordinatorID}`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
       if (response.status === 200) {
         setCoordinators((prevCoordinators) =>
           prevCoordinators.filter((coordinator) => coordinator._id !== coordinatorID)

@@ -16,7 +16,6 @@ import "chartjs-adapter-date-fns";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
 
 export default function ContractDatesGraph({ PRdate, POdate, InvoiceDate, Paiddate }) {
-    console.log("Propped Dates: ", { PRdate, POdate, InvoiceDate, Paiddate });
 
     // Collect all dates and their corresponding labels
     const datesWithLabels = [

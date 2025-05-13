@@ -1,36 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
 } from 'chart.js';
 import axios from 'axios';
 import { api } from '../../api';
 
 // Register ChartJS components
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
 );
 
 export default function LineChart() {
 
-    
+
     const userName = localStorage.getItem('username');
     const userRole = localStorage.getItem('role');
 
-    
+
     const [metricsData, setMetricsData] = useState({
         contracts: { count: 0, data: null },
         suppliers: { count: 0, data: null },
@@ -128,22 +128,31 @@ export default function LineChart() {
         }
     };
 
+    // Function to get the token from local storage or any other storage
+    const getToken = () => localStorage.getItem('token');
+
     const fetchMetricsData = async () => {
         try {
             const [contractsRes, suppliersRes, customersRes] = await Promise.all([
-                axios.get(`${api}/allcontracts`),
-                axios.get(`${api}/readsupplier`),
-                axios.get(`${api}/readcustomer`)
-            ]);
+                axios.get(`${api}/allcontracts`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                }),
+                axios.get(`${api}/readsupplier`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                }),
+                axios.get(`${api}/readcustomer`, {
+                    headers: { Authorization: `Bearer ${getToken()}` }
+                })
+                ]);
 
             let filteredContracts = contractsRes.data.data;
             let filteredSuppliers = suppliersRes.data.data;
             let filteredCustomers = customersRes.data.data;
             if (userRole === 'SalesTeam') {
                 filteredContracts = filteredContracts.filter(contract => contract.manager === userName);
-                
+
                 filteredSuppliers = filteredContracts.filter(contract => contract.supplier);
-                
+
                 filteredCustomers = filteredContracts.filter(contract => contract.customer);
             }
 
@@ -226,7 +235,7 @@ const MetricCard = ({ title, count, data, options, color }) => (
     <div className="bg-white px-4 py-2 rounded-lg border">
         <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold">{title}</h2>
-            <p className="text-3xl font-bold">{count}</p>
+            <p className={`text-lg font-bold rounded-full bg-${color}-200 text-${color}-800 px-4 border`}>{count}</p>
         </div>
         <div className={`bg-${color}-200 px-2 rounded-full`}>
             <p className={`text-${color}-700 font-semibold`}></p>

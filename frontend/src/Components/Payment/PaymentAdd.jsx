@@ -16,10 +16,15 @@ export default function PaymentAdd({ handleCloseModal, tenderNo, AMCCurrency, AM
   const [loading, setLoading] = useState(true);
   const [isPaymentDone, setIsPaymentDone] = useState(false);
 
+  // Function to get the token from local storage or any other storage
+  const getToken = () => localStorage.getItem('token');
+
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get(`${api}/Allpayments`);
+        const response = await axios.get(`${api}/Allpayments`, {
+          headers: { Authorization: `Bearer ${getToken()}` },
+        });
 
         const delay = new Promise((resolve) => setTimeout(resolve, 1000));
         await Promise.all([delay, response]);
@@ -73,7 +78,9 @@ export default function PaymentAdd({ handleCloseModal, tenderNo, AMCCurrency, AM
     console.log("Payload Sent:", requestData);
 
     try {
-      const response = await axios.post(`${api}/createpayment`, requestData);
+      const response = await axios.post(`${api}/createpayment`, requestData, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+      });
       console.log("Response:", response.data);
       toast.success("Payment Initiated");
       handleCloseModal();
