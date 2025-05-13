@@ -13,3 +13,6 @@ build/
 
 #ensure the api.js not going to the repo
 api.js
+
+# Ignore environment variables
+.env

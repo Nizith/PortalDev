@@ -2,8 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
-const config = require('./config/config');
-const connectDB = require('./config/db');
+const config = require('./config/config.js');
+const connectDB = require('./config/db.js');
 
 const app = express();
 /**

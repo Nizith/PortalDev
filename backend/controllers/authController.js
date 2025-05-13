@@ -14,7 +14,7 @@ const generateToken = (tokenPayload) => {
 // @access  Public
 exports.register = async (req, res) => {
     try {
-        const { username, password, adminKey } = req.body;
+        const { username, password, role, adminKey } = req.body;
 
         // Check if user exists
         const userExists = await User.findOne({ username });
@@ -27,7 +27,6 @@ exports.register = async (req, res) => {
         }
 
         // Check for admin registration
-        let role = 'user';
         if (adminKey && adminKey === ADMIN_REGISTRATION_KEY) {
             role = 'Admin';
         }
@@ -56,6 +55,7 @@ exports.register = async (req, res) => {
         });
 
     } catch (error) {
+        console.error('Error in register:', error);
         res.status(500).json({
             success: false,
             error: 'Server error'
