@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import './index.css'
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom"
 import CustomerAdd from "./Components/Admin/CustomerAdd.jsx"
@@ -17,20 +17,67 @@ import Dashboard from "./Components/Dashboard/Dashboard.jsx"
 import UserRoleTable from "./Components/Admin/UserRoleTable.jsx"
 import Document from "./Components/Admin/Document.jsx"
 import Notification from "./Components/Admin/Notification.jsx"
-
+import { jwtDecode } from "jwt-decode"
+import SessionExpiredModal from "./Components/SessionExpiredModal"
 
 function Layout({ children }) {
   const location = useLocation();
+  const [showSessionExpired, setShowSessionExpired] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    // Check if the token is expired
+    let timer;
+    try {
+      const decoded = jwtDecode(token);
+      const expiry = decoded.exp * 1000;
+      const now = Date.now();
+      const timeout = expiry - now;
+
+      if (timeout > 0) {
+        timer = setTimeout(() => {
+          setShowSessionExpired(true);
+        }, timeout);
+      } else {
+        setShowSessionExpired(true);
+      }
+
+    } catch (e) {
+      setShowSessionExpired(true);
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+
+  }, [location]);
 
   // Conditionally render Sidebar based on the current path
   const hideSidebar = location.pathname === '/' || location.pathname === '/login';
 
+  // Handle session expired modal
+  const handleSessionExpiredOk = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+    setShowSessionExpired(false);
+  };
+
   return (
     <div className="App">
+
+      {/* Sidebar */}
       {!hideSidebar && <Sidebar />}
       <div className={!hideSidebar ? "ml-[20%]" : ""}>
         {children}
       </div>
+
+      {/* Session Expired Modal */}
+      {showSessionExpired && (
+        <SessionExpiredModal onOk={handleSessionExpiredOk} />
+      )}
+
     </div>
   );
 }
